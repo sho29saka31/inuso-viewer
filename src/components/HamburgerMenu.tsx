@@ -145,7 +145,13 @@ export default function HamburgerMenu() {
                 onClick={closeHamburger}
                 className="block w-full rounded-lg bg-[var(--color-background)] px-4 py-3 text-left text-sm font-bold text-[var(--color-primary)]"
               >
-                📲 ホーム画面への追加方法
+                <span className="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <rect x="5" y="2" width="14" height="20" rx="2"/>
+                    <path d="M9 7l3-3 3 3M12 4v8"/>
+                  </svg>
+                  ホーム画面への追加方法
+                </span>
               </button>
             </div>
           )}

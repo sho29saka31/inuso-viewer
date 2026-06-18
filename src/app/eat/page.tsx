@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 300;
 export const metadata: Metadata = { title: "飲食エリア" };
 
 const STATUS_LABELS = ["停止中", "非常に閑散", "閑散", "通常", "混雑", "非常に混雑"];
@@ -97,7 +98,15 @@ export default async function EatPage() {
       <h1 className="text-xl font-bold mb-6">飲食エリア</h1>
 
       <section className="mb-8">
-        <h2 className="text-base font-bold mb-3 text-[var(--color-text-main)]">🚐 キッチンカー</h2>
+        <div className="flex items-center gap-2 mb-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-[var(--color-text-main)]">
+            <rect x="1" y="3" width="15" height="13" rx="2" />
+            <path d="M16 8h4l3 3v5h-7V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+          <h2 className="text-base font-bold text-[var(--color-text-main)]">キッチンカー</h2>
+        </div>
         {carItems.length === 0 ? (
           <p className="text-sm text-[var(--color-text-sub)]">現在登録されているキッチンカーはありません。</p>
         ) : (
@@ -108,7 +117,14 @@ export default async function EatPage() {
       </section>
 
       <section>
-        <h2 className="text-base font-bold mb-3 text-[var(--color-text-main)]">🛍 PTAバザー</h2>
+        <div className="flex items-center gap-2 mb-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-[var(--color-text-main)]">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 01-8 0" />
+          </svg>
+          <h2 className="text-base font-bold text-[var(--color-text-main)]">PTAバザー</h2>
+        </div>
         {ptaItems.length === 0 ? (
           <p className="text-sm text-[var(--color-text-sub)]">現在登録されているPTAバザーはありません。</p>
         ) : (

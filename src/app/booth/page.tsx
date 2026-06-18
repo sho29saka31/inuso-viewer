@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 300;
 export const metadata: Metadata = { title: "ブース一覧" };
-
 const STATUS_LABELS = ["停止中", "非常に閑散", "閑散", "通常", "混雑", "非常に混雑"];
 const STATUS_COLORS = [
   "bg-gray-200 text-gray-600",
@@ -12,7 +12,6 @@ const STATUS_COLORS = [
   "bg-orange-100 text-orange-700",
   "bg-red-100 text-red-700",
 ];
-
 const CATEGORY_LABELS: Record<string, string> = {
   game: "ゲーム",
   food: "食品",
@@ -20,7 +19,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   exhibition: "展示",
   other: "その他",
 };
-
 interface Booth {
   boothId: string;
   name: string;
@@ -29,7 +27,6 @@ interface Booth {
   description?: string;
   status: number;
 }
-
 async function getBooths(): Promise<{ booths: Booth[] } | { error: string }> {
   try {
     const db = getDb();
@@ -43,10 +40,8 @@ async function getBooths(): Promise<{ booths: Booth[] } | { error: string }> {
     return { error: e instanceof Error ? e.message : String(e) };
   }
 }
-
 export default async function BoothPage() {
   const result = await getBooths();
-
   if ("error" in result) {
     return (
       <div className="px-4 py-6">
@@ -56,20 +51,16 @@ export default async function BoothPage() {
       </div>
     );
   }
-
   const { booths } = result;
-
   const grouped = booths.reduce<Record<string, Booth[]>>((acc, b) => {
     const key = b.category;
     if (!acc[key]) acc[key] = [];
     acc[key].push(b);
     return acc;
   }, {});
-
   return (
     <div className="px-4 py-6 pb-24">
       <h1 className="text-xl font-bold mb-6">ブース一覧</h1>
-
       {booths.length === 0 ? (
         <p className="text-sm text-[var(--color-text-sub)]">現在登録されているブースはありません。</p>
       ) : (
