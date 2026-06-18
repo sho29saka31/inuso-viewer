@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie } from "@/lib/cookies";
 import ConsentOverlay from "./ConsentOverlay";
 import PwaGuide from "./PwaGuide";
 import UserRoleOverlay from "./UserRoleOverlay";
+
+const LEGAL_PATHS = ["/terms", "/privacy", "/cookie-policy"];
 
 type Step = "consent" | "pwa" | "user_role" | "done";
 
@@ -16,8 +19,11 @@ function isIOS(): boolean {
 export default function InitFlow() {
   const [step, setStep] = useState<Step | null>(null);
   const { showUserRoleOverlay, closeUserRoleOverlay } = useApp();
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (LEGAL_PATHS.includes(pathname)) return;
+
     const hasConsent = !!getCookie("consent");
     const hasPwaGuided = !!getCookie("pwa_guided");
     const hasUserRole = !!getCookie("user_role");
@@ -31,7 +37,7 @@ export default function InitFlow() {
     } else {
       setStep("done");
     }
-  }, []);
+  }, [pathname]);
 
   function afterConsent() {
     if (!getCookie("pwa_guided") && isIOS()) {
@@ -54,6 +60,8 @@ export default function InitFlow() {
   function afterUserRole() {
     setStep("done");
   }
+
+  if (LEGAL_PATHS.includes(pathname)) return null;
 
   if (showUserRoleOverlay) {
     return <UserRoleOverlay onComplete={closeUserRoleOverlay} />;

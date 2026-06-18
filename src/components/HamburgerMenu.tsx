@@ -16,6 +16,9 @@ const pages = [
   { href: "/map", label: "校内マップ" },
   { href: "/about", label: "制作情報" },
   { href: "/faq", label: "よくある質問" },
+];
+
+const legalPages = [
   { href: "/terms", label: "利用規約" },
   { href: "/privacy", label: "プライバシーポリシー" },
   { href: "/cookie-policy", label: "Cookieポリシー" },
@@ -62,6 +65,18 @@ export default function HamburgerMenu() {
               href={href}
               onClick={closeHamburger}
               className="block px-5 py-3 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+            >
+              {label}
+            </Link>
+          ))}
+          {legalPages.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeHamburger}
+              className="block px-5 py-3 text-sm text-[var(--color-text-sub)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               {label}
             </Link>
