@@ -52,8 +52,12 @@ const tabs = [
   },
 ];
 
+const LEGAL_PATHS = ["/terms", "/privacy", "/cookie-policy"];
+
 export default function Footer() {
   const pathname = usePathname();
+
+  if (LEGAL_PATHS.includes(pathname)) return null;
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-100 bg-white pb-safe">

@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie } from "@/lib/cookies";
+
+const LEGAL_PATHS = ["/terms", "/privacy", "/cookie-policy"];
 import ConsentOverlay from "./ConsentOverlay";
 import PwaGuide from "./PwaGuide";
 import UserRoleOverlay from "./UserRoleOverlay";
@@ -16,6 +19,9 @@ function isIOS(): boolean {
 export default function InitFlow() {
   const [step, setStep] = useState<Step | null>(null);
   const { showUserRoleOverlay, closeUserRoleOverlay } = useApp();
+  const pathname = usePathname();
+
+  if (LEGAL_PATHS.includes(pathname)) return null;
 
   useEffect(() => {
     const hasConsent = !!getCookie("consent");
