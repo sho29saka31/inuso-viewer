@@ -36,6 +36,16 @@ export default function UserRoleOverlay({ onComplete }: Props) {
         setError("学籍番号は4桁の数字で入力してください。");
         return;
       }
+      const expectedPrefix = `${grade}${cls}`;
+      if (studentId.slice(0, 2) !== expectedPrefix) {
+        setError("入力内容に誤りがあります。");
+        return;
+      }
+      const suffix = parseInt(studentId.slice(2), 10);
+      if (suffix < 1 || suffix > 40) {
+        setError("入力内容に誤りがあります。");
+        return;
+      }
       setCookie("user_role", JSON.stringify({ role: "student", grade, class: cls, studentId }));
     } else if (role === "teacher") {
       setCookie("user_role", JSON.stringify({ role: "teacher", grade: grade || "none" }));
