@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 300;
 export const metadata: Metadata = { title: "お知らせ" };
 
 interface Notice {

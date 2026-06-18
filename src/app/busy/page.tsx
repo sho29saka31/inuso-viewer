@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = { title: "混雑状況" };
 
 const STATUS_LABELS = ["停止中", "非常に閑散", "閑散", "通常", "混雑", "非常に混雑"];

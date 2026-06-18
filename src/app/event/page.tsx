@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 300;
 export const metadata: Metadata = { title: "イベントスケジュール" };
-
 interface Event {
   eventId: string;
   eventName: string;
@@ -14,7 +14,6 @@ interface Event {
   isDelayed?: boolean;
   delayMinutes?: number;
 }
-
 async function getEvents(): Promise<{ events: Event[] } | { error: string }> {
   try {
     const db = getDb();
@@ -24,15 +23,12 @@ async function getEvents(): Promise<{ events: Event[] } | { error: string }> {
     return { error: e instanceof Error ? e.message : String(e) };
   }
 }
-
 function formatDay(day: string): string {
   const d = new Date(day + "T00:00:00");
   return d.toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" });
 }
-
 export default async function EventPage() {
   const result = await getEvents();
-
   if ("error" in result) {
     return (
       <div className="px-4 py-6">
@@ -42,19 +38,15 @@ export default async function EventPage() {
       </div>
     );
   }
-
   const { events } = result;
-
   const grouped = events.reduce<Record<string, Event[]>>((acc, e) => {
     if (!acc[e.day]) acc[e.day] = [];
     acc[e.day].push(e);
     return acc;
   }, {});
-
   return (
     <div className="px-4 py-6 pb-24">
       <h1 className="text-xl font-bold mb-6">イベントスケジュール</h1>
-
       {events.length === 0 ? (
         <p className="text-sm text-[var(--color-text-sub)]">現在登録されているイベントはありません。</p>
       ) : (
