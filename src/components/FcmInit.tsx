@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { getCookie } from "@/lib/cookies";
 
+const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+
 const FIREBASE_CONFIG = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -11,8 +13,6 @@ const FIREBASE_CONFIG = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
-
-const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
 
 function getTopicsForRole(raw: string): string[] {
   try {
@@ -48,15 +48,12 @@ export default function FcmInit() {
         const permission = await Notification.requestPermission();
         if (permission !== "granted") return;
 
-        const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        const registration = await navigator.serviceWorker.register(
+          "/firebase-messaging-sw.js",
+          { scope: "/" }
+        );
         await navigator.serviceWorker.ready;
 
-        // Send config to SW
-        if (registration.active) {
-          registration.active.postMessage({ type: "FIREBASE_CONFIG", config: FIREBASE_CONFIG });
-        }
-
-        // Import firebase client SDK dynamically
         const { initializeApp, getApps } = await import("firebase/app");
         const { getMessaging, getToken, onMessage } = await import("firebase/messaging");
 
@@ -73,7 +70,6 @@ export default function FcmInit() {
 
         if (!token) return;
 
-        // Subscribe to topics via API
         const userRoleRaw = getCookie("user_role");
         const topics = userRoleRaw ? getTopicsForRole(userRoleRaw) : ["all", "guest"];
 
@@ -83,13 +79,10 @@ export default function FcmInit() {
           body: JSON.stringify({ token, topics }),
         }).catch(() => {});
 
-        // Handle foreground messages
         onMessage(messaging, (payload) => {
           const title = payload.notification?.title ?? "ISF通知";
           const body = payload.notification?.body ?? "";
-          if ("Notification" in window && Notification.permission === "granted") {
-            new Notification(title, { body, icon: "/icon-192.png" });
-          }
+          new Notification(title, { body, icon: "/icon-192.png" });
         });
       } catch (err) {
         console.warn("FCM init error:", err);
