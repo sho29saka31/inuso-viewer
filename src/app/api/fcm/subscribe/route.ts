@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMessaging } from "firebase-admin/messaging";
-import { getDb } from "@/lib/firebase-admin";
 
 export async function POST(req: NextRequest) {
   const { token, topics } = await req.json();
@@ -8,15 +6,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "token and topics required" }, { status: 400 });
   }
 
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    return NextResponse.json({ ok: true, skipped: "no service account" });
+  }
+
   try {
+    const { getMessaging } = await import("firebase-admin/messaging");
+    const { getDb } = await import("@/lib/firebase-admin");
+
     const messaging = getMessaging();
     await Promise.all(
-      topics.map((topic: string) =>
-        messaging.subscribeToTopic(token, topic)
-      )
+      topics.map((topic: string) => messaging.subscribeToTopic(token, topic))
     );
 
-    // Store token in Firestore for future reference
     const db = getDb();
     await db.collection("fcmTokens").doc(token.slice(-20)).set({
       token,
