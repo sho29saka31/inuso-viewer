@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import InitFlow from "@/components/InitFlow";
+import FcmInit from "@/components/FcmInit";
 
 const mPlusRounded = M_PLUS_Rounded_1c({
   weight: ["400", "500", "700", "800"],
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className={mPlusRounded.className}>
         <AppProvider>
           <InitFlow />
+          <FcmInit />
           <Header />
           <main className="min-h-[calc(100dvh-3.5rem-4rem)] pb-16">
             {children}
