@@ -24,13 +24,13 @@ interface EatItem {
   status: number;
 }
 
-async function getEatItems(): Promise<EatItem[] | null> {
+async function getEatItems(): Promise<{ items: EatItem[] } | { error: string }> {
   try {
     const db = getDb();
     const snap = await db.collection("booths").where("category", "==", "eat").get();
-    return snap.docs.map((d) => d.data() as EatItem);
-  } catch {
-    return null;
+    return { items: snap.docs.map((d) => d.data() as EatItem) };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : String(e) };
   }
 }
 
@@ -76,17 +76,19 @@ function EatCard({ item }: { item: EatItem }) {
 }
 
 export default async function EatPage() {
-  const items = await getEatItems();
+  const result = await getEatItems();
 
-  if (items === null) {
+  if ("error" in result) {
     return (
       <div className="px-4 py-6">
         <h1 className="text-xl font-bold mb-4">飲食エリア</h1>
         <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。</p>
+        <p className="text-xs text-red-400 mt-2 break-all">{result.error}</p>
       </div>
     );
   }
 
+  const { items } = result;
   const carItems = items.filter((i) => i.type === "car");
   const ptaItems = items.filter((i) => i.type === "pta");
 
