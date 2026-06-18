@@ -38,7 +38,7 @@ const tabs = [
     ),
   },
   {
-    href: "/eat/car",
+    href: "/eat",
     label: "飲食",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -52,7 +52,7 @@ const tabs = [
   },
 ];
 
-const LEGAL_PATHS = ["/terms", "/privacy", "/cookie-policy"];
+const LEGAL_PATHS = ["/legal/terms", "/legal/privacy", "/legal/cookie-policy"];
 
 export default function Footer() {
   const pathname = usePathname();
@@ -63,7 +63,7 @@ export default function Footer() {
     <footer className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-100 bg-white pb-safe">
       <div className="flex">
         {tabs.map(({ href, label, icon }) => {
-          const active = pathname === href || (href === "/eat/car" && pathname.startsWith("/eat"));
+          const active = pathname === href || (href === "/eat" && pathname.startsWith("/eat"));
           return (
             <Link
               key={href}

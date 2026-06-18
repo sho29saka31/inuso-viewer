@@ -41,7 +41,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
               className="h-5 w-5 cursor-pointer accent-[var(--color-primary)]"
             />
             <span>
-              <Link href="/terms" className="underline text-[var(--color-primary)]">
+              <Link href="/legal/terms" className="underline text-[var(--color-primary)]">
                 利用規約
               </Link>
               に同意します。
@@ -55,7 +55,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
               className="h-5 w-5 cursor-pointer accent-[var(--color-primary)]"
             />
             <span>
-              <Link href="/privacy" className="underline text-[var(--color-primary)]">
+              <Link href="/legal/privacy" className="underline text-[var(--color-primary)]">
                 プライバシーポリシー
               </Link>
               に同意します。
@@ -69,7 +69,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
               className="h-5 w-5 cursor-pointer accent-[var(--color-primary)]"
             />
             <span>
-              <Link href="/cookie-policy" className="underline text-[var(--color-primary)]">
+              <Link href="/legal/cookie-policy" className="underline text-[var(--color-primary)]">
                 Cookieポリシー
               </Link>
               に同意します。

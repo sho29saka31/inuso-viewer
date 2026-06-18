@@ -8,7 +8,7 @@ import ConsentOverlay from "./ConsentOverlay";
 import PwaGuide from "./PwaGuide";
 import UserRoleOverlay from "./UserRoleOverlay";
 
-const LEGAL_PATHS = ["/terms", "/privacy", "/cookie-policy"];
+const LEGAL_PATHS = ["/legal/terms", "/legal/privacy", "/legal/cookie-policy"];
 
 type Step = "consent" | "pwa" | "user_role" | "done";
 
