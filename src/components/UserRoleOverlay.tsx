@@ -41,6 +41,11 @@ export default function UserRoleOverlay({ onComplete }: Props) {
         setError("入力内容に誤りがあります。");
         return;
       }
+      const suffix = parseInt(studentId.slice(2), 10);
+      if (suffix < 1 || suffix > 40) {
+        setError("入力内容に誤りがあります。");
+        return;
+      }
       setCookie("user_role", JSON.stringify({ role: "student", grade, class: cls, studentId }));
     } else if (role === "teacher") {
       setCookie("user_role", JSON.stringify({ role: "teacher", grade: grade || "none" }));
