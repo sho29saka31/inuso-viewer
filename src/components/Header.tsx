@@ -1,9 +1,10 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "@/contexts/AppContext";
-import { getCookie } from "@/lib/cookies";
+import { getCookie, setCookie } from "@/lib/cookies";
+import { useEffect, useState } from "react";
 
 type Crumb = { label: string; href?: string };
 
@@ -53,11 +54,27 @@ function getBreadcrumbs(pathname: string): Crumb[] {
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const { openHamburger, openUserRoleOverlay } = useApp();
+  const [hasUnread, setHasUnread] = useState(false);
 
   const isTop = pathname === "/top" || pathname === "/";
   const crumbs = getBreadcrumbs(pathname);
-  const pageTitle = crumbs.length > 0 ? crumbs[crumbs.length - 1].label : "ISF";
+
+  useEffect(() => {
+    const readAt = getCookie("notice_read_at");
+    if (!readAt) {
+      setHasUnread(true);
+    } else {
+      setHasUnread(false);
+    }
+  }, [pathname]);
+
+  function handleNoticeClick() {
+    setCookie("notice_read_at", String(Date.now()));
+    setHasUnread(false);
+    router.push("/notice");
+  }
 
   function handleAccountClick() {
     const raw = getCookie("user_role");
@@ -85,12 +102,14 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
-      <div className="flex h-14 items-center justify-between px-4">
+      <div className="relative flex h-14 items-center justify-center px-4">
+        {/* Center: logo/title */}
         <Link href="/top" className="text-base font-bold text-[var(--color-text-main)]">
-          {isTop ? "ISF" : pageTitle}
+          {isTop ? "ISF" : (crumbs[crumbs.length - 1]?.label ?? "ISF")}
         </Link>
 
-        <div className="flex items-center gap-1">
+        {/* Right: account, notification, hamburger */}
+        <div className="absolute right-2 flex items-center gap-0">
           <button
             onClick={handleAccountClick}
             aria-label="アカウント"
@@ -103,13 +122,17 @@ export default function Header() {
           </button>
 
           <button
+            onClick={handleNoticeClick}
             aria-label="通知"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 01-3.46 0" />
             </svg>
+            {hasUnread && (
+              <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
+            )}
           </button>
 
           <button
