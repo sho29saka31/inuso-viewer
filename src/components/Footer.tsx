@@ -38,7 +38,7 @@ const tabs = [
     ),
   },
   {
-    href: "/eat/car",
+    href: "/eat",
     label: "飲食",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -52,29 +52,66 @@ const tabs = [
   },
 ];
 
-const LEGAL_PATHS = ["/terms", "/privacy", "/cookie-policy"];
+const LEGAL_PATHS = ["/legal/terms", "/legal/privacy", "/legal/cookie-policy"];
 
 export default function Footer() {
   const pathname = usePathname();
 
   if (LEGAL_PATHS.includes(pathname)) return null;
 
+  const homeActive = pathname === "/top" || pathname === "/";
+
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-100 bg-white pb-safe">
-      <div className="flex">
-        {tabs.map(({ href, label, icon }) => {
-          const active = pathname === href || (href === "/eat/car" && pathname.startsWith("/eat"));
+      <div className="flex items-end">
+        {/* Left 2 tabs */}
+        {tabs.slice(0, 2).map(({ href, label, icon }) => {
+          const active = pathname === href;
           return (
             <Link
               key={href}
               href={href}
               className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-xs transition-colors ${
-                active
-                  ? "text-[var(--color-primary)]"
-                  : "text-[var(--color-text-sub)]"
+                active ? "text-[var(--color-primary)]" : "text-[var(--color-text-sub)]"
               }`}
             >
-              <span className={active ? "text-[var(--color-primary)]" : ""}>{icon}</span>
+              <span>{icon}</span>
+              <span className="font-medium">{label}</span>
+            </Link>
+          );
+        })}
+
+        {/* Home center button */}
+        <Link
+          href="/top"
+          className="flex flex-col items-center justify-center px-4 pb-1"
+          aria-label="ホーム"
+        >
+          <div className={`-mt-5 flex h-14 w-14 flex-col items-center justify-center rounded-full border-4 border-white shadow-md transition-colors ${
+            homeActive ? "bg-[var(--color-primary)]" : "bg-[var(--color-primary)] opacity-80"
+          }`}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          </div>
+          <span className={`mt-0.5 text-xs font-medium ${homeActive ? "text-[var(--color-primary)]" : "text-[var(--color-text-sub)]"}`}>
+            ホーム
+          </span>
+        </Link>
+
+        {/* Right 2 tabs */}
+        {tabs.slice(2).map(({ href, label, icon }) => {
+          const active = pathname === href || (href === "/eat" && pathname.startsWith("/eat"));
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-xs transition-colors ${
+                active ? "text-[var(--color-primary)]" : "text-[var(--color-text-sub)]"
+              }`}
+            >
+              <span>{icon}</span>
               <span className="font-medium">{label}</span>
             </Link>
           );
