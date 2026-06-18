@@ -1,0 +1,69 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useApp } from "@/contexts/AppContext";
+import { getCookie } from "@/lib/cookies";
+import ConsentOverlay from "./ConsentOverlay";
+import PwaGuide from "./PwaGuide";
+import UserRoleOverlay from "./UserRoleOverlay";
+
+type Step = "consent" | "pwa" | "user_role" | "done";
+
+function isIOS(): boolean {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+export default function InitFlow() {
+  const [step, setStep] = useState<Step | null>(null);
+  const { showUserRoleOverlay, closeUserRoleOverlay } = useApp();
+
+  useEffect(() => {
+    const hasConsent = !!getCookie("consent");
+    const hasPwaGuided = !!getCookie("pwa_guided");
+    const hasUserRole = !!getCookie("user_role");
+
+    if (!hasConsent) {
+      setStep("consent");
+    } else if (!hasPwaGuided && isIOS()) {
+      setStep("pwa");
+    } else if (!hasUserRole) {
+      setStep("user_role");
+    } else {
+      setStep("done");
+    }
+  }, []);
+
+  function afterConsent() {
+    if (!getCookie("pwa_guided") && isIOS()) {
+      setStep("pwa");
+    } else if (!getCookie("user_role")) {
+      setStep("user_role");
+    } else {
+      setStep("done");
+    }
+  }
+
+  function afterPwa() {
+    if (!getCookie("user_role")) {
+      setStep("user_role");
+    } else {
+      setStep("done");
+    }
+  }
+
+  function afterUserRole() {
+    setStep("done");
+  }
+
+  if (showUserRoleOverlay) {
+    return <UserRoleOverlay onComplete={closeUserRoleOverlay} />;
+  }
+
+  if (step === null || step === "done") return null;
+
+  if (step === "consent") return <ConsentOverlay onComplete={afterConsent} />;
+  if (step === "pwa") return <PwaGuide onComplete={afterPwa} />;
+  if (step === "user_role") return <UserRoleOverlay onComplete={afterUserRole} />;
+
+  return null;
+}
