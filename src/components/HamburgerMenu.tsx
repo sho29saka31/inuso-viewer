@@ -132,8 +132,6 @@ export default function HamburgerMenu() {
             <Link
               key={href}
               href={href}
-              target="_blank"
-              rel="noopener noreferrer"
               onClick={closeHamburger}
               className="block px-5 py-2.5 text-xs text-[var(--color-text-sub)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
