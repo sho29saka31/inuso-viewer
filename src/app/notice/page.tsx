@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getDb } from "@/lib/firebase-admin";
 
-export const revalidate = 300;
+export const revalidate = 30;
 export const metadata: Metadata = { title: "お知らせ" };
 
 interface Notice {

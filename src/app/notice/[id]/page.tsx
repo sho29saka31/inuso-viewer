@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDb } from "@/lib/firebase-admin";
 
-export const revalidate = 300;
+export const revalidate = 30;
 
 interface Notice {
   noticeId: string;
