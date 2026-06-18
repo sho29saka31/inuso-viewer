@@ -19,7 +19,6 @@ export const metadata: Metadata = {
     template: "%s | ISF",
   },
   description: "犬山総合高等学校 文化祭向け情報共有PWAアプリ",
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
