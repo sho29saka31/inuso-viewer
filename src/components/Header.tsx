@@ -105,7 +105,7 @@ export default function Header() {
       <div className="relative flex h-14 items-center justify-center px-4">
         {/* Center: logo/title */}
         <Link href="/top" className="text-base font-bold text-[var(--color-text-main)]">
-          {isTop ? "ISF" : (crumbs[crumbs.length - 1]?.label ?? "ISF")}
+          ISF
         </Link>
 
         {/* Right: account, notification, hamburger */}
