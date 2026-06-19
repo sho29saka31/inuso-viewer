@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie, setCookie } from "@/lib/cookies";
@@ -104,8 +105,8 @@ export default function Header() {
     <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
       <div className="relative flex h-14 items-center justify-center px-4">
         {/* Center: logo/title */}
-        <Link href="/top" className="text-base font-bold text-[var(--color-text-main)]">
-          ISF
+        <Link href="/top" className="flex items-center">
+          <Image src="/logo.png" alt="ISF" width={72} height={32} className="h-8 w-auto object-contain" priority />
         </Link>
 
         {/* Right: account, notification, hamburger */}
