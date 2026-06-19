@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     template: "%s | ISF",
   },
   description: "犬山総合高等学校 文化祭向け情報共有PWAアプリ",
+  icons: { icon: "/logo.png", apple: "/logo.png" },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
