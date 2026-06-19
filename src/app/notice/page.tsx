@@ -11,7 +11,7 @@ interface Notice {
   authorId: string;
   type?: string;
   isUrgent?: boolean;
-  createdAt: { _seconds: number } | null;
+  createdAt: { seconds?: number; _seconds?: number } | null;
 }
 
 function resolveType(n: Notice): string {
@@ -36,9 +36,11 @@ async function getNotices(): Promise<{ notices: Notice[] } | { error: string }> 
   }
 }
 
-function formatDate(ts: { _seconds: number } | null | undefined): string {
+function formatDate(ts: { seconds?: number; _seconds?: number } | null | undefined): string {
   if (!ts) return "";
-  const d = new Date(ts._seconds * 1000);
+  const secs = ts.seconds ?? ts._seconds;
+  if (secs == null) return "";
+  const d = new Date(secs * 1000);
   return d.toLocaleDateString("ja-JP", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
