@@ -21,8 +21,9 @@ const tabs = [
     label: "ブース",
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
+        <path d="M3 3h18v4H3z" />
+        <path d="M3 7v13a1 1 0 001 1h16a1 1 0 001-1V7" />
+        <path d="M9 21V11h6v10" />
       </svg>
     ),
   },
