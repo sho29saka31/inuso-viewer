@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ISF — いぬそう文化祭アプリ（Viewer）
 
-## Getting Started
+犬山総合高等学校 文化祭「ISF」の来場者向けWebアプリです。  
+イベントスケジュール・ブース情報・混雑状況・お知らせをリアルタイムに提供します。
 
-First, run the development server:
+> **ISFプロジェクト** が開発・運用しています。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 機能概要
+
+| 機能 | 説明 |
+|---|---|
+| **ホーム** | 当日のハイライト・直近のイベント・最新お知らせを表示 |
+| **日程** | タイムテーブル形式でイベントスケジュールを確認 |
+| **ブース** | クラス・部活・有志・委員会のブース一覧と詳細 |
+| **混雑** | フロアマップ上にリアルタイム混雑状況を表示 |
+| **飲食** | キッチンカー・PTAバザーのメニューと価格 |
+| **お知らせ** | 緊急・注意・一般の通知一覧と詳細ページ |
+| **プッシュ通知** | FCMによるリアルタイム通知（PWAインストール後に有効） |
+| **よくある質問** | アコーディオン式FAQ（6カテゴリ・30項目） |
+| **お問い合わせ** | Firestore連携のフィードバックフォーム |
+
+---
+
+## 技術スタック
+
+| 技術 | 用途 |
+|---|---|
+| **Next.js 16 (App Router)** | フロントエンド・SSR・ISRキャッシュ |
+| **Firebase Firestore** | データベース（ブース・通知・イベント等） |
+| **Firebase Cloud Messaging** | プッシュ通知配信 |
+| **Tailwind CSS** | スタイリング |
+| **Vercel** | ホスティング・エッジキャッシュ |
+| **PWA** | ホーム画面インストール・Service Worker |
+
+---
+
+## 環境変数
+
+`.env.local` に以下を設定してください。
+
+```env
+# Firebase Admin SDK（サーバーサイド）
+FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}
+
+# Viewer キャッシュ on-demand 無効化（admin から呼ばれる）
+VIEWER_REVALIDATE_SECRET=your_secret_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ブランチ運用
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| ブランチ | 役割 |
+|---|---|
+| `main` | 本番環境 |
+| `dev` | 統合・ステージング |
+| `claudecode` | Claude Code による自動開発ブランチ（→ `dev` へ PR） |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ローカル開発
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+[http://localhost:3000](http://localhost:3000) で確認できます。
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ディレクトリ構成（主要部分）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/
+│   ├── top/          # ホームページ
+│   ├── event/        # 日程
+│   ├── booth/        # ブース一覧・詳細
+│   ├── busy/         # 混雑状況
+│   ├── eat/          # 飲食ブース
+│   ├── notice/       # お知らせ一覧・詳細
+│   ├── support/
+│   │   ├── faq/      # よくある質問
+│   │   └── contact/  # お問い合わせ
+│   ├── about/        # 制作情報
+│   ├── legal/        # 利用規約・プライバシー・Cookie
+│   └── api/          # FCM購読・キャッシュ無効化
+├── components/       # Header・Footer・共通UI
+└── lib/              # Firebase Admin・Cookie ユーティリティ
+```
+
+---
+
+## ライセンス
+
+© 2026 ISFプロジェクト（犬山総合高等学校 文化祭実行委員会）  
+本リポジトリのコードは学校行事目的のみに使用します。
