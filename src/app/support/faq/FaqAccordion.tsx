@@ -1,17 +1,111 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { deleteCookie } from "@/lib/cookies";
 import FaqCookieReset from "./FaqCookieReset";
 
-interface FaqItem {
+export interface FaqItem {
   q: string;
   a: string;
   resetButton?: boolean;
+  notifyButton?: boolean;
+  unsubscribeButton?: boolean;
+  readResetButton?: boolean;
+  mapLinkButton?: boolean;
+  reloadButton?: boolean;
+  allCookieButton?: boolean;
 }
 
 interface FaqCategory {
   category: string;
   items: FaqItem[];
+}
+
+function NotifyButton() {
+  const [perm, setPerm] = useState<NotificationPermission>("default");
+  useEffect(() => {
+    if ("Notification" in window) setPerm(Notification.permission);
+  }, []);
+  if (perm === "granted") return null;
+  async function handleClick() {
+    if (!("Notification" in window)) { alert("このブラウザはプッシュ通知に対応していません。"); return; }
+    const result = await Notification.requestPermission();
+    setPerm(result);
+    if (result === "granted") {
+      alert("通知が許可されました。ページを再読み込みして設定を完了します。");
+      window.location.reload();
+    } else {
+      alert("通知が拒否されました。端末の設定から許可してください。");
+    }
+  }
+  return (
+    <button onClick={handleClick} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+      通知を許可する
+    </button>
+  );
+}
+
+function UnsubscribeButton() {
+  const [perm, setPerm] = useState<NotificationPermission>("default");
+  useEffect(() => {
+    if ("Notification" in window) setPerm(Notification.permission);
+  }, []);
+  if (perm !== "granted") return null;
+  async function handleClick() {
+    if (!confirm("プッシュ通知の購読を解除しますか？")) return;
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const reg of regs) await reg.unregister();
+    } catch {}
+    deleteCookie("fcm_token");
+    alert("通知購読を解除しました。ページを再読み込みします。");
+    window.location.reload();
+  }
+  return (
+    <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-2.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50">
+      通知の購読を解除する
+    </button>
+  );
+}
+
+function ReadResetButton() {
+  function handleClick() {
+    if (!confirm("お知らせの既読状態をリセットしますか？")) return;
+    deleteCookie("notice_read_at");
+    alert("既読状態をリセットしました。");
+  }
+  return (
+    <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 py-2.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50">
+      既読状態をリセットする
+    </button>
+  );
+}
+
+function ReloadButton() {
+  return (
+    <button onClick={() => window.location.reload()} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+      ページを強制リロードする
+    </button>
+  );
+}
+
+export function AllCookieDeleteButton({ compact }: { compact?: boolean }) {
+  function handleClick() {
+    if (!confirm("すべてのCookie・設定情報を削除しますか？\n同意バナー・ユーザー設定・既読状態がすべてリセットされます。")) return;
+    const ALL_COOKIES = ["cookie_consent", "user_role", "user_grade", "notice_read_at", "fcm_token", "pwa_guided", "consent"];
+    ALL_COOKIES.forEach((c) => deleteCookie(c));
+    alert("すべてのCookieを削除しました。ページを再読み込みします。");
+    window.location.reload();
+  }
+  return (
+    <button
+      onClick={handleClick}
+      className={`w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 ${compact ? "" : "mt-2"}`}
+    >
+      すべてのCookieを削除する
+    </button>
+  );
 }
 
 export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
@@ -23,7 +117,8 @@ export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
         <section key={category}>
           <h2 className="text-xs font-bold text-[var(--color-primary)] uppercase tracking-wider mb-3">{category}</h2>
           <div className="flex flex-col gap-2">
-            {items.map(({ q, a, resetButton }, i) => {
+            {items.map((item, i) => {
+              const { q, a, resetButton, notifyButton, unsubscribeButton, readResetButton, mapLinkButton, reloadButton, allCookieButton } = item;
               const key = `${category}-${i}`;
               const open = openKey === key;
               return (
@@ -45,6 +140,19 @@ export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
                   {open && (
                     <div className="px-4 pb-4 border-t border-gray-100">
                       <p className="text-sm text-[var(--color-text-sub)] leading-relaxed mt-3 whitespace-pre-line">A. {a}</p>
+                      {notifyButton && <NotifyButton />}
+                      {unsubscribeButton && <UnsubscribeButton />}
+                      {readResetButton && <ReadResetButton />}
+                      {reloadButton && <ReloadButton />}
+                      {mapLinkButton && (
+                        <Link href="/map" className="mt-3 flex items-center justify-center gap-2 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                          </svg>
+                          校内マップを開く
+                        </Link>
+                      )}
+                      {allCookieButton && <AllCookieDeleteButton compact />}
                       {resetButton && (
                         <div className="mt-4">
                           <FaqCookieReset />

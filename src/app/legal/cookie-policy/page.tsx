@@ -95,7 +95,7 @@ export default function CookiePolicyPage() {
         <section>
           <h2 className="text-sm font-bold text-[var(--color-text-main)] mb-1">同意の撤回</h2>
           <p className="text-sm text-[var(--color-text-sub)] leading-relaxed">
-            Cookie同意はいつでも撤回できます。「よくある質問」ページ下部の「ユーザー情報をリセット」ボタンを押すことで、すべての設定をリセットできます。再度同意バナーが表示されます。
+            Cookie同意はいつでも撤回できます。「よくある質問」ページ最下部の「すべてのCookieを削除」ボタンを押すことで、すべてのCookie・設定情報を削除できます。削除後は再度同意バナーが表示されます。
           </p>
         </section>
       </div>
