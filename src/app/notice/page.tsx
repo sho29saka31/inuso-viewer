@@ -1,16 +1,30 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 300;
 export const metadata: Metadata = { title: "お知らせ" };
 
 interface Notice {
   noticeId: string;
   title: string;
-  body: string;
   authorId: string;
-  isUrgent: boolean;
+  type?: string;
+  isUrgent?: boolean;
   createdAt: { _seconds: number } | null;
 }
+
+function resolveType(n: Notice): string {
+  if (n.type) return n.type;
+  return n.isUrgent ? "urgent" : "info";
+}
+
+const TYPE_CONFIG: Record<string, { label: string; card: string; badge: string }> = {
+  urgent:  { label: "緊急",    card: "bg-red-50 border-red-200",    badge: "bg-red-500 text-white" },
+  warning: { label: "注意",    card: "bg-yellow-50 border-yellow-200", badge: "bg-yellow-500 text-white" },
+  info:    { label: "お知らせ", card: "bg-white border-gray-100",    badge: "bg-blue-100 text-blue-700" },
+  other:   { label: "その他",  card: "bg-white border-gray-100",    badge: "bg-gray-100 text-gray-600" },
+};
 
 async function getNotices(): Promise<{ notices: Notice[] } | { error: string }> {
   try {
@@ -51,26 +65,33 @@ export default async function NoticePage() {
         <p className="text-sm text-[var(--color-text-sub)]">現在お知らせはありません。</p>
       ) : (
         <div className="flex flex-col gap-3">
-          {notices.map((n) => (
-            <div
-              key={n.noticeId}
-              className={`rounded-xl border shadow-sm p-4 ${
-                n.isUrgent ? "bg-red-50 border-red-200" : "bg-white border-gray-100"
-              }`}
-            >
-              <div className="flex items-start gap-2 mb-1">
-                {n.isUrgent && (
-                  <span className="shrink-0 text-xs px-1.5 py-0.5 rounded bg-red-500 text-white font-bold">緊急</span>
-                )}
-                <p className="font-bold text-sm text-[var(--color-text-main)]">{n.title}</p>
+          {notices.map((n) => {
+            const type = resolveType(n);
+            const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.info;
+            return (
+              <div
+                key={n.noticeId}
+                className={`rounded-xl border shadow-sm p-4 ${cfg.card}`}
+              >
+                <div className="flex items-start gap-2 mb-1">
+                  <span className={`shrink-0 text-xs px-1.5 py-0.5 rounded font-bold ${cfg.badge}`}>{cfg.label}</span>
+                  <p className="font-bold text-sm text-[var(--color-text-main)]">{n.title}</p>
+                </div>
+                <div className="flex justify-between items-center mt-2 text-xs text-[var(--color-text-sub)]">
+                  <span>{n.authorId}</span>
+                  <span>{formatDate(n.createdAt)}</span>
+                </div>
+                <div className="flex justify-end mt-2">
+                  <Link
+                    href={`/notice/${n.noticeId}`}
+                    className="text-xs text-[var(--color-primary)] font-medium"
+                  >
+                    詳細を見る →
+                  </Link>
+                </div>
               </div>
-              <p className="text-sm text-[var(--color-text-main)] whitespace-pre-wrap mt-1">{n.body}</p>
-              <div className="flex justify-between items-center mt-2 text-xs text-[var(--color-text-sub)]">
-                <span>{n.authorId}</span>
-                <span>{formatDate(n.createdAt)}</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

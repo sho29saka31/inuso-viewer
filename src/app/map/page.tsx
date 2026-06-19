@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = { title: "校内マップ" };
 
 async function getMapImageUrl(): Promise<string | null> {

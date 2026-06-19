@@ -16,7 +16,13 @@ export default function PwaGuide({ onComplete }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
         <div className="mb-4 text-center">
-          <div className="mb-3 text-5xl">📲</div>
+          <div className="mb-3 flex justify-center text-[var(--color-primary)]">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+              <rect x="5" y="2" width="14" height="20" rx="2"/>
+              <line x1="12" y1="18" x2="12" y2="18.01"/>
+              <path d="M9 7l3-3 3 3M12 4v8"/>
+            </svg>
+          </div>
           <h2 className="text-lg font-bold text-[var(--color-text-main)]">
             ホーム画面に追加して<br />通知を受け取ろう
           </h2>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 
+export const revalidate = 3600;
 export const metadata: Metadata = { title: "デジタルパンフレット" };
 
 async function getPdfUrl(): Promise<string | null> {
