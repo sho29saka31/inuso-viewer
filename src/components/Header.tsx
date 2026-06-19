@@ -28,7 +28,6 @@ function getBreadcrumbs(pathname: string): Crumb[] {
   if (pathname.startsWith("/support/")) {
     const labels: Record<string, string> = {
       "/support/faq": "よくある質問",
-      "/support/contact": "お問い合わせ",
     };
     return [
       { label: "TOP", href: "/top" },
@@ -61,6 +60,9 @@ export default function Header() {
 
   const isTop = pathname === "/top" || pathname === "/";
   const crumbs = getBreadcrumbs(pathname);
+  const hideAccountNotice =
+    pathname === "/support/faq" ||
+    pathname.startsWith("/legal/");
 
   useEffect(() => {
     const readAt = getCookie("notice_read_at");
@@ -104,6 +106,20 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
       <div className="relative flex h-14 items-center justify-center px-4">
+        {/* Left: reload */}
+        <div className="absolute left-2 flex items-center">
+          <button
+            onClick={() => router.refresh()}
+            aria-label="更新"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+            </svg>
+          </button>
+        </div>
+
         {/* Center: logo/title */}
         <Link href="/top" className="flex items-center">
           <Image src="/logo.png" alt="ISF" width={72} height={32} className="h-8 w-auto object-contain" priority />
@@ -111,30 +127,34 @@ export default function Header() {
 
         {/* Right: account, notification, hamburger */}
         <div className="absolute right-2 flex items-center gap-0">
-          <button
-            onClick={handleAccountClick}
-            aria-label="アカウント"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-            </svg>
-          </button>
+          {!hideAccountNotice && (
+            <>
+              <button
+                onClick={handleAccountClick}
+                aria-label="アカウント"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+              </button>
 
-          <button
-            onClick={handleNoticeClick}
-            aria-label="通知"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 01-3.46 0" />
-            </svg>
-            {hasUnread && (
-              <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
-            )}
-          </button>
+              <button
+                onClick={handleNoticeClick}
+                aria-label="通知"
+                className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 01-3.46 0" />
+                </svg>
+                {hasUnread && (
+                  <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
+                )}
+              </button>
+            </>
+          )}
 
           <button
             onClick={openHamburger}
