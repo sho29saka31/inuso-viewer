@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDb } from "@/lib/firebase-admin";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 interface Notice {
   noticeId: string;
