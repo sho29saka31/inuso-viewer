@@ -18,7 +18,7 @@ const pages = [
   {
     href: "/booth",
     label: "ブース一覧",
-    icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 3h18v4H3z"/><path d="M3 7v14h18V7"/><line x1="12" y1="7" x2="12" y2="21"/></svg>,
+    icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 3h18v4H3z"/><path d="M3 7v13a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M9 21V11h6v10"/></svg>,
   },
   {
     href: "/busy",
