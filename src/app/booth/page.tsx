@@ -3,7 +3,7 @@ import { getDb } from "@/lib/firebase-admin";
 import BoothList from "./BoothList";
 import type { Booth } from "./BoothList";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const metadata: Metadata = { title: "ブース一覧" };
 
 async function getBooths(): Promise<{ booths: Booth[] } | { error: string }> {
