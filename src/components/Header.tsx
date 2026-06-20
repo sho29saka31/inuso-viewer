@@ -6,6 +6,7 @@ import { useApp } from "@/contexts/AppContext";
 import { getCookie, setCookie } from "@/lib/cookies";
 import { useEffect, useState, useTransition } from "react";
 import { AlertDialog } from "@/components/ui/Dialog";
+import { revalidateAll } from "@/app/actions";
 
 type Crumb = { label: string; href?: string };
 
@@ -111,7 +112,7 @@ export default function Header() {
         {/* Left: reload */}
         <div className="absolute left-2 flex items-center">
           <button
-            onClick={() => startRefresh(() => router.refresh())}
+            onClick={() => startRefresh(async () => { await revalidateAll(); router.refresh(); })}
             aria-label="更新"
             className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
