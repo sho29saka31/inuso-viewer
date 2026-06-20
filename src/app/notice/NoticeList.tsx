@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getCookie } from "@/lib/cookies";
 
 interface Notice {
   noticeId: string;
@@ -40,9 +41,9 @@ function formatDate(ts: { seconds?: number; _seconds?: number } | null | undefin
 
 function getUserRole(): UserRole | null {
   try {
-    const raw = document.cookie.split("; ").find((c) => c.startsWith("user_role="))?.split("=")[1];
+    const raw = getCookie("user_role");
     if (!raw) return null;
-    return JSON.parse(decodeURIComponent(raw));
+    return JSON.parse(raw);
   } catch {
     return null;
   }
@@ -59,7 +60,8 @@ function shouldShow(notice: Notice, userRole: UserRole | null): boolean {
   if (target === "1nen") return role === "student" && grade === "1";
   if (target === "2nen") return role === "student" && grade === "2";
   if (target === "3nen") return role === "student" && grade === "3";
-  return true;
+  // 未知のtargetはフォールスルーせず非表示
+  return false;
 }
 
 export default function NoticeList({ notices }: { notices: Notice[] }) {
