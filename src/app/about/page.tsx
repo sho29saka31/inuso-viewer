@@ -27,6 +27,18 @@ const techStack = [
     name: "PWA（Progressive Web App）",
     desc: "ホーム画面インストール・Service Workerによるオフライン対応・プッシュ通知受信を実現。",
   },
+  {
+    name: "Google Analytics（GA4）",
+    desc: "Googleが提供するアクセス解析サービス。Cookie同意をいただいたユーザーのアクセス情報を収集し、アプリ改善に活用。",
+  },
+  {
+    name: "Sentry",
+    desc: "エラー監視サービス。アプリで発生した技術的なエラーをリアルタイムで検知・収集し、品質向上に活用。IPアドレス等の技術情報が収集される場合があります。",
+  },
+  {
+    name: "M PLUS Rounded 1c（Googleフォント）",
+    desc: "本アプリ全体で使用しているフォント。Google Fonts経由でホスティングされ、フォントデータ読み込み時にGoogleのサーバーにリクエストが発生します。",
+  },
 ];
 
 export default function AboutPage() {

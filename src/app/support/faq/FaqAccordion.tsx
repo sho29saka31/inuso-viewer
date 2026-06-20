@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { deleteCookie } from "@/lib/cookies";
 import FaqCookieReset from "./FaqCookieReset";
+import { ConfirmDialog, AlertDialog } from "@/components/ui/Dialog";
+import { useDialog } from "@/hooks/useDialog";
 
 export interface FaqItem {
   q: string;
@@ -24,61 +26,90 @@ interface FaqCategory {
 
 function NotifyButton() {
   const [perm, setPerm] = useState<NotificationPermission>("default");
+  const { alert, alertState, handleAlertClose } = useDialog();
+
   useEffect(() => {
     if ("Notification" in window) setPerm(Notification.permission);
   }, []);
+
   if (perm === "granted") return null;
+
   async function handleClick() {
-    if (!("Notification" in window)) { alert("このブラウザはプッシュ通知に対応していません。"); return; }
+    if (!("Notification" in window)) {
+      await alert("このブラウザはプッシュ通知に対応していません。");
+      return;
+    }
     const result = await Notification.requestPermission();
     setPerm(result);
     if (result === "granted") {
-      alert("通知が許可されました。ページを再読み込みして設定を完了します。");
+      await alert("通知が許可されました。ページを再読み込みして設定を完了します。");
       window.location.reload();
     } else {
-      alert("通知が拒否されました。端末の設定から許可してください。");
+      await alert("通知が拒否されました。端末の設定から許可してください。");
     }
   }
+
   return (
-    <button onClick={handleClick} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
-      通知を許可する
-    </button>
+    <>
+      {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+        通知を許可する
+      </button>
+    </>
   );
 }
 
 function UnsubscribeButton() {
   const [perm, setPerm] = useState<NotificationPermission>("default");
+  const { confirm, alert, confirmState, alertState, handleConfirm, handleAlertClose } = useDialog();
+
   useEffect(() => {
     if ("Notification" in window) setPerm(Notification.permission);
   }, []);
+
   if (perm !== "granted") return null;
+
   async function handleClick() {
-    if (!confirm("プッシュ通知の購読を解除しますか？")) return;
+    const ok = await confirm("プッシュ通知の購読を解除しますか？");
+    if (!ok) return;
     try {
       const regs = await navigator.serviceWorker.getRegistrations();
       for (const reg of regs) await reg.unregister();
     } catch {}
     deleteCookie("fcm_token");
-    alert("通知購読を解除しました。ページを再読み込みします。");
+    await alert("通知購読を解除しました。ページを再読み込みします。");
     window.location.reload();
   }
+
   return (
-    <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-2.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50">
-      通知の購読を解除する
-    </button>
+    <>
+      {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
+      {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-2.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50">
+        通知の購読を解除する
+      </button>
+    </>
   );
 }
 
 function ReadResetButton() {
-  function handleClick() {
-    if (!confirm("お知らせの既読状態をリセットしますか？")) return;
+  const { confirm, alert, confirmState, alertState, handleConfirm, handleAlertClose } = useDialog();
+
+  async function handleClick() {
+    const ok = await confirm("お知らせの既読状態をリセットしますか？");
+    if (!ok) return;
     deleteCookie("notice_read_at");
-    alert("既読状態をリセットしました。");
+    await alert("既読状態をリセットしました。");
   }
+
   return (
-    <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 py-2.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50">
-      既読状態をリセットする
-    </button>
+    <>
+      {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
+      {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 py-2.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50">
+        既読状態をリセットする
+      </button>
+    </>
   );
 }
 
@@ -91,20 +122,28 @@ function ReloadButton() {
 }
 
 export function AllCookieDeleteButton({ compact }: { compact?: boolean }) {
-  function handleClick() {
-    if (!confirm("すべてのCookie・設定情報を削除しますか？\n同意バナー・ユーザー設定・既読状態がすべてリセットされます。")) return;
+  const { confirm, alert, confirmState, alertState, handleConfirm, handleAlertClose } = useDialog();
+
+  async function handleClick() {
+    const ok = await confirm("すべてのCookie・設定情報を削除しますか？\n同意バナー・ユーザー設定・既読状態がすべてリセットされます。");
+    if (!ok) return;
     const ALL_COOKIES = ["cookie_consent", "user_role", "user_grade", "notice_read_at", "fcm_token", "pwa_guided", "consent"];
     ALL_COOKIES.forEach((c) => deleteCookie(c));
-    alert("すべてのCookieを削除しました。ページを再読み込みします。");
+    await alert("すべてのCookieを削除しました。ページを再読み込みします。");
     window.location.reload();
   }
+
   return (
-    <button
-      onClick={handleClick}
-      className={`w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 ${compact ? "" : "mt-2"}`}
-    >
-      すべてのCookieを削除する
-    </button>
+    <>
+      {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
+      {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
+      <button
+        onClick={handleClick}
+        className={`w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 ${compact ? "" : "mt-2"}`}
+      >
+        すべてのCookieを削除する
+      </button>
+    </>
   );
 }
 

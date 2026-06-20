@@ -74,17 +74,36 @@ function isIOS(): boolean {
 export default function HamburgerMenu() {
   const { isHamburgerOpen, closeHamburger } = useApp();
   const [ios, setIos] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     setIos(isIOS());
   }, []);
 
+  useEffect(() => {
+    if (isHamburgerOpen) {
+      // trigger enter animation on next frame
+      requestAnimationFrame(() => setVisible(true));
+    } else {
+      setVisible(false);
+    }
+  }, [isHamburgerOpen]);
+
   if (!isHamburgerOpen) return null;
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-black/40" onClick={closeHamburger} />
-      <div className="fixed top-0 right-0 z-50 h-full w-72 overflow-y-auto bg-white shadow-2xl">
+      {/* Overlay */}
+      <div
+        className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-300"
+        style={{ opacity: visible ? 1 : 0 }}
+        onClick={closeHamburger}
+      />
+      {/* Panel */}
+      <div
+        className="fixed top-0 right-0 z-50 h-full w-72 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out"
+        style={{ transform: visible ? "translateX(0)" : "translateX(100%)" }}
+      >
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
           <span className="font-bold text-[var(--color-text-main)]">メニュー</span>
           <button onClick={closeHamburger} className="text-[var(--color-text-sub)]" aria-label="閉じる">

@@ -1,11 +1,11 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie, setCookie } from "@/lib/cookies";
 import { useEffect, useState, useTransition } from "react";
+import { AlertDialog } from "@/components/ui/Dialog";
 
 type Crumb = { label: string; href?: string };
 
@@ -58,6 +58,7 @@ export default function Header() {
   const { openHamburger, openUserRoleOverlay } = useApp();
   const [hasUnread, setHasUnread] = useState(false);
   const [isRefreshing, startRefresh] = useTransition();
+  const [accountInfo, setAccountInfo] = useState<string | null>(null);
 
   const isTop = pathname === "/top" || pathname === "/";
   const crumbs = getBreadcrumbs(pathname);
@@ -95,7 +96,7 @@ export default function Header() {
           data.class ? `クラス: ${data.class}組` : null,
           data.studentId ? `学籍番号: ${data.studentId}` : null,
         ].filter(Boolean);
-        alert(`現在の設定情報\n\n${lines.join("\n")}\n\n※変更はできません。`);
+        setAccountInfo(`現在の設定情報\n\n${lines.join("\n")}\n\n※変更はできません。`);
       } else {
         openUserRoleOverlay();
       }
@@ -126,7 +127,7 @@ export default function Header() {
 
         {/* Center: logo/title */}
         <Link href="/top" className="flex items-center">
-          <Image src="/logo.png" alt="ISF" width={72} height={32} className="h-8 w-auto object-contain" priority />
+          <span className="text-lg font-black tracking-tight text-[var(--color-primary)]">ISF</span>
         </Link>
 
         {/* Right: account, notification, hamburger */}
@@ -174,6 +175,7 @@ export default function Header() {
         </div>
       </div>
 
+      {accountInfo && <AlertDialog message={accountInfo} onClose={() => setAccountInfo(null)} />}
       {crumbs.length > 0 && (
         <div className="border-t border-gray-50 bg-[var(--color-background)] px-4 py-1.5 text-xs text-[var(--color-text-sub)] flex items-center gap-1 flex-wrap">
           {crumbs.map((crumb, i) => (
