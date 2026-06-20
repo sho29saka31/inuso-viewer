@@ -12,6 +12,12 @@ const STATUS_COLORS = [
   "bg-red-100 text-red-700",
 ];
 const CATEGORY_LABELS: Record<string, string> = {
+  class: "クラス発表",
+  club: "部活動",
+  pe: "有志発表",
+  "pe-gym": "有志発表",
+  health: "委員会",
+  committee: "委員会",
   game: "ゲーム",
   food: "食品",
   stage: "ステージ",
