@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 interface ConfirmDialogProps {
   message: string;
   onConfirm: () => void;
@@ -7,7 +10,11 @@ interface ConfirmDialogProps {
 }
 
 export function ConfirmDialog({ message, onConfirm, onCancel }: ConfirmDialogProps) {
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-6" onClick={onCancel}>
       <div className="absolute inset-0 bg-black/40" />
       <div
@@ -30,7 +37,8 @@ export function ConfirmDialog({ message, onConfirm, onCancel }: ConfirmDialogPro
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -40,7 +48,11 @@ interface AlertDialogProps {
 }
 
 export function AlertDialog({ message, onClose }: AlertDialogProps) {
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-6" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
@@ -55,6 +67,7 @@ export function AlertDialog({ message, onClose }: AlertDialogProps) {
           OK
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

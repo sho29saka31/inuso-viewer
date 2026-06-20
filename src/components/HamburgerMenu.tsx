@@ -75,6 +75,7 @@ export default function HamburgerMenu() {
   const { isHamburgerOpen, closeHamburger } = useApp();
   const [ios, setIos] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
     setIos(isIOS());
@@ -82,14 +83,14 @@ export default function HamburgerMenu() {
 
   useEffect(() => {
     if (isHamburgerOpen) {
-      // trigger enter animation on next frame
+      setShouldRender(true);
       requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
     }
   }, [isHamburgerOpen]);
 
-  if (!isHamburgerOpen) return null;
+  if (!shouldRender) return null;
 
   return (
     <>
@@ -103,6 +104,7 @@ export default function HamburgerMenu() {
       <div
         className="fixed top-0 right-0 z-50 h-full w-72 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out"
         style={{ transform: visible ? "translateX(0)" : "translateX(100%)" }}
+        onTransitionEnd={() => { if (!visible) setShouldRender(false); }}
       >
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
           <span className="font-bold text-[var(--color-text-main)]">メニュー</span>
