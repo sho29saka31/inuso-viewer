@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NotificationBanner from "./NotificationBanner";
 import { getDb } from "@/lib/firebase-admin";
 
 export const revalidate = 30;
@@ -61,7 +62,8 @@ export default async function NoticePage() {
 
   return (
     <div className="px-4 py-6 pb-24">
-      <h1 className="text-xl font-bold mb-6">お知らせ</h1>
+      <h1 className="text-xl font-bold mb-4">お知らせ</h1>
+      <NotificationBanner />
 
       {notices.length === 0 ? (
         <p className="text-sm text-[var(--color-text-sub)]">現在お知らせはありません。</p>
