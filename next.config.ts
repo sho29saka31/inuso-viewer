@@ -19,7 +19,7 @@ export default withSentryConfig(nextConfig, {
 
   org: "isf-webapp",
 
-  project: "javascript-nextjs",
+  project: "viewer",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,

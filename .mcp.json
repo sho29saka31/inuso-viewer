@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "Sentry": {
-      "url": "https://mcp.sentry.dev/mcp/isf-webapp/javascript-nextjs"
+      "url": "https://mcp.sentry.dev/mcp/isf-webapp/viewer"
     }
   }
 }
