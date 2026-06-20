@@ -80,8 +80,8 @@ export default function FcmInit() {
         }).catch(() => {});
 
         onMessage(messaging, (payload) => {
-          const title = payload.notification?.title ?? "ISF通知";
-          const body = payload.notification?.body ?? "";
+          const title = (payload.data?.title ?? payload.notification?.title) ?? "ISF通知";
+          const body = (payload.data?.body ?? payload.notification?.body) ?? "";
           new Notification(title, { body, icon: "/icon-192.png" });
         });
       } catch (err) {
