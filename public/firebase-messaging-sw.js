@@ -6,8 +6,8 @@ firebase.initializeApp(self.__FIREBASE_CONFIG__);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title ?? "ISF通知";
-  const body = payload.notification?.body ?? "";
+  const title = payload.data?.title ?? payload.notification?.title ?? "ISF通知";
+  const body = payload.data?.body ?? payload.notification?.body ?? "";
   self.registration.showNotification(title, {
     body,
     icon: "/icon-192.png",

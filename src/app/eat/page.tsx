@@ -49,10 +49,20 @@ function EatCard({ item }: { item: EatItem }) {
           <div className="flex items-center gap-2 shrink-0">
             {item.instagramUrl && (
               <a href={item.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-pink-500">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+                      <stop offset="0%" stopColor="#fdf497" />
+                      <stop offset="5%" stopColor="#fdf497" />
+                      <stop offset="45%" stopColor="#fd5949" />
+                      <stop offset="60%" stopColor="#d6249f" />
+                      <stop offset="90%" stopColor="#285AEB" />
+                    </radialGradient>
+                  </defs>
+                  <rect x="0" y="0" width="24" height="24" rx="5.5" ry="5.5" fill="url(#ig-grad)" />
+                  <rect x="6.5" y="6.5" width="11" height="11" rx="3" ry="3" fill="none" stroke="white" strokeWidth="1.6" />
+                  <circle cx="12" cy="12" r="3" fill="none" stroke="white" strokeWidth="1.6" />
+                  <circle cx="17" cy="7" r="1" fill="white" />
                 </svg>
               </a>
             )}
