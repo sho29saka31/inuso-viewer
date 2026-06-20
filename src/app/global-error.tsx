@@ -21,12 +21,22 @@ export default function GlobalError({
           <p className="text-4xl">⚠️</p>
           <h1 className="text-lg font-bold text-gray-800">エラーが発生しました</h1>
           <p className="text-sm text-gray-500">申し訳ありません。もう一度お試しください。</p>
-          <button
-            onClick={reset}
-            className="mt-2 px-4 py-2 rounded-lg bg-[#1EA78C] text-white text-sm font-bold"
-          >
-            再試行
-          </button>
+          <div className="flex flex-col items-center gap-2 mt-2">
+            <button
+              onClick={reset}
+              className="px-4 py-2 rounded-lg bg-[#1EA78C] text-white text-sm font-bold"
+            >
+              再試行
+            </button>
+            <a
+              href="https://inuso-admin.vercel.app/status"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-gray-400 underline underline-offset-2"
+            >
+              システムステータスを確認する
+            </a>
+          </div>
         </div>
       </body>
     </html>
