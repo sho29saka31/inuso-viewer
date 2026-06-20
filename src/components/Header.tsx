@@ -57,6 +57,7 @@ export default function Header() {
   const router = useRouter();
   const { openHamburger, openUserRoleOverlay } = useApp();
   const [hasUnread, setHasUnread] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const isTop = pathname === "/top" || pathname === "/";
   const crumbs = getBreadcrumbs(pathname);
@@ -109,11 +110,18 @@ export default function Header() {
         {/* Left: reload */}
         <div className="absolute left-2 flex items-center">
           <button
-            onClick={() => router.refresh()}
+            onClick={() => {
+              setIsRefreshing(true);
+              router.refresh();
+              setTimeout(() => setIsRefreshing(false), 1000);
+            }}
             aria-label="更新"
             className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg
+              width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+              className={isRefreshing ? "animate-spin" : ""}
+            >
               <polyline points="23 4 23 10 17 10" />
               <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
             </svg>
