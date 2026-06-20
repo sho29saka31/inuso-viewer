@@ -60,7 +60,7 @@ export default function CookiePolicyPage() {
         <section>
           <h2 className="text-sm font-bold text-[var(--color-text-main)] mb-1">第三者のCookie</h2>
           <p className="text-sm text-[var(--color-text-sub)] leading-relaxed mb-2">
-            本アプリはVercel（ホスティング）、Firebase（データベース・プッシュ通知）、およびSentry（エラー監視）を利用しています。エラー発生時にはIPアドレス等の技術情報がSentryに送信される場合があります。これらのサービスが独自のCookieやトラッキング技術を使用する場合があります。詳細は各サービスのプライバシーポリシーをご参照ください。
+            本アプリはVercel（ホスティング）、Firebase（データベース・プッシュ通知）、Google Analytics（アクセス解析）、およびSentry（エラー監視）を利用しています。Google Analyticsはお客様のCookie同意後にのみ有効化され、訪問データをGoogleのサーバーに送信します。エラー発生時にはIPアドレス等の技術情報がSentryに送信される場合があります。これらのサービスが独自のCookieやトラッキング技術を使用する場合があります。詳細は各サービスのプライバシーポリシーをご参照ください。
           </p>
           <div className="flex flex-col gap-1">
             <a
@@ -70,6 +70,19 @@ export default function CookiePolicyPage() {
               className="flex items-center justify-between rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
             >
               Vercel プライバシーポリシー
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+            <a
+              href="https://policies.google.com/technologies/partner-sites"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
+            >
+              Google Analytics データの利用について
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
                 <polyline points="15 3 21 3 21 9" />
