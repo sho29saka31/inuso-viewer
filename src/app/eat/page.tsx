@@ -20,7 +20,7 @@ interface EatItem {
   shopName: string;
   type: string;
   instagramUrl?: string;
-  products?: { name: string; price: number }[];
+  products?: { name: string; price: number; isSoldOut?: boolean }[];
   imageUrl?: string;
   status: number;
 }
@@ -74,8 +74,15 @@ function EatCard({ item }: { item: EatItem }) {
         {item.products && item.products.length > 0 && (
           <ul className="flex flex-col gap-1">
             {item.products.map((p, i) => (
-              <li key={i} className="flex justify-between text-sm text-[var(--color-text-main)]">
-                <span>{p.name}</span>
+              <li key={i} className={`flex justify-between text-sm ${p.isSoldOut ? "opacity-40 line-through" : "text-[var(--color-text-main)]"}`}>
+                <span className="flex items-center gap-1.5">
+                  {p.name}
+                  {p.isSoldOut && (
+                    <span className="no-underline not-italic text-xs px-1 py-0.5 rounded bg-red-100 text-red-600 font-medium" style={{ textDecoration: "none" }}>
+                      売り切れ
+                    </span>
+                  )}
+                </span>
                 <span className="font-medium">¥{p.price.toLocaleString()}</span>
               </li>
             ))}

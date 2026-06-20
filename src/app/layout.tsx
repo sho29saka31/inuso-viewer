@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import InitFlow from "@/components/InitFlow";
 import FcmInit from "@/components/FcmInit";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const mPlusRounded = M_PLUS_Rounded_1c({
   weight: ["400", "500", "700", "800"],
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="ja">
       <body className={mPlusRounded.className}>
         <AppProvider>
+          <GoogleAnalytics />
           <InitFlow />
           <FcmInit />
           <Header />
