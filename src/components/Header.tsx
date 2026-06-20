@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie, setCookie } from "@/lib/cookies";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 type Crumb = { label: string; href?: string };
 
@@ -57,7 +57,7 @@ export default function Header() {
   const router = useRouter();
   const { openHamburger, openUserRoleOverlay } = useApp();
   const [hasUnread, setHasUnread] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, startRefresh] = useTransition();
 
   const isTop = pathname === "/top" || pathname === "/";
   const crumbs = getBreadcrumbs(pathname);
@@ -110,11 +110,7 @@ export default function Header() {
         {/* Left: reload */}
         <div className="absolute left-2 flex items-center">
           <button
-            onClick={() => {
-              setIsRefreshing(true);
-              router.refresh();
-              setTimeout(() => setIsRefreshing(false), 1000);
-            }}
+            onClick={() => startRefresh(() => router.refresh())}
             aria-label="更新"
             className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
