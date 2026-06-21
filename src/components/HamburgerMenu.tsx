@@ -60,6 +60,14 @@ const supportPages = [
   },
 ];
 
+const externalPages = [
+  {
+    href: "https://isf-webapp.instatus.com/",
+    label: "システムステータス",
+    icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>,
+  },
+];
+
 const legalPages = [
   { href: "/legal/terms", label: "利用規約" },
   { href: "/legal/privacy", label: "プライバシーポリシー" },
@@ -140,6 +148,23 @@ export default function HamburgerMenu() {
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}
             </Link>
+          ))}
+
+          <div className="mx-4 my-2 border-t border-gray-100" />
+
+          {externalPages.map(({ href, label, icon }) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeHamburger}
+              className="flex items-center gap-3 px-5 py-3 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+            >
+              <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
+              {label}
+              <svg className="ml-auto text-[var(--color-text-sub)] shrink-0" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
           ))}
 
           <div className="mx-4 my-2 border-t border-gray-100" />
