@@ -47,7 +47,7 @@ export default function Error({
           ホームへ戻る
         </Link>
         <a
-          href="https://inuso-admin.vercel.app/status"
+          href="https://isf-webapp.instatus.com/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-[var(--color-text-sub)] underline underline-offset-2 mt-1"

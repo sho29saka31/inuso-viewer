@@ -48,7 +48,7 @@ export default function GlobalError({
               ホームへ戻る
             </button>
             <a
-              href="https://inuso-admin.vercel.app/status"
+              href="https://isf-webapp.instatus.com/"
               target="_blank"
               rel="noopener noreferrer"
               style={{ fontSize: 12, color: "#9CA3AF", textDecoration: "underline", textUnderlineOffset: 2, marginTop: 4 }}
