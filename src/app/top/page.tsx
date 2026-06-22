@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getDb } from "@/lib/firebase-admin";
+import { formatDate } from "@/lib/formatDate";
 
 export const revalidate = 60;
 export const metadata: Metadata = { title: "ホーム" };
@@ -48,14 +49,6 @@ const QUICK_LINKS = [
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
   },
 ];
-
-function formatDate(ts: { _seconds?: number; seconds?: number } | null | undefined): string {
-  if (!ts) return "";
-  const secs = ts._seconds ?? ts.seconds;
-  if (secs == null) return "";
-  const d = new Date(secs * 1000);
-  return d.toLocaleDateString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
-}
 
 export default async function TopPage() {
   const notices = await getRecentNotices();

@@ -68,12 +68,7 @@ export default function Header() {
     pathname.startsWith("/legal/");
 
   useEffect(() => {
-    const readAt = getCookie("notice_read_at");
-    if (!readAt) {
-      setHasUnread(true);
-    } else {
-      setHasUnread(false);
-    }
+    setHasUnread(!getCookie("notice_read_at"));
   }, [pathname]);
 
   function handleNoticeClick() {
