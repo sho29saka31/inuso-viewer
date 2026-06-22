@@ -73,7 +73,7 @@ export default function NoticeList({ notices }: { notices: Notice[] }) {
             </div>
             <div className="flex justify-between items-center mt-2 text-xs text-[var(--color-text-sub)]">
               <span>{n.authorId}</span>
-              <span>{formatDate(n.createdAt)}</span>
+              <span>{formatDate(n.createdAt, { month: "long" })}</span>
             </div>
             <div className="flex justify-end mt-2">
               <Link href={`/notice/${n.noticeId}`} className="text-xs text-[var(--color-primary)] font-medium">

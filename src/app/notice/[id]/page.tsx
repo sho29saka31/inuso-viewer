@@ -37,8 +37,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
   try {
     const db = getDb();
     const snap = await db.collection("notices").doc(id).get();
-    if (!snap.exists) notFound();
-    notice = snap.data() as Notice;
+    if (snap.exists) notice = snap.data() as Notice;
   } catch {
     return (
       <div className="px-4 py-6 pb-24 flex flex-col items-center gap-4 text-center mt-12">
@@ -53,6 +52,8 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
       </div>
     );
   }
+
+  if (!notice) notFound();
 
   const type = resolveType(notice);
   const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.info;
@@ -71,7 +72,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
         <p className="text-sm text-[var(--color-text-main)] whitespace-pre-wrap leading-relaxed">{notice.body}</p>
         <div className="flex justify-between items-center mt-5 pt-3 border-t border-gray-100 text-xs text-[var(--color-text-sub)]">
           <span>{notice.authorId}</span>
-          <span>{formatDate(notice.createdAt)}</span>
+          <span>{formatDate(notice.createdAt, { year: true, month: "long" })}</span>
         </div>
       </div>
     </div>
