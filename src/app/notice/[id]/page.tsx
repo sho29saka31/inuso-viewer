@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDb } from "@/lib/firebase-admin";
+import { formatDate } from "@/lib/formatDate";
+import { TYPE_CONFIG, resolveType } from "../noticeConfig";
 
 export const revalidate = 30;
 
@@ -14,18 +16,6 @@ interface Notice {
   isUrgent?: boolean;
   createdAt: { seconds?: number; _seconds?: number } | null;
 }
-
-function resolveType(n: Notice): string {
-  if (n.type) return n.type;
-  return n.isUrgent ? "urgent" : "info";
-}
-
-const TYPE_CONFIG: Record<string, { label: string; card: string; badge: string }> = {
-  urgent:  { label: "緊急",    card: "bg-red-50 border-red-200",       badge: "bg-red-500 text-white" },
-  warning: { label: "注意",    card: "bg-yellow-50 border-yellow-200", badge: "bg-yellow-500 text-white" },
-  info:    { label: "お知らせ", card: "bg-blue-50 border-blue-200",    badge: "bg-blue-500 text-white" },
-  other:   { label: "その他",  card: "bg-gray-50 border-gray-200",    badge: "bg-gray-500 text-white" },
-};
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -40,14 +30,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
-function formatDate(ts: { seconds?: number; _seconds?: number } | null | undefined): string {
-  if (!ts) return "";
-  const secs = ts.seconds ?? ts._seconds;
-  if (secs == null) return "";
-  const d = new Date(secs * 1000);
-  return d.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
-}
-
 export default async function NoticeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
@@ -55,8 +37,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
   try {
     const db = getDb();
     const snap = await db.collection("notices").doc(id).get();
-    if (!snap.exists) notFound();
-    notice = snap.data() as Notice;
+    if (snap.exists) notice = snap.data() as Notice;
   } catch {
     return (
       <div className="px-4 py-6 pb-24 flex flex-col items-center gap-4 text-center mt-12">
@@ -71,6 +52,8 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
       </div>
     );
   }
+
+  if (!notice) notFound();
 
   const type = resolveType(notice);
   const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.info;
@@ -89,7 +72,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
         <p className="text-sm text-[var(--color-text-main)] whitespace-pre-wrap leading-relaxed">{notice.body}</p>
         <div className="flex justify-between items-center mt-5 pt-3 border-t border-gray-100 text-xs text-[var(--color-text-sub)]">
           <span>{notice.authorId}</span>
-          <span>{formatDate(notice.createdAt)}</span>
+          <span>{formatDate(notice.createdAt, { year: true, month: "long" })}</span>
         </div>
       </div>
     </div>
