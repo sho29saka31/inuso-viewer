@@ -9,7 +9,7 @@ interface Notice {
   noticeId: string;
   title: string;
   isUrgent: boolean;
-  createdAt: { _seconds: number } | null;
+  createdAt: { _seconds?: number; seconds?: number } | null;
 }
 
 async function getRecentNotices(): Promise<Notice[]> {
@@ -49,10 +49,12 @@ const QUICK_LINKS = [
   },
 ];
 
-function formatDate(ts: { _seconds: number } | null | undefined): string {
+function formatDate(ts: { _seconds?: number; seconds?: number } | null | undefined): string {
   if (!ts) return "";
-  const d = new Date(ts._seconds * 1000);
-  return d.toLocaleDateString("ja-JP", { month: "numeric", day: "numeric" });
+  const secs = ts._seconds ?? ts.seconds;
+  if (secs == null) return "";
+  const d = new Date(secs * 1000);
+  return d.toLocaleDateString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
 export default async function TopPage() {
@@ -97,7 +99,7 @@ export default async function TopPage() {
             {notices.map((n) => (
               <Link
                 key={n.noticeId}
-                href="/notice"
+                href={`/notice/${n.noticeId}`}
                 className={`rounded-xl border p-3 flex items-start gap-2 ${
                   n.isUrgent ? "bg-red-50 border-red-200" : "bg-white border-gray-100"
                 }`}
