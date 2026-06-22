@@ -61,7 +61,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
     return (
       <div className="px-4 py-6 pb-24 flex flex-col items-center gap-4 text-center mt-12">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-sub)" strokeWidth="1.5" strokeLinecap="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><dot cx="12" cy="16" r="1"/><circle cx="12" cy="16" r="0.5" fill="var(--color-text-sub)"/>
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="var(--color-text-sub)"/>
         </svg>
         <div>
           <p className="font-bold text-[var(--color-text-main)]">読み込みエラー</p>
