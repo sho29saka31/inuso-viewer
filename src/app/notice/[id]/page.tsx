@@ -59,8 +59,15 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
     notice = snap.data() as Notice;
   } catch {
     return (
-      <div className="px-4 py-6">
-        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。</p>
+      <div className="px-4 py-6 pb-24 flex flex-col items-center gap-4 text-center mt-12">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-sub)" strokeWidth="1.5" strokeLinecap="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="var(--color-text-sub)"/>
+        </svg>
+        <div>
+          <p className="font-bold text-[var(--color-text-main)]">読み込みエラー</p>
+          <p className="text-sm text-[var(--color-text-sub)] mt-1">通信に失敗しました。<br />時間をおいて再度お試しください。</p>
+        </div>
+        <Link href="/notice" className="text-sm text-[var(--color-primary)] underline">お知らせ一覧に戻る</Link>
       </div>
     );
   }
