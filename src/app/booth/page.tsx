@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 import BoothList from "./BoothList";
 import type { Booth } from "./BoothList";
+import * as Sentry from "@sentry/nextjs";
 
 export const revalidate = 300;
 export const metadata: Metadata = { title: "ブース一覧" };
@@ -23,11 +24,11 @@ async function getBooths(): Promise<{ booths: Booth[] } | { error: string }> {
 export default async function BoothPage() {
   const result = await getBooths();
   if ("error" in result) {
+    Sentry.captureException(new Error(result.error));
     return (
       <div className="px-4 py-6">
         <h1 className="text-xl font-bold mb-4">ブース一覧</h1>
-        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。</p>
-        <p className="text-xs text-red-400 mt-2 break-all">{result.error}</p>
+        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。時間をおいて再度お試しください。</p>
       </div>
     );
   }
