@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
+import * as Sentry from "@sentry/nextjs";
 
 export const revalidate = 60;
 
@@ -55,11 +56,11 @@ export default async function BusyPage() {
   const result = await getData();
 
   if ("error" in result) {
+    Sentry.captureException(new Error(result.error));
     return (
       <div className="px-4 py-6">
         <h1 className="text-xl font-bold mb-4">混雑状況</h1>
-        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。</p>
-        <p className="text-xs text-red-400 mt-2 break-all">{result.error}</p>
+        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。時間をおいて再度お試しください。</p>
       </div>
     );
   }
