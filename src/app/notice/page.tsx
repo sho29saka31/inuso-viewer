@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import NotificationBanner from "./NotificationBanner";
 import NoticeList from "./NoticeList";
 import { getDb } from "@/lib/firebase-admin";
+import * as Sentry from "@sentry/nextjs";
 
 export const revalidate = 30;
 export const metadata: Metadata = { title: "お知らせ" };
@@ -30,11 +31,11 @@ export default async function NoticePage() {
   const result = await getNotices();
 
   if ("error" in result) {
+    Sentry.captureException(new Error(result.error));
     return (
       <div className="px-4 py-6">
         <h1 className="text-xl font-bold mb-4">お知らせ</h1>
-        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。</p>
-        <p className="text-xs text-red-400 mt-2 break-all">{result.error}</p>
+        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。時間をおいて再度お試しください。</p>
       </div>
     );
   }
