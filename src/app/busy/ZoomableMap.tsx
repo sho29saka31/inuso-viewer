@@ -6,13 +6,13 @@ const MIN_SCALE = 1;
 const MAX_SCALE = 5;
 
 const FLOORS = [
-  { label: "5F", viewBox: "0 68 1400 220" },
-  { label: "4F", viewBox: "0 286 1400 336" },
-  { label: "3F", viewBox: "0 618 1400 314" },
-  { label: "2F", viewBox: "0 928 1400 314" },
-  { label: "1F", viewBox: "0 1238 1400 214" },
-  { label: "体育館", viewBox: "0 1448 1400 124" },
-  { label: "屋外", viewBox: "0 1568 1400 116" },
+  { label: "5F", viewBox: "20 120 1360 95" },
+  { label: "4F", viewBox: "20 330 1360 275" },
+  { label: "3F", viewBox: "20 660 1360 250" },
+  { label: "2F", viewBox: "20 970 1360 250" },
+  { label: "1F", viewBox: "20 1340 1360 92" },
+  { label: "体育館", viewBox: "20 1455 1360 105" },
+  { label: "屋外", viewBox: "20 1578 1360 102" },
 ];
 
 const LEGEND = [
@@ -26,6 +26,7 @@ const LEGEND = [
 export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
   const [floor, setFloor] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
@@ -36,16 +37,18 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
     setTranslate({ x: 0, y: 0 });
   }, []);
 
+  // transform-origin は 0 0 (左上)。コンテンツ実寸からパン範囲をクランプする。
   const clampTranslate = useCallback((x: number, y: number, s: number) => {
-    const el = containerRef.current;
-    if (!el) return { x, y };
-    const w = el.clientWidth;
-    const h = el.clientHeight;
-    const maxX = (w * (s - 1)) / 2;
-    const maxY = (h * (s - 1)) / 2;
+    const cont = containerRef.current;
+    const content = contentRef.current;
+    if (!cont || !content) return { x, y };
+    const baseW = content.offsetWidth;
+    const baseH = content.offsetHeight;
+    const minX = Math.min(0, cont.clientWidth - baseW * s);
+    const minY = Math.min(0, cont.clientHeight - baseH * s);
     return {
-      x: Math.max(-maxX, Math.min(maxX, x)),
-      y: Math.max(-maxY, Math.min(maxY, y)),
+      x: Math.min(0, Math.max(minX, x)),
+      y: Math.min(0, Math.max(minY, y)),
     };
   }, []);
 
@@ -54,10 +57,10 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     setScale((prev) => {
       const next = Math.max(MIN_SCALE, Math.min(MAX_SCALE, prev * delta));
-      if (next === MIN_SCALE) setTranslate({ x: 0, y: 0 });
+      setTranslate((t) => clampTranslate(t.x, t.y, next));
       return next;
     });
-  }, []);
+  }, [clampTranslate]);
 
   const getTouchDist = (e: TouchEvent) => {
     const [a, b] = [e.touches[0], e.touches[1]];
@@ -67,7 +70,7 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
   const handleTouchStart = useCallback((e: TouchEvent) => {
     if (e.touches.length === 2) {
       pinchRef.current = { dist: getTouchDist(e), scale };
-    } else if (e.touches.length === 1 && scale > 1) {
+    } else if (e.touches.length === 1) {
       const t = e.touches[0];
       dragRef.current = { startX: t.clientX, startY: t.clientY, origX: translate.x, origY: translate.y };
     }
@@ -79,8 +82,9 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
       const newDist = getTouchDist(e);
       const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, pinchRef.current.scale * (newDist / pinchRef.current.dist)));
       setScale(newScale);
-      if (newScale === MIN_SCALE) setTranslate({ x: 0, y: 0 });
-    } else if (e.touches.length === 1 && dragRef.current && scale > 1) {
+      setTranslate((t) => clampTranslate(t.x, t.y, newScale));
+    } else if (e.touches.length === 1 && dragRef.current) {
+      e.preventDefault();
       const t = e.touches[0];
       const dx = t.clientX - dragRef.current.startX;
       const dy = t.clientY - dragRef.current.startY;
@@ -99,13 +103,16 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
   }, [resetView]);
 
   const vb = FLOORS[floor].viewBox;
-  const floorSvg = svgHtml.replace(
-    /viewBox="[^"]*"/,
-    `viewBox="${vb}"`
-  ).replace(
-    /width="1400" height="1700"/,
-    'width="100%" height="100%" preserveAspectRatio="xMidYMid meet"'
-  );
+  const [, , vbW, vbH] = vb.split(/\s+/).map(Number);
+  // 各フロアを設計どおりの自然なサイズ(1:1)で描画し、文字を読めるサイズに保つ。
+  // 横幅は画面より広いので横スクロール、足りない高さは下に余白。
+  const containerH = Math.min(360, Math.max(200, vbH));
+  const floorSvg = svgHtml
+    .replace(/viewBox="[^"]*"/, `viewBox="${vb}"`)
+    .replace(
+      /width="1400" height="1700"/,
+      `width="${vbW}" height="${vbH}" style="display:block"`
+    );
 
   return (
     <div>
@@ -115,9 +122,9 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
           <button
             key={f.label}
             onClick={() => switchFloor(i)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
+            className={`px-3.5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
               i === floor
-                ? "bg-[var(--color-primary)] text-white"
+                ? "bg-[var(--color-primary)] text-white shadow-sm"
                 : "bg-gray-100 text-gray-600 active:bg-gray-200"
             }`}
           >
@@ -130,20 +137,27 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
       <div className="mx-4 mb-3 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
         <div
           ref={containerRef}
-          className="w-full overflow-hidden touch-none relative"
+          className="w-full overflow-hidden touch-none relative bg-[#F1F5F9]"
+          style={{ height: `${containerH}px` }}
           onWheel={handleWheel}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           <div
+            ref={contentRef}
+            className="w-max h-max"
             style={{
               transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-              transformOrigin: "center center",
+              transformOrigin: "0 0",
               transition: pinchRef.current || dragRef.current ? "none" : "transform 0.15s ease-out",
             }}
             dangerouslySetInnerHTML={{ __html: floorSvg }}
           />
+
+          {/* 横スクロール可能を示すグラデーション */}
+          <div className="pointer-events-none absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-black/5 to-transparent" />
+
           {scale > 1 && (
             <button
               onClick={resetView}
@@ -155,20 +169,22 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
         </div>
 
         {/* 凡例 */}
-        <div className="border-t border-gray-200 bg-gray-50 px-3 py-1.5 flex items-center justify-center gap-2">
+        <div className="border-t border-gray-200 bg-gray-50 px-3 py-1.5 flex items-center justify-center gap-2 flex-wrap">
           {LEGEND.map((item) => (
             <div key={item.label} className="flex items-center gap-0.5">
               <span
-                className="w-2 h-2 rounded-sm shrink-0 border border-gray-300"
+                className="w-2.5 h-2.5 rounded-sm shrink-0 border border-gray-300"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-[9px] text-gray-500">{item.label}</span>
+              <span className="text-[10px] text-gray-500">{item.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <p className="px-4 mb-3 text-[10px] text-gray-400 text-center">ピンチで拡大・ドラッグで移動</p>
+      <p className="px-4 mb-3 text-[11px] text-gray-400 text-center">
+        横にスクロール・ピンチで拡大できます
+      </p>
     </div>
   );
 }
