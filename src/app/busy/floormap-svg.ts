@@ -87,8 +87,6 @@ export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 
 <text x="1156.9" y="540.0" class="bt" font-size="9" fill="#94A3B8">準備室</text>
 <rect x="1183.8" y="508" width="174.7" height="64" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" />
 <text x="1271.2" y="540.0" class="bs">社会科教室</text>
-<rect x="281.2" y="576" width="533.1" height="22" rx="4" fill="#DCFCE7" stroke="#86EFAC" stroke-width="1"/>
-<text x="547.7" y="591" text-anchor="middle" font-size="10" fill="#166534">デジタル・イノベーションエリア</text>
 <line x1="40" y1="618" x2="1360" y2="618" stroke="#E2E8F0" stroke-width="1"/>
 <text x="40" y="642" font-size="17" font-weight="700" fill="#0F172A">フロアマップ — 第1棟3F</text>
 <text x="1360" y="640" text-anchor="end" font-size="11" fill="#64748B">第1棟基準</text>
