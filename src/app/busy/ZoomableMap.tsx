@@ -16,8 +16,9 @@ const FLOORS = [
 ];
 
 const LEGEND = [
-  { label: "データなし", color: "#94A3B8" },
-  { label: "閑散", color: "#2C7BB6" },
+  { label: "停止中", color: "#94A3B8" },
+  { label: "非常に閑散", color: "#2C7BB6" },
+  { label: "閑散", color: "#ABD9E9" },
   { label: "通常", color: "#FFFFBF" },
   { label: "混雑", color: "#FDAE61" },
   { label: "非常に混雑", color: "#D7191C" },
