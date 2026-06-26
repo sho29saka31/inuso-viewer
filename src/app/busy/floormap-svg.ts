@@ -1,20 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1700" width="1400" height="1700" font-family="sans-serif">
-<!--
-  混雑レベル配色（色弱対応: 青→黄→赤 / ColorBrewer RdYlBu反転ベース）
-  各ブース<rect>の fill を data-level に応じて切り替えてください。
-    level 0 (データなし/停止中): #94A3B8
-    level 1 (非常に閑散):        #2C7BB6
-    level 2 (閑散):              #ABD9E9
-    level 3 (通常):              #FFFFBF
-    level 4 (混雑):              #FDAE61
-    level 5 (非常に混雑):        #D7191C
-  ブース要素: <rect class="booth" id="{boothId}" data-booth-id="{boothId}" data-level="0">
-  例: document.querySelectorAll('.booth').forEach(el => {
-        const lvl = congestion[el.dataset.boothId] ?? 0;
-        el.setAttribute('fill', LEVEL_COLORS[lvl]);
-        el.dataset.level = lvl;
-      });
--->
+export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1700" width="1400" height="1700" font-family="sans-serif">
 <rect x="0" y="0" width="1400" height="1584" fill="#F1F5F9"/>
 <text x="40" y="36" font-size="11" font-weight="700" fill="#0F172A" font-family="sans-serif">混雑レベル凡例（色弱対応）</text>
 <rect x="40" y="46" width="18" height="14" rx="2" fill="#94A3B8" stroke="#CBD5E1" stroke-width="0.5"/>
@@ -282,4 +266,4 @@
 <rect id="pta-bazaar" class="booth" data-booth-id="pta-bazaar" data-level="0" x="671.5" y="1608" width="200" height="64" rx="3" fill="#94A3B8" stroke="#1D4ED8" stroke-width="2"/>
 <text x="771.5" y="1636.0" text-anchor="middle" dominant-baseline="middle" font-size="12.5" font-weight="700" fill="#FFFFFF" font-family="sans-serif">PTAバザー</text>
 <text x="771.5" y="1651.0" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#1E3A8A" font-family="monospace">pta-bazaar</text>
-</svg>
+</svg>`;

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { promises as fs } from "fs";
-import path from "path";
 import { getDb } from "@/lib/firebase-admin";
 import * as Sentry from "@sentry/nextjs";
+import { FLOORMAP_SVG } from "./floormap-svg";
 
 export const revalidate = 60;
 
@@ -64,8 +63,7 @@ async function getData(): Promise<{ booths: Booth[]; svgHtml: string } | { error
       statusMap[booth.boothId ?? ""] = typeof booth.status === "number" ? booth.status : 0;
     }
 
-    const svgPath = path.join(process.cwd(), "src/app/busy/floormap-all.svg");
-    let svg = await fs.readFile(svgPath, "utf-8");
+    let svg = FLOORMAP_SVG;
 
     for (const [boothId, status] of Object.entries(statusMap)) {
       if (!boothId) continue;
