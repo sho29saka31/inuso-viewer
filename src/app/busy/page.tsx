@@ -44,7 +44,13 @@ interface Booth {
   status: number;
 }
 
-async function getData(): Promise<{ booths: Booth[]; svgHtml: string } | { error: string }> {
+const FLOOR_VIEWBOXES = [
+  "20 110 1360 110", "20 320 1360 290", "20 650 1360 270",
+  "20 960 1360 270", "20 1330 1360 110", "20 1445 1360 120",
+  "20 1568 1360 120",
+];
+
+async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { error: string }> {
   try {
     const db = getDb();
     const boothSnap = await db.collection("booths").orderBy("status", "desc").get();
@@ -66,7 +72,14 @@ async function getData(): Promise<{ booths: Booth[]; svgHtml: string } | { error
       svg = svg.replace(re, `$1${color}$2`);
     }
 
-    return { booths, svgHtml: svg };
+    const floorSvgs = FLOOR_VIEWBOXES.map((vb) => {
+      const [, , vbW, vbH] = vb.split(/\s+/).map(Number);
+      return svg
+        .replace(/viewBox="[^"]*"/, `viewBox="${vb}"`)
+        .replace(/width="1400" height="1700"/, `width="${vbW}" height="${vbH}" style="display:block"`);
+    });
+
+    return { booths, floorSvgs };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
@@ -85,7 +98,7 @@ export default async function BusyPage() {
     );
   }
 
-  const { booths, svgHtml } = result;
+  const { booths, floorSvgs } = result;
 
   return (
     <div className="pb-24">
@@ -94,7 +107,7 @@ export default async function BusyPage() {
         <p className="text-xs text-[var(--color-text-sub)]">リアルタイム更新 (60秒ごと)</p>
       </div>
 
-      <ZoomableMap svgHtml={svgHtml} />
+      <ZoomableMap floorSvgs={floorSvgs} />
 
       {booths.length === 0 ? (
         <p className="px-4 text-sm text-[var(--color-text-sub)]">データがありません。</p>

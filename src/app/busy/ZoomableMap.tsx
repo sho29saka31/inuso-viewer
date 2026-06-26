@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback, useMemo, type TouchEvent, type WheelEvent } from "react";
+import { useRef, useState, useCallback, type TouchEvent, type WheelEvent } from "react";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
@@ -24,7 +24,7 @@ const LEGEND = [
   { label: "非常に混雑", color: "#D7191C" },
 ];
 
-export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
+export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
   const [floor, setFloor] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -32,18 +32,6 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
   const pinchRef = useRef<{ dist: number; scale: number } | null>(null);
-
-  const floorSvgs = useMemo(() => {
-    return FLOORS.map((f) => {
-      const [, , vbW, vbH] = f.viewBox.split(/\s+/).map(Number);
-      return svgHtml
-        .replace(/viewBox="[^"]*"/, `viewBox="${f.viewBox}"`)
-        .replace(
-          /width="1400" height="1700"/,
-          `width="${vbW}" height="${vbH}" style="display:block"`,
-        );
-    });
-  }, [svgHtml]);
 
   const resetView = useCallback(() => {
     setScale(1);
@@ -114,8 +102,7 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
     resetView();
   }, [resetView]);
 
-  const vb = FLOORS[floor].viewBox;
-  const [, , , vbH] = vb.split(/\s+/).map(Number);
+  const [, , , vbH] = FLOORS[floor].viewBox.split(/\s+/).map(Number);
   const containerH = Math.min(360, Math.max(220, vbH + 10));
 
   return (
@@ -154,6 +141,7 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
             style={{
               transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
               transformOrigin: "0 0",
+              willChange: "transform",
               transition: pinchRef.current || dragRef.current ? "none" : "transform 0.15s ease-out",
             }}
             dangerouslySetInnerHTML={{ __html: floorSvgs[floor] }}
