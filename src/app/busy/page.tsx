@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { promises as fs } from "fs";
+import path from "path";
 import { getDb } from "@/lib/firebase-admin";
 import * as Sentry from "@sentry/nextjs";
 
@@ -24,6 +26,24 @@ const STATUS_TEXT_COLORS = [
   "text-red-700",
 ];
 
+const SVG_FILL_COLORS: Record<number, string> = {
+  0: "#94A3B8",
+  1: "#2C7BB6",
+  2: "#ABD9E9",
+  3: "#FFFFBF",
+  4: "#FDAE61",
+  5: "#D7191C",
+};
+
+const SVG_LEGEND = [
+  { level: 0, label: "データなし", color: "#94A3B8" },
+  { level: 1, label: "非常に閑散", color: "#2C7BB6" },
+  { level: 2, label: "閑散", color: "#ABD9E9" },
+  { level: 3, label: "通常", color: "#FFFFBF" },
+  { level: 4, label: "混雑", color: "#FDAE61" },
+  { level: 5, label: "非常に混雑", color: "#D7191C" },
+];
+
 interface Booth {
   boothId: string;
   name?: string;
@@ -33,20 +53,30 @@ interface Booth {
   status: number;
 }
 
-interface MapConfig {
-  imageUrl?: string;
-}
-
-async function getData(): Promise<{ booths: Booth[]; mapImageUrl: string | null } | { error: string }> {
+async function getData(): Promise<{ booths: Booth[]; svgHtml: string } | { error: string }> {
   try {
     const db = getDb();
-    const [boothSnap, mapSnap] = await Promise.all([
-      db.collection("booths").orderBy("status", "desc").get(),
-      db.collection("config").doc("map").get(),
-    ]);
+    const boothSnap = await db.collection("booths").orderBy("status", "desc").get();
     const booths = boothSnap.docs.map((d) => d.data() as Booth);
-    const mapConfig = mapSnap.exists ? (mapSnap.data() as MapConfig) : {};
-    return { booths, mapImageUrl: mapConfig.imageUrl ?? null };
+
+    const statusMap: Record<string, number> = {};
+    for (const booth of booths) {
+      statusMap[booth.boothId ?? ""] = typeof booth.status === "number" ? booth.status : 0;
+    }
+
+    const svgPath = path.join(process.cwd(), "src/app/busy/floormap-all.svg");
+    let svg = await fs.readFile(svgPath, "utf-8");
+
+    for (const [boothId, status] of Object.entries(statusMap)) {
+      if (!boothId) continue;
+      const color = SVG_FILL_COLORS[status] ?? SVG_FILL_COLORS[0];
+      const re = new RegExp(
+        `(<rect\\b[^>]*\\bid="${boothId}"[^>]*\\bfill=")[^"]*(")`
+      );
+      svg = svg.replace(re, `$1${color}$2`);
+    }
+
+    return { booths, svgHtml: svg };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
@@ -65,7 +95,7 @@ export default async function BusyPage() {
     );
   }
 
-  const { booths, mapImageUrl } = result;
+  const { booths, svgHtml } = result;
 
   return (
     <div className="pb-24">
@@ -74,21 +104,23 @@ export default async function BusyPage() {
         <p className="text-xs text-[var(--color-text-sub)]">リアルタイム更新 (60秒ごと)</p>
       </div>
 
-      {mapImageUrl && (
-        <div className="relative mx-4 mb-4 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-50">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={mapImageUrl} alt="校舎フロアマップ" className="w-full h-auto" />
-
-          <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-3 py-2 flex flex-wrap gap-2">
-            {[1, 2, 3, 4, 5].map((lvl) => (
-              <div key={lvl} className="flex items-center gap-1">
-                <span className={`w-2.5 h-2.5 rounded-full ${STATUS_COLORS[lvl]} shrink-0`} />
-                <span className="text-white text-[10px]">{STATUS_LABELS[lvl]}</span>
-              </div>
-            ))}
-          </div>
+      <div className="mx-4 mb-4 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
+        <div
+          className="w-full overflow-x-auto"
+          dangerouslySetInnerHTML={{ __html: svgHtml }}
+        />
+        <div className="bg-gray-50 border-t border-gray-200 px-3 py-2 flex flex-wrap gap-x-3 gap-y-1">
+          {SVG_LEGEND.map((item) => (
+            <div key={item.level} className="flex items-center gap-1">
+              <span
+                className="w-2.5 h-2.5 rounded-sm shrink-0 border border-gray-300"
+                style={{ backgroundColor: item.color }}
+              />
+              <span className="text-[10px] text-gray-600">{item.label}</span>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
       {booths.length === 0 ? (
         <p className="px-4 text-sm text-[var(--color-text-sub)]">データがありません。</p>
