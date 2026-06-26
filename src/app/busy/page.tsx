@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 import * as Sentry from "@sentry/nextjs";
 import { FLOORMAP_SVG } from "./floormap-svg";
+import ZoomableMap from "./ZoomableMap";
 
 export const revalidate = 60;
 
@@ -103,10 +104,7 @@ export default async function BusyPage() {
       </div>
 
       <div className="mx-4 mb-4 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
-        <div
-          className="w-full overflow-x-auto"
-          dangerouslySetInnerHTML={{ __html: svgHtml }}
-        />
+        <ZoomableMap svgHtml={svgHtml} />
         <div className="bg-gray-50 border-t border-gray-200 px-3 py-2 flex flex-wrap gap-x-3 gap-y-1">
           {SVG_LEGEND.map((item) => (
             <div key={item.level} className="flex items-center gap-1">
