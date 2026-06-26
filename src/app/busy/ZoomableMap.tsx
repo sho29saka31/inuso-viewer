@@ -1,18 +1,18 @@
 "use client";
 
-import { useRef, useState, useCallback, type TouchEvent, type WheelEvent } from "react";
+import { useRef, useState, useCallback, useMemo, type TouchEvent, type WheelEvent } from "react";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
 
 const FLOORS = [
-  { label: "5F", viewBox: "20 120 1360 95" },
-  { label: "4F", viewBox: "20 330 1360 275" },
-  { label: "3F", viewBox: "20 660 1360 250" },
-  { label: "2F", viewBox: "20 970 1360 250" },
-  { label: "1F", viewBox: "20 1340 1360 92" },
-  { label: "体育館", viewBox: "20 1455 1360 105" },
-  { label: "屋外", viewBox: "20 1578 1360 102" },
+  { label: "5F", viewBox: "20 110 1360 110" },
+  { label: "4F", viewBox: "20 320 1360 290" },
+  { label: "3F", viewBox: "20 650 1360 270" },
+  { label: "2F", viewBox: "20 960 1360 270" },
+  { label: "1F", viewBox: "20 1330 1360 110" },
+  { label: "体育館", viewBox: "20 1445 1360 120" },
+  { label: "屋外", viewBox: "20 1568 1360 120" },
 ];
 
 const LEGEND = [
@@ -32,12 +32,23 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
   const pinchRef = useRef<{ dist: number; scale: number } | null>(null);
 
+  const floorSvgs = useMemo(() => {
+    return FLOORS.map((f) => {
+      const [, , vbW, vbH] = f.viewBox.split(/\s+/).map(Number);
+      return svgHtml
+        .replace(/viewBox="[^"]*"/, `viewBox="${f.viewBox}"`)
+        .replace(
+          /width="1400" height="1700"/,
+          `width="${vbW}" height="${vbH}" style="display:block"`,
+        );
+    });
+  }, [svgHtml]);
+
   const resetView = useCallback(() => {
     setScale(1);
     setTranslate({ x: 0, y: 0 });
   }, []);
 
-  // transform-origin は 0 0 (左上)。コンテンツ実寸からパン範囲をクランプする。
   const clampTranslate = useCallback((x: number, y: number, s: number) => {
     const cont = containerRef.current;
     const content = contentRef.current;
@@ -103,16 +114,8 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
   }, [resetView]);
 
   const vb = FLOORS[floor].viewBox;
-  const [, , vbW, vbH] = vb.split(/\s+/).map(Number);
-  // 各フロアを設計どおりの自然なサイズ(1:1)で描画し、文字を読めるサイズに保つ。
-  // 横幅は画面より広いので横スクロール、足りない高さは下に余白。
-  const containerH = Math.min(360, Math.max(200, vbH));
-  const floorSvg = svgHtml
-    .replace(/viewBox="[^"]*"/, `viewBox="${vb}"`)
-    .replace(
-      /width="1400" height="1700"/,
-      `width="${vbW}" height="${vbH}" style="display:block"`
-    );
+  const [, , , vbH] = vb.split(/\s+/).map(Number);
+  const containerH = Math.min(360, Math.max(220, vbH + 10));
 
   return (
     <div>
@@ -152,10 +155,9 @@ export default function ZoomableMap({ svgHtml }: { svgHtml: string }) {
               transformOrigin: "0 0",
               transition: pinchRef.current || dragRef.current ? "none" : "transform 0.15s ease-out",
             }}
-            dangerouslySetInnerHTML={{ __html: floorSvg }}
+            dangerouslySetInnerHTML={{ __html: floorSvgs[floor] }}
           />
 
-          {/* 横スクロール可能を示すグラデーション */}
           <div className="pointer-events-none absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-black/5 to-transparent" />
 
           {scale > 1 && (
