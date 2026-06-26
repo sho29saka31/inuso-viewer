@@ -64,7 +64,7 @@ async function getData(): Promise<{ booths: Booth[]; svgHtml: string } | { error
       statusMap[booth.boothId ?? ""] = typeof booth.status === "number" ? booth.status : 0;
     }
 
-    const svgPath = path.join(process.cwd(), "src/app/busy/floormap-all.svg");
+    const svgPath = path.join(process.cwd(), "public/floormap-all.svg");
     let svg = await fs.readFile(svgPath, "utf-8");
 
     for (const [boothId, status] of Object.entries(statusMap)) {
