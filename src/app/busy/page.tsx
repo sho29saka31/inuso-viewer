@@ -44,6 +44,14 @@ interface Booth {
   status: number;
 }
 
+const BOOTH_ID_TO_SVG: Record<string, string> = {
+  "club-game": "club-esports",
+  "eat-1": "pta-bazaar",
+  "eat-2": "eat-car-1",
+  "eat-3": "eat-car-2",
+  "eat-4": "eat-car-3",
+};
+
 const FLOOR_VIEWBOXES = [
   "20 110 1360 110", "20 320 1360 290", "20 650 1360 270",
   "20 960 1360 270", "20 1330 1360 110", "1110 1455 280 125",
@@ -62,7 +70,9 @@ async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { e
 
     const statusMap: Record<string, number> = {};
     for (const booth of booths) {
-      statusMap[booth.boothId ?? ""] = typeof booth.status === "number" ? booth.status : 0;
+      const id = booth.boothId ?? "";
+      const svgId = BOOTH_ID_TO_SVG[id] ?? id;
+      statusMap[svgId] = typeof booth.status === "number" ? booth.status : 0;
     }
 
     let svg = FLOORMAP_SVG;
