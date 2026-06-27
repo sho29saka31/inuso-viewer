@@ -15,7 +15,7 @@ async function getBooths(): Promise<{ booths: Booth[] } | { error: string }> {
       .where("category", "!=", "eat")
       .orderBy("category")
       .get();
-    return { booths: snap.docs.map((d) => d.data() as Booth) };
+    return { booths: snap.docs.map((d) => { const data = d.data() as Booth; if (!data.boothId) data.boothId = d.id; return data; }) };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
