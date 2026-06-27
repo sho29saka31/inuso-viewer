@@ -110,7 +110,7 @@ export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 
 <text x="925.0" y="712.0" class="bt" font-size="12.5" font-weight="700" fill="#FFFFFF">3の4</text>
 <text x="925.0" y="727.0" class="bi">class3-4</text>
 <rect x="1001.5" y="684" width="147.0" height="64" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" />
-<text x="1075.0" y="716.0" class="bs">3の5</text>
+<text x="1075.0" y="716.0" class="bs">学習室2Y</text>
 <rect x="1151.5" y="684" width="132.0" height="64" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" />
 <text x="1217.5" y="716.0" class="bs">学習室2Z</text>
 <rect x="1286.5" y="684" width="72.0" height="64" rx="3" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="1" />
