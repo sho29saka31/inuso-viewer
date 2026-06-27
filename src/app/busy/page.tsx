@@ -9,18 +9,18 @@ export const revalidate = 60;
 export const metadata: Metadata = { title: "混雑状況" };
 
 const STATUS_LABELS = ["停止中", "非常に閑散", "閑散", "通常", "混雑", "非常に混雑"];
-const STATUS_COLORS = [
-  "bg-gray-400",
-  "bg-blue-300",
-  "bg-green-400",
-  "bg-yellow-400",
-  "bg-orange-400",
-  "bg-red-500",
+const STATUS_DOT_COLORS = [
+  "#94A3B8",
+  "#2C7BB6",
+  "#ABD9E9",
+  "#FFFFBF",
+  "#FDAE61",
+  "#D7191C",
 ];
 const STATUS_TEXT_COLORS = [
   "text-gray-600",
-  "text-blue-700",
-  "text-green-700",
+  "text-blue-800",
+  "text-cyan-700",
   "text-yellow-700",
   "text-orange-700",
   "text-red-700",
@@ -117,7 +117,10 @@ export default async function BusyPage() {
             const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
             return (
               <div key={booth.boothId} className="rounded-xl bg-white border border-gray-100 shadow-sm p-3 flex items-center gap-3">
-                <span className={`w-3 h-3 rounded-full shrink-0 ${STATUS_COLORS[level]}`} />
+                <span
+                  className="w-3 h-3 rounded-full shrink-0 border border-gray-200"
+                  style={{ backgroundColor: STATUS_DOT_COLORS[level] }}
+                />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
                     {booth.name ?? booth.shopName}
