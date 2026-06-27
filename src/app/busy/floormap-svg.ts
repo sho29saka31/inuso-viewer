@@ -231,7 +231,7 @@ export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 
 <text x="1213.3" y="1392.0" class="bt" font-size="9" fill="#94A3B8">準備室</text>
 <rect x="1241.5" y="1360" width="117.0" height="64" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" />
 <text x="1300.0" y="1392.0" class="bs">体育教官室</text>
-<line x1="40" y1="1448" x2="1360" y2="1448" stroke="#E2E8F0" stroke-width="1"/>
+<line x1="40" y1="1448" x2="1100" y2="1448" stroke="#E2E8F0" stroke-width="1"/>
 <text x="1120" y="1476" font-size="12" font-weight="700" fill="#1D4ED8">体育館（全階共通・独立建物）</text>
 <rect id="pe-gym" x="1140" y="1494" width="220" height="74" rx="5" fill="#94A3B8" stroke="#1D4ED8" stroke-width="2"/>
 <text x="1250.0" y="1527.0" class="bt" font-size="14" font-weight="700" fill="#FFFFFF">体育館</text>
