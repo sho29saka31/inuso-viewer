@@ -11,7 +11,7 @@ const FLOORS = [
   { label: "3F", viewBox: "20 650 1360 270" },
   { label: "2F", viewBox: "20 960 1360 270" },
   { label: "1F", viewBox: "20 1330 1360 110" },
-  { label: "体育館", viewBox: "1110 1455 280 105" },
+  { label: "体育館", viewBox: "1110 1455 280 125" },
   { label: "屋外", viewBox: "20 1568 880 120" },
 ];
 
