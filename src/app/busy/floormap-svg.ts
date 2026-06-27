@@ -236,7 +236,7 @@ export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 
 <rect id="pe-gym" x="1140" y="1494" width="220" height="74" rx="5" fill="#94A3B8" stroke="#1D4ED8" stroke-width="2"/>
 <text x="1250.0" y="1527.0" class="bt" font-size="14" font-weight="700" fill="#FFFFFF">体育館</text>
 <text x="1250.0" y="1543.0" class="bt" font-size="9" fill="#1E3A8A" font-family="monospace">pe-gym</text>
-<line x1="40" y1="1568" x2="1360" y2="1568" stroke="#E2E8F0" stroke-width="1"/>
+<line x1="40" y1="1568" x2="1100" y2="1568" stroke="#E2E8F0" stroke-width="1"/>
 <text x="40" y="1596" font-size="12" font-weight="700" fill="#1D4ED8">屋外エリア</text>
 <rect id="eat-car-1" x="41.5" y="1608" width="200" height="64" rx="3" fill="#94A3B8" stroke="#1D4ED8" stroke-width="2"/>
 <text x="141.5" y="1636.0" class="bt" font-size="12.5" font-weight="700" fill="#FFFFFF">キッチンカー1</text>
