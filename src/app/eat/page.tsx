@@ -29,7 +29,7 @@ async function getEatItems(): Promise<{ items: EatItem[] } | { error: string }> 
   try {
     const db = getDb();
     const snap = await db.collection("booths").where("category", "==", "eat").get();
-    return { items: snap.docs.map((d) => d.data() as EatItem) };
+    return { items: snap.docs.map((d) => { const data = d.data() as EatItem; if (!data.boothId) data.boothId = d.id; return data; }) };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }

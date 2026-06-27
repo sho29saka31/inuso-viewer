@@ -54,7 +54,11 @@ async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { e
   try {
     const db = getDb();
     const boothSnap = await db.collection("booths").orderBy("status", "desc").get();
-    const booths = boothSnap.docs.map((d) => d.data() as Booth);
+    const booths = boothSnap.docs.map((d) => {
+      const data = d.data() as Booth;
+      if (!data.boothId) data.boothId = d.id;
+      return data;
+    });
 
     const statusMap: Record<string, number> = {};
     for (const booth of booths) {
