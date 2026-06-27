@@ -46,8 +46,8 @@ interface Booth {
 
 const FLOOR_VIEWBOXES = [
   "20 110 1360 110", "20 320 1360 290", "20 650 1360 270",
-  "20 960 1360 270", "20 1330 1360 110", "20 1445 1360 120",
-  "20 1568 1360 120",
+  "20 960 1360 270", "20 1330 1360 110", "1110 1455 280 105",
+  "20 1568 880 120",
 ];
 
 async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { error: string }> {
