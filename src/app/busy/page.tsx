@@ -18,12 +18,12 @@ const STATUS_DOT_COLORS = [
   "#D7191C",
 ];
 const STATUS_TEXT_COLORS = [
-  "text-gray-600",
-  "text-blue-800",
-  "text-cyan-700",
-  "text-yellow-700",
-  "text-orange-700",
-  "text-red-700",
+  "#64748B",
+  "#1E5A8A",
+  "#0E7490",
+  "#A16207",
+  "#C2410C",
+  "#B91C1C",
 ];
 
 const SVG_FILL_COLORS: Record<number, string> = {
@@ -129,7 +129,10 @@ export default async function BusyPage() {
                     <p className="text-xs text-[var(--color-text-sub)]">{booth.location}</p>
                   )}
                 </div>
-                <span className={`text-xs font-medium shrink-0 ${STATUS_TEXT_COLORS[level]}`}>
+                <span
+                  className="text-xs font-medium shrink-0"
+                  style={{ color: STATUS_TEXT_COLORS[level] }}
+                >
                   {STATUS_LABELS[level]}
                 </span>
               </div>
