@@ -4,6 +4,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import type { ViewerFeatures } from "@/lib/feature-flags";
 
 const DEFAULT_FEATURES: ViewerFeatures = {
+  service: true,
   event: true, booth: true, busy: true, eat: true,
   notice: true, digital: true, map: true,
 };
