@@ -29,5 +29,5 @@ export const getViewerFeatures = unstable_cache(
     }
   },
   ["viewer-features"],
-  { tags: ["viewer-features"], revalidate: 60 }
+  { tags: ["viewer-features"] }
 );
