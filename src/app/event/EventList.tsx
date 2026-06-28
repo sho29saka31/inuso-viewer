@@ -19,7 +19,12 @@ function toMinutes(hhmm: string): number {
   return h * 60 + m;
 }
 
+function isDayLabel(day: string): boolean {
+  return /日目/.test(day);
+}
+
 function getEventState(ev: Event, now: Date): "upcoming" | "active" | "done" {
+  if (isDayLabel(ev.day)) return "upcoming";
   const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   if (ev.day > today) return "upcoming";
   if (ev.day < today) return "done";
@@ -32,7 +37,7 @@ function getEventState(ev: Event, now: Date): "upcoming" | "active" | "done" {
 }
 
 function isAllDay(ev: Event): boolean {
-  return /日目/.test(ev.eventName) || ev.startTime === "00:00" || ev.startTime === "00:00:00";
+  return ev.startTime === "00:00" || ev.startTime === "00:00:00";
 }
 
 export default function EventList({ grouped }: { grouped: Record<string, Event[]> }) {
@@ -45,6 +50,7 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
   }, []);
 
   function formatDay(day: string): string {
+    if (isDayLabel(day)) return day;
     const d = new Date(day + "T00:00:00");
     return d.toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" });
   }
@@ -64,7 +70,6 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                 key={ev.eventId}
                 className="mb-3 rounded-xl bg-[var(--color-primary)] text-white px-4 py-2.5 flex items-center gap-2 shadow-sm"
               >
-                <span className="text-xs font-bold opacity-80">終日</span>
                 <span className="font-bold text-sm">{ev.eventName}</span>
                 {ev.isDelayed && (
                   <span className="ml-auto text-xs px-1.5 py-0.5 rounded bg-white/20 font-medium">

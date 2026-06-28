@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { M_PLUS_Rounded_1c } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { AppProvider } from "@/contexts/AppContext";
 import Header from "@/components/Header";
@@ -9,9 +9,13 @@ import InitFlow from "@/components/InitFlow";
 import FcmInit from "@/components/FcmInit";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
-const mPlusRounded = M_PLUS_Rounded_1c({
-  weight: ["400", "500", "700", "800"],
-  subsets: ["latin"],
+const mPlusRounded = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource/m-plus-rounded-1c/files/m-plus-rounded-1c-japanese-400-normal.woff2", weight: "400" },
+    { path: "../../node_modules/@fontsource/m-plus-rounded-1c/files/m-plus-rounded-1c-japanese-500-normal.woff2", weight: "500" },
+    { path: "../../node_modules/@fontsource/m-plus-rounded-1c/files/m-plus-rounded-1c-japanese-700-normal.woff2", weight: "700" },
+    { path: "../../node_modules/@fontsource/m-plus-rounded-1c/files/m-plus-rounded-1c-japanese-800-normal.woff2", weight: "800" },
+  ],
   display: "swap",
 });
 
