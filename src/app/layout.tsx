@@ -9,6 +9,7 @@ import InitFlow from "@/components/InitFlow";
 import FcmInit from "@/components/FcmInit";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { getViewerFeatures } from "@/lib/feature-flags";
+import MaintenancePage from "@/app/MaintenancePage";
 
 const mPlusRounded = localFont({
   src: [
@@ -48,6 +49,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const features = await getViewerFeatures();
+
+  if (features.service === false) {
+    return (
+      <html lang="ja">
+        <body className={mPlusRounded.className}>
+          <MaintenancePage />
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="ja">
       <body className={mPlusRounded.className}>
