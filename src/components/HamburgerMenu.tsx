@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useApp } from "@/contexts/AppContext";
 
-const pages = [
+type FeatureKey = "event" | "booth" | "busy" | "eat" | "notice" | "digital" | "map";
+
+const pages: { href: string; label: string; featureKey?: FeatureKey; icon: React.ReactNode }[] = [
   {
     href: "/top",
     label: "ホーム（TOP）",
@@ -12,36 +14,43 @@ const pages = [
   },
   {
     href: "/event",
+    featureKey: "event",
     label: "イベントスケジュール",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
   },
   {
     href: "/booth",
+    featureKey: "booth",
     label: "ブース一覧",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 3h18v4H3z"/><path d="M3 7v13a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M9 21V11h6v10"/></svg>,
   },
   {
     href: "/busy",
+    featureKey: "busy",
     label: "混雑状況",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>,
   },
   {
     href: "/eat",
+    featureKey: "eat",
     label: "飲食エリア",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>,
   },
   {
     href: "/notice",
+    featureKey: "notice",
     label: "お知らせ",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,
   },
   {
     href: "/digital",
+    featureKey: "digital",
     label: "デジタルパンフレット",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
   },
   {
     href: "/map",
+    featureKey: "map",
     label: "校内マップ",
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>,
   },
@@ -80,7 +89,8 @@ function isIOS(): boolean {
 }
 
 export default function HamburgerMenu() {
-  const { isHamburgerOpen, closeHamburger } = useApp();
+  const { isHamburgerOpen, closeHamburger, features } = useApp();
+  const visiblePages = pages.filter(({ featureKey }) => !featureKey || features[featureKey] !== false);
   const [ios, setIos] = useState(false);
   const [visible, setVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -124,7 +134,7 @@ export default function HamburgerMenu() {
         </div>
 
         <nav className="py-2">
-          {pages.map(({ href, label, icon }) => (
+          {visiblePages.map(({ href, label, icon }) => (
             <Link
               key={href}
               href={href}

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getDb } from "@/lib/firebase-admin";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 
 export const revalidate = 300;
 export const metadata: Metadata = { title: "飲食エリア" };
@@ -94,6 +96,7 @@ function EatCard({ item }: { item: EatItem }) {
 }
 
 export default async function EatPage() {
+  if (!(await getViewerFeatures()).eat) return <FeatureDisabled />;
   const result = await getEatItems();
 
   if ("error" in result) {

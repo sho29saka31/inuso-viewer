@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 
 export const revalidate = 3600;
 export const metadata: Metadata = { title: "デジタルパンフレット" };
@@ -16,6 +18,7 @@ async function getPdfUrl(): Promise<string | null> {
 }
 
 export default async function DigitalPage() {
+  if (!(await getViewerFeatures()).digital) return <FeatureDisabled />;
   const pdfUrl = await getPdfUrl();
 
   return (

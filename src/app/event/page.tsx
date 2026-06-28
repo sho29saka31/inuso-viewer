@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 import EventList from "./EventList";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 import * as Sentry from "@sentry/nextjs";
 
 export const revalidate = 300;
@@ -26,6 +28,7 @@ async function getEvents(): Promise<{ events: Event[] } | { error: string }> {
   }
 }
 export default async function EventPage() {
+  if (!(await getViewerFeatures()).event) return <FeatureDisabled />;
   const result = await getEvents();
   if ("error" in result) {
     Sentry.captureException(new Error(result.error));

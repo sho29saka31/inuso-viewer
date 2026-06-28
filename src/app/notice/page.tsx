@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import NotificationBanner from "./NotificationBanner";
 import NoticeList from "./NoticeList";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 import { getDb } from "@/lib/firebase-admin";
 import * as Sentry from "@sentry/nextjs";
 
@@ -28,6 +30,7 @@ async function getNotices(): Promise<{ notices: Notice[] } | { error: string }> 
 }
 
 export default async function NoticePage() {
+  if (!(await getViewerFeatures()).notice) return <FeatureDisabled />;
   const result = await getNotices();
 
   if ("error" in result) {
