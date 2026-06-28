@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 import BoothList from "./BoothList";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 import type { Booth } from "./BoothList";
 import * as Sentry from "@sentry/nextjs";
 
@@ -22,6 +24,7 @@ async function getBooths(): Promise<{ booths: Booth[] } | { error: string }> {
 }
 
 export default async function BoothPage() {
+  if (!(await getViewerFeatures()).booth) return <FeatureDisabled />;
   const result = await getBooths();
   if ("error" in result) {
     Sentry.captureException(new Error(result.error));

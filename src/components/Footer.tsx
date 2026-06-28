@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useApp } from "@/contexts/AppContext";
 
-const tabs = [
+type FeatureKey = "event" | "booth" | "busy" | "eat";
+
+const tabs: { href: string; label: string; featureKey?: FeatureKey; icon: (active: boolean) => React.ReactNode }[] = [
   {
     href: "/event",
+    featureKey: "event",
     label: "日程",
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
@@ -18,6 +22,7 @@ const tabs = [
   },
   {
     href: "/booth",
+    featureKey: "booth",
     label: "ブース",
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
@@ -39,6 +44,7 @@ const tabs = [
   },
   {
     href: "/busy",
+    featureKey: "busy",
     label: "混雑",
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
@@ -50,6 +56,7 @@ const tabs = [
   },
   {
     href: "/eat",
+    featureKey: "eat",
     label: "飲食",
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
@@ -67,13 +74,16 @@ const LEGAL_PATHS = ["/legal/terms", "/legal/privacy", "/legal/cookie-policy"];
 
 export default function Footer() {
   const pathname = usePathname();
+  const { features } = useApp();
 
   if (LEGAL_PATHS.includes(pathname)) return null;
+
+  const visibleTabs = tabs.filter(({ featureKey }) => !featureKey || features[featureKey] !== false);
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-100 bg-white pb-safe">
       <div className="flex items-center h-16">
-        {tabs.map(({ href, label, icon }) => {
+        {visibleTabs.map(({ href, label, icon }) => {
           const active =
             href === "/top"
               ? pathname === "/top" || pathname === "/"

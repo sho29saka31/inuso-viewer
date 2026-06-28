@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/firebase-admin";
 import * as Sentry from "@sentry/nextjs";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 
 export const revalidate = 60;
 
@@ -53,6 +55,7 @@ async function getData(): Promise<{ booths: Booth[]; mapImageUrl: string | null 
 }
 
 export default async function BusyPage() {
+  if (!(await getViewerFeatures()).busy) return <FeatureDisabled />;
   const result = await getData();
 
   if ("error" in result) {

@@ -8,6 +8,7 @@ import HamburgerMenu from "@/components/HamburgerMenu";
 import InitFlow from "@/components/InitFlow";
 import FcmInit from "@/components/FcmInit";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { getViewerFeatures } from "@/lib/feature-flags";
 
 const mPlusRounded = localFont({
   src: [
@@ -41,15 +42,16 @@ export const viewport: Viewport = {
   themeColor: "#1EA78C",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const features = await getViewerFeatures();
   return (
     <html lang="ja">
       <body className={mPlusRounded.className}>
-        <AppProvider>
+        <AppProvider features={features}>
           <GoogleAnalytics />
           <InitFlow />
           <FcmInit />

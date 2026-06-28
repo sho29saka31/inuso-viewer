@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getDb } from "@/lib/firebase-admin";
+import { getViewerFeatures } from "@/lib/feature-flags";
+import FeatureDisabled from "@/components/FeatureDisabled";
 
 export const revalidate = 3600;
 
@@ -18,6 +20,7 @@ async function getMapImageUrl(): Promise<string | null> {
 }
 
 export default async function MapPage() {
+  if (!(await getViewerFeatures()).map) return <FeatureDisabled />;
   const imageUrl = await getMapImageUrl();
 
   return (
