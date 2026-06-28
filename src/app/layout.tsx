@@ -48,6 +48,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const features = await getViewerFeatures();
+
+  if (features.service === false) {
+    return (
+      <html lang="ja">
+        <body className={mPlusRounded.className}>
+          <div className="flex flex-col items-center justify-center min-h-dvh gap-4 px-6 text-center">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" style={{ color: "#9CA3AF" }}>
+              <circle cx="12" cy="12" r="10" />
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+            </svg>
+            <h1 style={{ fontSize: "1.125rem", fontWeight: "700" }}>サービスは現在停止中です</h1>
+            <p style={{ fontSize: "0.875rem", color: "#6B7280" }}>しばらくお待ちください。</p>
+          </div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="ja">
       <body className={mPlusRounded.className}>

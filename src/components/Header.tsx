@@ -56,7 +56,7 @@ function getBreadcrumbs(pathname: string): Crumb[] {
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { openHamburger, openUserRoleOverlay } = useApp();
+  const { openHamburger, openUserRoleOverlay, features } = useApp();
   const [hasUnread, setHasUnread] = useState(false);
   const [isRefreshing, startRefresh] = useTransition();
   const [accountInfo, setAccountInfo] = useState<string | null>(null);
@@ -141,19 +141,21 @@ export default function Header() {
                 </svg>
               </button>
 
-              <button
-                onClick={handleNoticeClick}
-                aria-label="通知"
-                className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 01-3.46 0" />
-                </svg>
-                {hasUnread && (
-                  <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
-                )}
-              </button>
+              {features.notice !== false && (
+                <button
+                  onClick={handleNoticeClick}
+                  aria-label="通知"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 01-3.46 0" />
+                  </svg>
+                  {hasUnread && (
+                    <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
+                  )}
+                </button>
+              )}
             </>
           )}
 
