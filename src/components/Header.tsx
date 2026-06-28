@@ -107,7 +107,7 @@ export default function Header() {
         {/* Left: reload */}
         <div className="absolute left-2 flex items-center">
           <button
-            onClick={() => startRefresh(async () => { await revalidateAll(); router.refresh(); })}
+            onClick={() => startRefresh(async () => { try { await revalidateAll(); } catch {} router.refresh(); })}
             aria-label="更新"
             className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
