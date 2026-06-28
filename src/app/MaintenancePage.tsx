@@ -33,7 +33,7 @@ export default function MaintenancePage() {
         機能ON/OFF設定ページへ
       </a>
       <button
-        onClick={() => startRefresh(async () => { await revalidateAll(); router.refresh(); })}
+        onClick={() => startRefresh(async () => { try { await revalidateAll(); } catch {} router.refresh(); })}
         aria-label="再読み込み"
         className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
       >
