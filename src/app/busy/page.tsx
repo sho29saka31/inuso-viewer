@@ -4,29 +4,11 @@ import * as Sentry from "@sentry/nextjs";
 import { getViewerFeatures } from "@/lib/feature-flags";
 import FeatureDisabled from "@/components/FeatureDisabled";
 import { FLOORMAP_SVG } from "./floormap-svg";
-import ZoomableMap from "./ZoomableMap";
+import BusyClient from "./BusyClient";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = { title: "混雑状況" };
-
-const STATUS_LABELS = ["停止中", "非常に閑散", "閑散", "通常", "混雑", "非常に混雑"];
-const STATUS_DOT_COLORS = [
-  "#94A3B8",
-  "#2C7BB6",
-  "#ABD9E9",
-  "#FFFFBF",
-  "#FDAE61",
-  "#D7191C",
-];
-const STATUS_TEXT_COLORS = [
-  "#64748B",
-  "#1E5A8A",
-  "#0E7490",
-  "#A16207",
-  "#C2410C",
-  "#B91C1C",
-];
 
 const SVG_FILL_COLORS: Record<number, string> = {
   0: "#94A3B8",
@@ -119,44 +101,11 @@ export default async function BusyPage() {
 
   return (
     <div className="pb-24">
-      <div className="px-4 pt-6 pb-4">
+      <div className="px-4 pt-6 pb-3">
         <h1 className="text-xl font-bold mb-1">混雑状況</h1>
         <p className="text-xs text-[var(--color-text-sub)]">リアルタイム更新 (60秒ごと)</p>
       </div>
-
-      <ZoomableMap floorSvgs={floorSvgs} />
-
-      {booths.length === 0 ? (
-        <p className="px-4 text-sm text-[var(--color-text-sub)]">データがありません。</p>
-      ) : (
-        <div className="px-4 flex flex-col gap-2">
-          {booths.map((booth) => {
-            const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
-            return (
-              <div key={booth.boothId} className="rounded-xl bg-white border border-gray-100 shadow-sm p-3 flex items-center gap-3">
-                <span
-                  className="w-3 h-3 rounded-full shrink-0 border border-gray-200"
-                  style={{ backgroundColor: STATUS_DOT_COLORS[level] }}
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
-                    {booth.name ?? booth.shopName}
-                  </p>
-                  {booth.location && (
-                    <p className="text-xs text-[var(--color-text-sub)]">{booth.location}</p>
-                  )}
-                </div>
-                <span
-                  className="text-xs font-medium shrink-0"
-                  style={{ color: STATUS_TEXT_COLORS[level] }}
-                >
-                  {STATUS_LABELS[level]}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <BusyClient booths={booths} floorSvgs={floorSvgs} />
     </div>
   );
 }
