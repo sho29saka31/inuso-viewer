@@ -37,7 +37,7 @@ function getEventState(ev: Event, now: Date): "upcoming" | "active" | "done" {
 }
 
 function isAllDay(ev: Event): boolean {
-  return ev.startTime === "00:00" || ev.startTime === "00:00:00";
+  return /日目/.test(ev.eventName) || ev.startTime === "00:00" || ev.startTime === "00:00:00";
 }
 
 export default function EventList({ grouped }: { grouped: Record<string, Event[]> }) {
@@ -68,11 +68,11 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
             {allDayEvents.map((ev) => (
               <div
                 key={ev.eventId}
-                className="mb-3 rounded-xl bg-[var(--color-primary)] text-white px-4 py-2.5 flex items-center gap-2 shadow-sm"
+                className="mb-2 rounded-lg bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/30 px-3 py-2 flex items-center justify-between gap-2"
               >
-                <span className="font-bold text-sm">{ev.eventName}</span>
+                <span className="text-sm font-bold text-[var(--color-primary)]">{ev.eventName}</span>
                 {ev.isDelayed && (
-                  <span className="ml-auto text-xs px-1.5 py-0.5 rounded bg-white/20 font-medium">
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-medium">
                     遅延 +{ev.delayMinutes}分
                   </span>
                 )}
@@ -94,7 +94,7 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                         : "bg-white border-gray-100"
                     }`}
                   >
-                    <div className={`flex flex-col items-center text-xs shrink-0 w-16 pt-0.5 ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
+                    <div className={`flex flex-col items-center text-xs shrink-0 w-14 pt-0.5 ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
                       <span className={`font-bold text-sm ${isDone ? "text-gray-400" : "text-[var(--color-text-main)]"}`}>
                         {ev.startTime.slice(0, 5)}
                       </span>
