@@ -109,7 +109,19 @@ sequenceDiagram
 |---|---|---|
 | フロントエンド | Next.js 16 App Router | ページレンダリング・PWA |
 | ホスティング | Vercel | ISR・エッジ配信 |
-| データベース | Firebase Firestore | ブース・お知らせ・イベントデータ |
+| データベース | Firebase Firestore | ブース・お知らせ・イベント・機能フラグデータ |
 | プッシュ通知 | Firebase Cloud Messaging (FCM) | 来場者へのプッシュ通知 |
 | モニタリング | Google Analytics + Sentry | アクセス解析・エラー追跡 |
 | ステータス | Instatus | サービス稼働状況ページ |
+
+## 機能 ON/OFF システム
+
+Firestore `config/viewer_features` の各フィールドで機能を制御します。
+
+| フィールド | false 時の動作 |
+|---|---|
+| `service` | 全ページがメンテナンス画面（`MaintenancePage`）に切替 |
+| `notice` | お知らせページ非表示・header の通知 SVG も非表示 |
+| `busy` / `booth` / `event` / `eat` / `digital` / `map` | 各ページが「この機能は現在利用できません」表示 |
+
+フラグは `unstable_cache` + cache tags で管理し、変更時に inuso-admin が即時無効化します。

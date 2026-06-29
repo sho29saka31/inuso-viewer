@@ -24,6 +24,8 @@
 | 制作情報 | `/about` | ISFプロジェクト紹介 |
 | 利用規約等 | `/legal/*` | 利用規約・プライバシーポリシー・Cookie説明 |
 
+各機能ページは Firestore `config/viewer_features` の機能フラグで個別に ON/OFF 制御できます。`service: false` に設定すると全ページがメンテナンス画面に切り替わります。機能フラグの制御は inuso-admin の `/db/features` ページから行います。
+
 ---
 
 ## 技術スタック
@@ -122,11 +124,15 @@ src/
 │   ├── FcmInit.tsx             # FCM 初期化
 │   ├── InitFlow.tsx            # 初回起動フロー制御
 │   ├── PwaGuide.tsx            # PWA インストールガイド
+│   ├── MaintenancePage.tsx     # service=false 時のメンテナンス画面
+│   ├── FeatureDisabled.tsx     # 各機能 OFF 時の表示
+│   ├── RouteRefresh.tsx        # ページ遷移ごとにルーターキャッシュ無効化
 │   └── GoogleAnalytics.tsx
 └── lib/
     ├── firebase-admin.ts       # Admin SDK 初期化・getDb()
     ├── formatDate.ts           # Firestore Timestamp → 日本語日時文字列
-    └── cookies.ts              # getCookie / setCookie
+    ├── cookies.ts              # getCookie / setCookie
+    └── feature-flags.ts        # ViewerFeatures 取得（unstable_cache + viewer-features タグ）
 ```
 
 ---
