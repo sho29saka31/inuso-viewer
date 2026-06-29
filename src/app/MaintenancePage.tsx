@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { revalidateAll } from "@/app/actions";
 
-const ADMIN_FEATURES_URL = (process.env.NEXT_PUBLIC_ADMIN_URL ?? "") + "/db/features";
-
 export default function MaintenancePage() {
   const router = useRouter();
   const [isRefreshing, startRefresh] = useTransition();
@@ -17,32 +15,33 @@ export default function MaintenancePage() {
       </svg>
       <h1 style={{ fontSize: "1.125rem", fontWeight: "700" }}>サービスは現在停止中です</h1>
       <p style={{ fontSize: "0.875rem", color: "#6B7280" }}>しばらくお待ちください。</p>
-      <a
-        href={ADMIN_FEATURES_URL}
+      <button
+        onClick={() => startRefresh(async () => { try { await revalidateAll(); } catch {} router.refresh(); })}
+        disabled={isRefreshing}
         style={{
           marginTop: "0.5rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
           fontSize: "0.875rem",
           padding: "0.5rem 1.25rem",
           borderRadius: "0.5rem",
-          background: "#1EA78C",
-          color: "#fff",
-          fontWeight: "700",
-          textDecoration: "none",
+          border: "1px solid #D1D5DB",
+          background: "#fff",
+          color: "#374151",
+          fontWeight: "600",
+          cursor: isRefreshing ? "not-allowed" : "pointer",
+          opacity: isRefreshing ? 0.6 : 1,
         }}
       >
-        機能ON/OFF設定ページへ
-      </a>
-      <button
-        onClick={() => startRefresh(async () => { try { await revalidateAll(); } catch {} router.refresh(); })}
-        aria-label="再読み込み"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-          className={isRefreshing ? "animate-spin" : ""}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+          style={{ animation: isRefreshing ? "spin 1s linear infinite" : "none" }}>
           <polyline points="23 4 23 10 17 10" />
           <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
         </svg>
+        再読み込みする
       </button>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
