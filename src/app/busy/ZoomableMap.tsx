@@ -143,10 +143,28 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
   }, [resetView]);
 
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    // passive: false が必要な touchmove/touchstart を直接登録する
+    const onTouchStartNative = (e: globalThis.TouchEvent) => {
+      const synth = e as unknown as Parameters<typeof handleTouchStart>[0];
+      handleTouchStart(synth);
+    };
+    const onTouchMoveNative = (e: globalThis.TouchEvent) => {
+      const synth = e as unknown as Parameters<typeof handleTouchMove>[0];
+      handleTouchMove(synth);
+    };
+    const onTouchEndNative = () => handleTouchEnd();
+    el.addEventListener("touchstart", onTouchStartNative, { passive: false });
+    el.addEventListener("touchmove", onTouchMoveNative, { passive: false });
+    el.addEventListener("touchend", onTouchEndNative);
     return () => {
+      el.removeEventListener("touchstart", onTouchStartNative);
+      el.removeEventListener("touchmove", onTouchMoveNative);
+      el.removeEventListener("touchend", onTouchEndNative);
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   const [, , , vbH] = FLOORS[floor].viewBox.split(/\s+/).map(Number);
   const containerH = Math.min(360, Math.max(220, vbH + 10));
@@ -180,9 +198,6 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
           className="w-full overflow-hidden touch-none relative bg-[#F1F5F9]"
           style={{ height: `${containerH}px` }}
           onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           <div
             ref={contentRef}
