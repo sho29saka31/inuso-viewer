@@ -4,6 +4,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
+  serverExternalPackages: ["firebase-admin", "@google-cloud/firestore"],
   async redirects() {
     return [
       {
