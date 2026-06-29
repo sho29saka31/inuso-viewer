@@ -107,7 +107,7 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                           {ev.eventName}
                         </p>
                         {isActive && (
-                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-[var(--color-primary)] text-white font-bold animate-pulse">
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-[var(--color-primary)] text-white font-bold motion-safe:animate-pulse">
                             進行中
                           </span>
                         )}

@@ -154,7 +154,8 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
   return (
     <div>
       {/* フロアタブ */}
-      <div className="flex gap-1 px-4 mb-2 overflow-x-auto scrollbar-hide">
+      <div className="relative mb-2">
+      <div className="flex gap-1 px-4 overflow-x-auto scrollbar-hide">
         {FLOORS.map((f, i) => (
           <button
             key={f.label}
@@ -168,6 +169,8 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
             {f.label}
           </button>
         ))}
+      </div>
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
       </div>
 
       {/* マップ */}
@@ -212,13 +215,13 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
                 className="w-2.5 h-2.5 rounded-sm shrink-0 border border-gray-300"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-[10px] text-gray-500">{item.label}</span>
+              <span className="text-xs text-gray-500">{item.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <p className="px-4 mb-3 text-[11px] text-gray-400 text-center">
+      <p className="px-4 mb-3 text-xs text-gray-400 text-center">
         横にスクロール・ピンチで拡大できます
       </p>
     </div>

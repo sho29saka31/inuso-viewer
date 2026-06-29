@@ -126,7 +126,7 @@ export default function HamburgerMenu() {
       >
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
           <span className="font-bold text-[var(--color-text-main)]">メニュー</span>
-          <button onClick={closeHamburger} className="text-[var(--color-text-sub)]" aria-label="閉じる">
+          <button onClick={closeHamburger} className="flex h-11 w-11 items-center justify-center text-[var(--color-text-sub)]" aria-label="閉じる">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
@@ -139,7 +139,7 @@ export default function HamburgerMenu() {
               key={href}
               href={href}
               onClick={closeHamburger}
-              className="flex items-center gap-3 px-5 py-3 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex items-center gap-3 px-5 py-3.5 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}
@@ -153,7 +153,7 @@ export default function HamburgerMenu() {
               key={href}
               href={href}
               onClick={closeHamburger}
-              className="flex items-center gap-3 px-5 py-3 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex items-center gap-3 px-5 py-3.5 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}
@@ -169,7 +169,7 @@ export default function HamburgerMenu() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeHamburger}
-              className="flex items-center gap-3 px-5 py-3 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex items-center gap-3 px-5 py-3.5 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}
@@ -184,7 +184,7 @@ export default function HamburgerMenu() {
               key={href}
               href={href}
               onClick={closeHamburger}
-              className="block px-5 py-2.5 text-xs text-[var(--color-text-sub)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="block px-5 py-3 text-sm text-[var(--color-text-sub)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               {label}
             </Link>

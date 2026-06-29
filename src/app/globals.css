@@ -21,3 +21,8 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-main);
 }
+
+/* iOSでフォームフォーカス時のズーム防止 */
+input, select, textarea {
+  font-size: max(16px, 1em);
+}

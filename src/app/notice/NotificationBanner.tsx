@@ -32,7 +32,7 @@ export default function NotificationBanner() {
         {permission === "default" && (
           <button
             onClick={handleRequest}
-            className="mt-2 text-xs font-bold px-3 py-1.5 rounded-lg bg-yellow-500 text-white"
+            className="mt-2 text-sm font-bold px-4 py-2.5 rounded-lg bg-yellow-500 text-white"
           >
             通知を許可する
           </button>
