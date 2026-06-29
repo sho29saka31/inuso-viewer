@@ -95,15 +95,19 @@ Vercel ダッシュボード → Settings → Environment Variables に上記の
 
 ページごとのキャッシュ設定：
 
-| ページ | `revalidate` | 更新タイミング |
+| ページ | `revalidate` | 即時無効化トリガー |
 |---|---|---|
-| `/`（ホーム） | 60秒 | on-demand も対応 |
-| `/notice` | 30秒 | お知らせ更新時に即時無効化 |
-| `/notice/[id]` | 30秒 | お知らせ更新時に即時無効化 |
-| `/booth` | — | Bluetooth 更新時に即時無効化 |
-| `/busy` | — | Bluetooth 更新時に即時無効化 |
+| `/top` | 60秒 | お知らせ・ブース更新時 |
+| `/notice` | 30秒 | お知らせ送信・更新・削除時 |
+| `/notice/[id]` | 30秒 | お知らせ更新時 |
+| `/busy` | 60秒 | Bluetooth 更新時 |
+| `/booth` | 300秒 | ブース更新時 |
+| `/event` | 300秒 | イベント更新時 |
+| `/eat` | 300秒 | 飲食ブース更新時 |
+| `/map`, `/digital` | 300秒 | ファイル更新時 |
 
-on-demand 無効化は `POST /api/revalidate` で実行（inuso-admin から自動呼び出し）。
+即時無効化は `POST /api/revalidate` で実行（inuso-admin から自動呼び出し）。  
+機能フラグ（`config/viewer_features`）の変更時もすべてのページが即時無効化されます。
 
 ---
 

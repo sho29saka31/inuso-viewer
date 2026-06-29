@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-06-29
+
+- Security: `/api/revalidate` を fail-closed に強化（`REVALIDATE_SECRET` 未設定 or `secret` 未提供で即 401）([#100](https://github.com/sho29saka31/inuso-viewer/pull/100))
+- Security: `/api/revalidate` のパスをホワイトリストでフィルタ（`/`, `/top`, `/notice`, `/busy`, `/booth`, `/event`, `/eat`, `/map`, `/digital` のみ許可、任意パス書き込み防止）([#100](https://github.com/sho29saka31/inuso-viewer/pull/100))
+- Security: `/api/revalidate` のシークレット比較を `timingSafeEqual` ベースに変更（タイミング攻撃対策）([#100](https://github.com/sho29saka31/inuso-viewer/pull/100))
+- Security: `/notice` ページの Firestore エラー詳細を Sentry にキャプチャ・UI は汎用文言のみ表示（内部情報漏洩防止）([#100](https://github.com/sho29saka31/inuso-viewer/pull/100))
+- Feat: 機能 ON/OFF システムを実装（`config/viewer_features`・`src/lib/feature-flags.ts`）([#97](https://github.com/sho29saka31/inuso-viewer/pull/97))
+- Feat: `MaintenancePage` コンポーネントを追加（`service: false` 時に全ページをメンテナンス画面に切替）([#98](https://github.com/sho29saka31/inuso-viewer/pull/98), [#100](https://github.com/sho29saka31/inuso-viewer/pull/100))
+- Feat: `RouteRefresh` でページ遷移のたびにサービス停止状態を再検証（ルーターキャッシュ即時無効化）([#104](https://github.com/sho29saka31/inuso-viewer/pull/104))
+- Feat: 各機能ページに `FeatureDisabled` 表示を追加（`notice`/`busy`/`booth`/`event`/`eat`/`digital`/`map` 個別 ON/OFF）([#97](https://github.com/sho29saka31/inuso-viewer/pull/97))
+- Feat: ヘッダーの通知 SVG を `viewer_features.notice` が OFF のとき非表示に([#100](https://github.com/sho29saka31/inuso-viewer/pull/100))
+- Feat: `/api/revalidate` に `tags` パラメータを追加し `revalidateTag("viewer-features")` を呼び出せるよう拡張([#99](https://github.com/sho29saka31/inuso-viewer/pull/99))
+- Feat: 混雑ページにマップ表示/一覧表示タブ切替を追加・ステータス配色改善([#106](https://github.com/sho29saka31/inuso-viewer/pull/106))
+- Fix: `ConsentOverlay`・`PwaGuide`・利用規約ページのタッチターゲットを iOS 最小推奨（44×44px）に修正([#108](https://github.com/sho29saka31/inuso-viewer/pull/108))
+- Fix: `ZoomableMap` のタッチイベントリスナーを passive に変更（スクロール干渉を解消）([#108](https://github.com/sho29saka31/inuso-viewer/pull/108))
+- Fix: iOS フォームズーム防止（`font-size: max(16px, 1em)` グローバル CSS + `UserRoleOverlay` 各 `select`/`input` に `fontSize: "16px"`）([#108](https://github.com/sho29saka31/inuso-viewer/pull/108))
+- Fix: メンテナンスページのボタン改善・イベント終日バナーのスタイルを admin と統一([#102](https://github.com/sho29saka31/inuso-viewer/pull/102))
+- Perf: `next.config.ts` を最適化（`widenClientFileUpload: false` でビルド時間短縮・TypeScript/ESLint チェックを Vercel ビルドから分離）([#110](https://github.com/sho29saka31/inuso-viewer/pull/110))
+- Docs: `docs/architecture.md` に機能 ON/OFF システムのセクションを追加
+- Docs: `docs/deployment.md` の ISR キャッシュ設定表を実際の値に更新・機能フラグ即時無効化の注記を追加
+- Docs: `docs/troubleshooting.md` にメンテナンスモード（`service: false`）の対処を追加
+
+---
+
 ## 2026-06-23
 
 - Docs: デプロイ手順・ISRキャッシュ設定・FCMセットアップ手順を追加 (`docs/deployment.md`)
