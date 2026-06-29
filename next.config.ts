@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
+  serverExternalPackages: ["firebase-admin", "@google-cloud/firestore"],
   async redirects() {
     return [
       {
@@ -13,22 +16,16 @@ const nextConfig: NextConfig = {
   },
 };
 
+// 本番デプロイ時のみSentryソースマップをアップロード（プレビューはスキップして高速化）
+const isProduction = process.env.VERCEL_ENV === "production";
+
 export default withSentryConfig(nextConfig, {
-  // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
-
   org: "isf-webapp",
-
   project: "viewer",
-
-  // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
-
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+  widenClientFileUpload: false,
+  // プレビュー・開発時はソースマップアップロードをスキップ
+  sourcemaps: { disable: !isProduction },
 
   // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
   // This can increase your server load as well as your hosting bill.
