@@ -10,7 +10,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = { title: "混雑状況" };
 
-constSVG_FILL_COLORS: Record<number, string> = {
+const SVG_FILL_COLORS: Record<number, string> = {
   0: "#94A3B8",
   1: "#2C7BB6",
   2: "#ABD9E9",
