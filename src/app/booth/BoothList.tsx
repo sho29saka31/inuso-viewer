@@ -75,7 +75,7 @@ export default function BoothList({ booths }: { booths: Booth[] }) {
             </button>
           ))}
         </div>
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
         </div>
       )}
 
@@ -101,7 +101,7 @@ export default function BoothList({ booths }: { booths: Booth[] }) {
                           <p className="text-xs text-[var(--color-text-sub)] mt-1 line-clamp-2">{booth.description}</p>
                         )}
                       </div>
-                      <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[booth.status] ?? STATUS_COLORS[3]}`}>
+                      <span className={`shrink-0 text-xs px-2 py-1 rounded-full font-medium ${STATUS_COLORS[booth.status] ?? STATUS_COLORS[3]}`}>
                         {STATUS_LABELS[booth.status] ?? "不明"}
                       </span>
                     </div>

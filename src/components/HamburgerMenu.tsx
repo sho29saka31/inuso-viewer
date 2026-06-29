@@ -120,7 +120,7 @@ export default function HamburgerMenu() {
       />
       {/* Panel */}
       <div
-        className="fixed top-0 right-0 z-50 h-full w-72 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out"
+        className="fixed top-0 right-0 z-50 h-full w-[80vw] max-w-72 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out"
         style={{ transform: visible ? "translateX(0)" : "translateX(100%)" }}
         onTransitionEnd={() => { if (!visible) setShouldRender(false); }}
       >
@@ -139,7 +139,7 @@ export default function HamburgerMenu() {
               key={href}
               href={href}
               onClick={closeHamburger}
-              className="flex items-center gap-3 px-5 py-3.5 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex items-center gap-3 px-5 py-4 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}
@@ -153,7 +153,7 @@ export default function HamburgerMenu() {
               key={href}
               href={href}
               onClick={closeHamburger}
-              className="flex items-center gap-3 px-5 py-3.5 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex items-center gap-3 px-5 py-4 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}
@@ -169,7 +169,7 @@ export default function HamburgerMenu() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeHamburger}
-              className="flex items-center gap-3 px-5 py-3.5 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex items-center gap-3 px-5 py-4 text-sm text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-text-sub)] shrink-0">{icon}</span>
               {label}

@@ -60,7 +60,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="px-4 py-6 pb-24">
-      <Link href="/notice" className="text-xs text-[var(--color-primary)] mb-4 inline-block">
+      <Link href="/notice" className="text-sm text-[var(--color-primary)] mb-2 py-2 inline-block">
         ← お知らせ一覧に戻る
       </Link>
 

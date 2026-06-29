@@ -170,7 +170,7 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
           </button>
         ))}
       </div>
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
       </div>
 
       {/* マップ */}
