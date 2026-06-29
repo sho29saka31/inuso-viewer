@@ -10,6 +10,7 @@ import FcmInit from "@/components/FcmInit";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { getViewerFeatures } from "@/lib/feature-flags";
 import MaintenancePage from "@/app/MaintenancePage";
+import RouteRefresh from "@/components/RouteRefresh";
 
 const mPlusRounded = localFont({
   src: [
@@ -64,6 +65,7 @@ export default async function RootLayout({
     <html lang="ja">
       <body className={mPlusRounded.className}>
         <AppProvider features={features}>
+          <RouteRefresh />
           <GoogleAnalytics />
           <InitFlow />
           <FcmInit />
