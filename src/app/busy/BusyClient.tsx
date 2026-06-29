@@ -21,25 +21,30 @@ interface Booth {
   status: number;
 }
 
+const TABS = [
+  { key: "map" as const,  label: "🗺️ マップ" },
+  { key: "list" as const, label: "📋 一覧" },
+];
+
 export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; floorSvgs: string[] }) {
   const [tab, setTab] = useState<"map" | "list">("map");
 
   return (
     <>
-      {/* タブ切替 */}
-      <div className="px-4 flex gap-1 border-b border-gray-100">
-        {(["map", "list"] as const).map((t) => (
+      {/* セグメントコントロール */}
+      <div className="mx-4 my-3 bg-gray-100 rounded-xl p-1 flex">
+        {TABS.map((t) => (
           <button
-            key={t}
+            key={t.key}
             type="button"
-            onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-              tab === t
-                ? "border-[var(--color-primary)] text-[var(--color-primary)]"
-                : "border-transparent text-[var(--color-text-sub)]"
+            onClick={() => setTab(t.key)}
+            className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-150 ${
+              tab === t.key
+                ? "bg-white shadow-sm text-[var(--color-text-main)]"
+                : "text-[var(--color-text-sub)]"
             }`}
           >
-            {t === "map" ? "マップ表示" : "一覧表示"}
+            {t.label}
           </button>
         ))}
       </div>
@@ -50,27 +55,27 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       {/* 一覧 */}
       {tab === "list" && (
         booths.length === 0 ? (
-          <p className="px-4 py-4 text-sm text-[var(--color-text-sub)]">データがありません。</p>
+          <p className="px-4 py-6 text-sm text-center text-[var(--color-text-sub)]">データがありません。</p>
         ) : (
-          <div className="px-4 pt-3 flex flex-col gap-2">
+          <div className="px-4 flex flex-col gap-2 pb-4">
             {booths.map((booth) => {
               const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
               const { label, bg, text } = STATUS_CONFIG[level];
               return (
                 <div
                   key={booth.boothId}
-                  className="rounded-xl bg-white border border-gray-100 shadow-sm p-3 flex items-center gap-3"
+                  className="rounded-xl bg-white border border-gray-100 shadow-sm p-3.5 flex items-center gap-3"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
                       {booth.name ?? booth.shopName}
                     </p>
                     {booth.location && (
-                      <p className="text-xs text-[var(--color-text-sub)]">{booth.location}</p>
+                      <p className="text-xs text-[var(--color-text-sub)] mt-0.5">{booth.location}</p>
                     )}
                   </div>
                   <span
-                    className="text-xs font-semibold shrink-0 px-2 py-0.5 rounded-full"
+                    className="text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full"
                     style={{ backgroundColor: bg, color: text }}
                   >
                     {label}
