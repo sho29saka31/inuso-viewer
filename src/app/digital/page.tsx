@@ -39,7 +39,7 @@ export default async function DigitalPage() {
           >
             PDFを別タブで開く
           </a>
-          <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm" style={{ height: "75vh" }}>
+          <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm" style={{ height: "calc(100svh - 220px)" }}>
             <iframe src={pdfUrl} className="w-full h-full" title="デジタルパンフレット" />
           </div>
         </>

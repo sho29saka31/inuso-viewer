@@ -74,6 +74,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
               value={role}
               onChange={(e) => { setRole(e.target.value as Role); setGrade(""); setCls(""); setStudentId(""); }}
               className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+              style={{ fontSize: "16px" }}
             >
               <option value="">▼ 選択してください</option>
               <option value="student">生徒</option>
@@ -92,6 +93,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
                 value={grade}
                 onChange={(e) => setGrade(e.target.value)}
                 className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+              style={{ fontSize: "16px" }}
               >
                 <option value="">▼ 選択してください</option>
                 <option value="1">1年</option>
@@ -111,6 +113,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
                 value={cls}
                 onChange={(e) => setCls(e.target.value)}
                 className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+              style={{ fontSize: "16px" }}
               >
                 <option value="">▼ 選択してください</option>
                 <option value="1">1組</option>
@@ -134,6 +137,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
                 onChange={(e) => setStudentId(e.target.value.replace(/\D/g, ""))}
                 placeholder="例: 1234"
                 className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+              style={{ fontSize: "16px" }}
               />
             </div>
           )}

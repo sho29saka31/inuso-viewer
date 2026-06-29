@@ -94,11 +94,11 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                         : "bg-white border-gray-100"
                     }`}
                   >
-                    <div className={`flex flex-col items-center text-xs shrink-0 w-14 pt-0.5 ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
-                      <span className={`font-bold text-sm ${isDone ? "text-gray-400" : "text-[var(--color-text-main)]"}`}>
+                    <div className={`flex flex-col items-center text-sm shrink-0 w-14 pt-0.5 ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
+                      <span className={`font-bold ${isDone ? "text-gray-400" : "text-[var(--color-text-main)]"}`}>
                         {ev.startTime.slice(0, 5)}
                       </span>
-                      <span>〜</span>
+                      <span className="text-xs">〜</span>
                       <span>{ev.endTime.slice(0, 5)}</span>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -107,7 +107,7 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                           {ev.eventName}
                         </p>
                         {isActive && (
-                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-[var(--color-primary)] text-white font-bold animate-pulse">
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-[var(--color-primary)] text-white font-bold motion-safe:animate-pulse">
                             進行中
                           </span>
                         )}

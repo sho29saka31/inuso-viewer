@@ -109,7 +109,7 @@ export default function Header() {
           <button
             onClick={() => startRefresh(async () => { try { await revalidateAll(); } catch {} router.refresh(); })}
             aria-label="更新"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
             <svg
               width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
@@ -133,7 +133,7 @@ export default function Header() {
               <button
                 onClick={handleAccountClick}
                 aria-label="アカウント"
-                className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
               >
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <circle cx="12" cy="8" r="4" />
@@ -145,7 +145,7 @@ export default function Header() {
                 <button
                   onClick={handleNoticeClick}
                   aria-label="通知"
-                  className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+                  className="relative flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
                 >
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -162,7 +162,7 @@ export default function Header() {
           <button
             onClick={openHamburger}
             aria-label="メニュー"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <line x1="3" y1="6" x2="21" y2="6" />

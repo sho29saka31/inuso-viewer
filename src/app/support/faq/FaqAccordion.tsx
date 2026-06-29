@@ -52,7 +52,7 @@ function NotifyButton() {
   return (
     <>
       {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
-      <button onClick={handleClick} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-3.5 text-sm font-bold text-white active:opacity-80">
         通知を許可する
       </button>
     </>
@@ -85,7 +85,7 @@ function UnsubscribeButton() {
     <>
       {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
       {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
-      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-2.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50">
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-3.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50">
         通知の購読を解除する
       </button>
     </>
@@ -106,7 +106,7 @@ function ReadResetButton() {
     <>
       {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
       {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
-      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 py-2.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50">
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 py-3.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50">
         既読状態をリセットする
       </button>
     </>
@@ -115,7 +115,7 @@ function ReadResetButton() {
 
 function ReloadButton() {
   return (
-    <button onClick={() => window.location.reload()} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+    <button onClick={() => window.location.reload()} className="mt-3 w-full rounded-xl bg-[var(--color-primary)] py-3.5 text-sm font-bold text-white active:opacity-80">
       ページを強制リロードする
     </button>
   );
@@ -163,7 +163,7 @@ export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
               return (
                 <div key={key} className="rounded-xl bg-white border border-gray-100 shadow-sm overflow-hidden">
                   <button
-                    className="w-full text-left px-4 py-3 flex items-center justify-between gap-2"
+                    className="w-full text-left px-4 py-4 flex items-center justify-between gap-2"
                     onClick={() => setOpenKey(open ? null : key)}
                     aria-expanded={open}
                   >
@@ -184,7 +184,7 @@ export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
                       {readResetButton && <ReadResetButton />}
                       {reloadButton && <ReloadButton />}
                       {mapLinkButton && (
-                        <Link href="/map" className="mt-3 flex items-center justify-center gap-2 w-full rounded-xl bg-[var(--color-primary)] py-2.5 text-sm font-bold text-white active:opacity-80">
+                        <Link href="/map" className="mt-3 flex items-center justify-center gap-2 w-full rounded-xl bg-[var(--color-primary)] py-3.5 text-sm font-bold text-white active:opacity-80">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
                           </svg>

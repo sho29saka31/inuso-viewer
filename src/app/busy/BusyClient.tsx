@@ -57,7 +57,7 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
             key={key}
             type="button"
             onClick={() => setTab(key)}
-            className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-3 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-1.5 ${
               tab === key
                 ? "bg-white shadow-sm text-[var(--color-text-main)]"
                 : "text-[var(--color-text-sub)]"

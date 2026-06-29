@@ -71,12 +71,12 @@ export default async function TopPage() {
       {/* Quick links */}
       <section className="mb-6">
         <h2 className="text-sm font-bold text-[var(--color-text-sub)] mb-3">メニュー</h2>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           {visibleLinks.map(({ href, label, icon }) => (
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center gap-1.5 rounded-2xl bg-white border border-gray-100 shadow-sm py-4 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex flex-col items-center gap-1.5 rounded-xl bg-white border border-gray-100 shadow-sm py-4 px-1 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-primary)]">{icon}</span>
               <span className="text-xs font-medium">{label}</span>

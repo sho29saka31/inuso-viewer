@@ -25,13 +25,13 @@ export function ConfirmDialog({ message, onConfirm, onCancel }: ConfirmDialogPro
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-[var(--color-text-sub)]"
+            className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-[var(--color-text-sub)]"
           >
             キャンセル
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-2.5 rounded-xl bg-[var(--color-primary)] text-sm font-bold text-white"
+            className="flex-1 py-3 rounded-xl bg-[var(--color-primary)] text-sm font-bold text-white"
           >
             OK
           </button>
@@ -62,7 +62,7 @@ export function AlertDialog({ message, onClose }: AlertDialogProps) {
         <p className="text-sm text-[var(--color-text-main)] leading-relaxed whitespace-pre-line mb-6">{message}</p>
         <button
           onClick={onClose}
-          className="w-full py-2.5 rounded-xl bg-[var(--color-primary)] text-sm font-bold text-white"
+          className="w-full py-3 rounded-xl bg-[var(--color-primary)] text-sm font-bold text-white"
         >
           OK
         </button>

@@ -39,13 +39,13 @@ export default function PwaGuide({ onComplete }: Props) {
 
         <button
           onClick={handleComplete}
-          className="mb-3 w-full rounded-xl bg-[var(--color-primary)] py-3 text-sm font-bold text-white active:opacity-80"
+          className="mb-3 w-full rounded-xl bg-[var(--color-primary)] py-3.5 text-sm font-bold text-white active:opacity-80"
         >
           ホーム画面に追加する
         </button>
         <button
           onClick={handleComplete}
-          className="w-full rounded-xl py-3 text-sm text-[var(--color-text-sub)] underline"
+          className="w-full rounded-xl py-3.5 text-sm text-[var(--color-text-sub)] underline"
         >
           通知なしで続行する
         </button>
