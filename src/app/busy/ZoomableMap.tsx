@@ -143,10 +143,28 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
   }, [resetView]);
 
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    // passive: false が必要な touchmove/touchstart を直接登録する
+    const onTouchStartNative = (e: globalThis.TouchEvent) => {
+      const synth = e as unknown as Parameters<typeof handleTouchStart>[0];
+      handleTouchStart(synth);
+    };
+    const onTouchMoveNative = (e: globalThis.TouchEvent) => {
+      const synth = e as unknown as Parameters<typeof handleTouchMove>[0];
+      handleTouchMove(synth);
+    };
+    const onTouchEndNative = () => handleTouchEnd();
+    el.addEventListener("touchstart", onTouchStartNative, { passive: false });
+    el.addEventListener("touchmove", onTouchMoveNative, { passive: false });
+    el.addEventListener("touchend", onTouchEndNative);
     return () => {
+      el.removeEventListener("touchstart", onTouchStartNative);
+      el.removeEventListener("touchmove", onTouchMoveNative);
+      el.removeEventListener("touchend", onTouchEndNative);
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   const [, , , vbH] = FLOORS[floor].viewBox.split(/\s+/).map(Number);
   const containerH = Math.min(360, Math.max(220, vbH + 10));
@@ -154,7 +172,8 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
   return (
     <div>
       {/* フロアタブ */}
-      <div className="flex gap-1 px-4 mb-2 overflow-x-auto scrollbar-hide">
+      <div className="relative mb-2">
+      <div className="flex gap-1 px-4 overflow-x-auto scrollbar-hide">
         {FLOORS.map((f, i) => (
           <button
             key={f.label}
@@ -169,6 +188,8 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
           </button>
         ))}
       </div>
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
+      </div>
 
       {/* マップ */}
       <div className="mx-4 mb-3 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
@@ -177,9 +198,6 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
           className="w-full overflow-hidden touch-none relative bg-[#F1F5F9]"
           style={{ height: `${containerH}px` }}
           onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           <div
             ref={contentRef}
@@ -212,13 +230,13 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
                 className="w-2.5 h-2.5 rounded-sm shrink-0 border border-gray-300"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-[10px] text-gray-500">{item.label}</span>
+              <span className="text-xs text-gray-500">{item.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <p className="px-4 mb-3 text-[11px] text-gray-400 text-center">
+      <p className="px-4 mb-3 text-xs text-gray-400 text-center">
         横にスクロール・ピンチで拡大できます
       </p>
     </div>

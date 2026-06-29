@@ -32,8 +32,8 @@ export default function ConsentOverlay({ onComplete }: Props) {
           当アプリ利用時に以下の項目に同意してください。
         </p>
 
-        <div className="mb-6 flex flex-col gap-3">
-          <label className="flex cursor-pointer items-center gap-3 text-sm">
+        <div className="mb-6 flex flex-col gap-1">
+          <label className="flex cursor-pointer items-center gap-3 text-sm py-2">
             <input
               type="checkbox"
               checked={terms}
@@ -47,7 +47,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
               に同意します。
             </span>
           </label>
-          <label className="flex cursor-pointer items-center gap-3 text-sm">
+          <label className="flex cursor-pointer items-center gap-3 text-sm py-2">
             <input
               type="checkbox"
               checked={privacy}
@@ -61,7 +61,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
               に同意します。
             </span>
           </label>
-          <label className="flex cursor-pointer items-center gap-3 text-sm">
+          <label className="flex cursor-pointer items-center gap-3 text-sm py-2">
             <input
               type="checkbox"
               checked={cookie}
@@ -80,7 +80,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
         <button
           onClick={handleSubmit}
           disabled={!allChecked}
-          className={`w-full rounded-xl py-3 text-sm font-bold transition-colors ${
+          className={`w-full rounded-xl py-3.5 text-sm font-bold transition-colors ${
             allChecked
               ? "bg-[var(--color-primary)] text-white active:opacity-80"
               : "cursor-not-allowed bg-gray-200 text-gray-400"

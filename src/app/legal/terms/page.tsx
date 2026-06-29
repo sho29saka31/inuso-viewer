@@ -50,7 +50,7 @@ export default function TermsPage() {
       <div className="flex flex-col gap-5">
         {sections.map((s) => (
           <section key={s.title}>
-            <h2 className="text-sm font-bold text-[var(--color-text-main)] mb-1">{s.title}</h2>
+            <h2 className="text-sm font-bold text-[var(--color-text-main)] mb-2">{s.title}</h2>
             <p className="text-sm text-[var(--color-text-sub)] whitespace-pre-line leading-relaxed">{s.body}</p>
           </section>
         ))}

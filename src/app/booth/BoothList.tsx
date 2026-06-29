@@ -49,10 +49,11 @@ export default function BoothList({ booths }: { booths: Booth[] }) {
   return (
     <>
       {categories.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-4 px-4 scrollbar-none">
+        <div className="relative mb-4 -mx-4">
+        <div className="flex gap-2 overflow-x-auto pb-2 px-4 scrollbar-none">
           <button
             onClick={() => setActiveCategory("all")}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+            className={`shrink-0 px-3 py-2 rounded-full text-sm font-bold transition-colors ${
               activeCategory === "all"
                 ? "bg-[var(--color-primary)] text-white"
                 : "bg-white border border-gray-200 text-[var(--color-text-sub)]"
@@ -64,7 +65,7 @@ export default function BoothList({ booths }: { booths: Booth[] }) {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`shrink-0 px-3 py-2 rounded-full text-sm font-bold transition-colors ${
                 activeCategory === cat
                   ? "bg-[var(--color-primary)] text-white"
                   : "bg-white border border-gray-200 text-[var(--color-text-sub)]"
@@ -73,6 +74,8 @@ export default function BoothList({ booths }: { booths: Booth[] }) {
               {CATEGORY_LABELS[cat] ?? cat}
             </button>
           ))}
+        </div>
+        <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
         </div>
       )}
 
@@ -98,7 +101,7 @@ export default function BoothList({ booths }: { booths: Booth[] }) {
                           <p className="text-xs text-[var(--color-text-sub)] mt-1 line-clamp-2">{booth.description}</p>
                         )}
                       </div>
-                      <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[booth.status] ?? STATUS_COLORS[3]}`}>
+                      <span className={`shrink-0 text-xs px-2 py-1 rounded-full font-medium ${STATUS_COLORS[booth.status] ?? STATUS_COLORS[3]}`}>
                         {STATUS_LABELS[booth.status] ?? "不明"}
                       </span>
                     </div>

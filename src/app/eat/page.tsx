@@ -41,7 +41,7 @@ function EatCard({ item }: { item: EatItem }) {
   return (
     <div className="rounded-2xl bg-white shadow-sm border border-gray-100 overflow-hidden">
       {item.imageUrl && (
-        <div className="relative w-full h-40">
+        <div className="relative w-full aspect-[4/3]">
           <Image src={item.imageUrl} alt={item.shopName} fill className="object-cover" />
         </div>
       )}
@@ -50,7 +50,7 @@ function EatCard({ item }: { item: EatItem }) {
           <h2 className="font-bold text-base text-[var(--color-text-main)]">{item.shopName}</h2>
           <div className="flex items-center gap-2 shrink-0">
             {item.instagramUrl && (
-              <a href={item.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href={item.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex items-center justify-center h-11 w-11 -my-1">
                 <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
@@ -103,8 +103,7 @@ export default async function EatPage() {
     return (
       <div className="px-4 py-6">
         <h1 className="text-xl font-bold mb-4">飲食エリア</h1>
-        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。</p>
-        <p className="text-xs text-red-400 mt-2 break-all">{result.error}</p>
+        <p className="text-sm text-[var(--color-text-sub)]">データを取得できませんでした。時間をおいて再度お試しください。</p>
       </div>
     );
   }

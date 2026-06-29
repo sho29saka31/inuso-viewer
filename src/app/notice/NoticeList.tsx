@@ -76,7 +76,7 @@ export default function NoticeList({ notices }: { notices: Notice[] }) {
               <span>{formatDate(n.createdAt, { month: "long" })}</span>
             </div>
             <div className="flex justify-end mt-2">
-              <Link href={`/notice/${n.noticeId}`} className="text-xs text-[var(--color-primary)] font-medium">
+              <Link href={`/notice/${n.noticeId}`} className="text-sm text-[var(--color-primary)] font-medium py-1 inline-block">
                 詳細を見る →
               </Link>
             </div>
