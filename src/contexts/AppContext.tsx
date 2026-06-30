@@ -16,6 +16,9 @@ type AppContextType = {
   showUserRoleOverlay: boolean;
   openUserRoleOverlay: () => void;
   closeUserRoleOverlay: () => void;
+  showPwaGuide: boolean;
+  openPwaGuide: () => void;
+  closePwaGuide: () => void;
   features: ViewerFeatures;
 };
 
@@ -24,6 +27,7 @@ const AppContext = createContext<AppContextType | null>(null);
 export function AppProvider({ children, features }: { children: ReactNode; features?: ViewerFeatures }) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [showUserRoleOverlay, setShowUserRoleOverlay] = useState(false);
+  const [showPwaGuide, setShowPwaGuide] = useState(false);
 
   return (
     <AppContext.Provider
@@ -34,6 +38,9 @@ export function AppProvider({ children, features }: { children: ReactNode; featu
         showUserRoleOverlay,
         openUserRoleOverlay: () => setShowUserRoleOverlay(true),
         closeUserRoleOverlay: () => setShowUserRoleOverlay(false),
+        showPwaGuide,
+        openPwaGuide: () => setShowPwaGuide(true),
+        closePwaGuide: () => setShowPwaGuide(false),
         features: features ?? DEFAULT_FEATURES,
       }}
     >

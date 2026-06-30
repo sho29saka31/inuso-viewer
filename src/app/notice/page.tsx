@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import NotificationBanner from "./NotificationBanner";
+import PwaInstallBanner from "./PwaInstallBanner";
 import NoticeList from "./NoticeList";
 import { getViewerFeatures } from "@/lib/feature-flags";
 import FeatureDisabled from "@/components/FeatureDisabled";
@@ -49,6 +50,7 @@ export default async function NoticePage() {
     <div className="px-4 py-6 pb-24">
       <h1 className="text-xl font-bold mb-4">お知らせ</h1>
       <NotificationBanner />
+      <PwaInstallBanner />
       <NoticeList notices={notices} />
     </div>
   );
