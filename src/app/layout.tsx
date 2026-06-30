@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AppProvider } from "@/contexts/AppContext";
@@ -64,6 +65,14 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body className={mPlusRounded.className}>
+        {/* beforeinstallprompt はハイドレーション前に発火し得るため、最速で捕捉して退避する */}
+        <Script id="pwa-install-capture" strategy="beforeInteractive">
+          {
+            "window.__pwaInstallPrompt=null;" +
+            "window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaInstallPrompt=e;});" +
+            "window.addEventListener('appinstalled',function(){window.__pwaInstallPrompt=null;});"
+          }
+        </Script>
         <AppProvider features={features}>
           <RouteRefresh />
           <GoogleAnalytics />
