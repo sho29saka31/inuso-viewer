@@ -37,12 +37,11 @@ interface Booth {
   status: number;
 }
 
+// Firestore boothId と SVG の id が異なるブースのみマッピングする。
+// 飲食（eat-car-1/2/3・pta-bazaar）は boothId と SVG id が一致するため
+// 下の statusMap で boothId をそのまま使う（フォールバック）。
 const BOOTH_ID_TO_SVG: Record<string, string> = {
   "club-game": "club-esports",
-  "eat-1": "pta-bazaar",
-  "eat-2": "eat-car-1",
-  "eat-3": "eat-car-2",
-  "eat-4": "eat-car-3",
 };
 
 const FLOOR_VIEWBOXES = [
