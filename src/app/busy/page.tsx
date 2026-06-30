@@ -19,6 +19,15 @@ const SVG_FILL_COLORS: Record<number, string> = {
   5: "#D7191C",
 };
 
+const SVG_TEXT_COLORS: Record<number, string> = {
+  0: "#FFFFFF",
+  1: "#FFFFFF",
+  2: "#1E3A5F",
+  3: "#5D4E00",
+  4: "#7C2D12",
+  5: "#FFFFFF",
+};
+
 interface Booth {
   boothId: string;
   name?: string;
@@ -28,12 +37,11 @@ interface Booth {
   status: number;
 }
 
+// Firestore boothId と SVG の id が異なるブースのみマッピングする。
+// 飲食（eat-car-1/2/3・pta-bazaar）は boothId と SVG id が一致するため
+// 下の statusMap で boothId をそのまま使う（フォールバック）。
 const BOOTH_ID_TO_SVG: Record<string, string> = {
   "club-game": "club-esports",
-  "eat-1": "pta-bazaar",
-  "eat-2": "eat-car-1",
-  "eat-3": "eat-car-2",
-  "eat-4": "eat-car-3",
 };
 
 const FLOOR_VIEWBOXES = [
@@ -64,10 +72,15 @@ async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { e
     for (const [boothId, status] of Object.entries(statusMap)) {
       if (!boothId) continue;
       const color = SVG_FILL_COLORS[status] ?? SVG_FILL_COLORS[0];
+      const textColor = SVG_TEXT_COLORS[status] ?? SVG_TEXT_COLORS[0];
       const re = new RegExp(
         `(<rect\\b[^>]*\\bid="${boothId}"[^>]*\\bfill=")[^"]*(")`
       );
       svg = svg.replace(re, `$1${color}$2`);
+      const textRe = new RegExp(
+        `(<rect\\b[^>]*\\bid="${boothId}"[^>]*/>\\s*<text\\b[^>]*\\bfill=")[^"]*(")`
+      );
+      svg = svg.replace(textRe, `$1${textColor}$2`);
     }
 
     const floorSvgs = FLOOR_VIEWBOXES.map((vb) => {
