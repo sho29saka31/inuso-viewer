@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AppProvider } from "@/contexts/AppContext";
 import Header from "@/components/Header";
+import HeaderGuideBar from "@/components/HeaderGuideBar";
 import Footer from "@/components/Footer";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import InitFlow from "@/components/InitFlow";
@@ -69,6 +70,7 @@ export default async function RootLayout({
           <InitFlow />
           <FcmInit />
           <Header />
+          <HeaderGuideBar />
           <main className="min-h-[calc(100dvh-3.5rem-4rem)] pb-16">
             {children}
           </main>
