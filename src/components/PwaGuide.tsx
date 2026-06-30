@@ -1,12 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { setCookie } from "@/lib/cookies";
+import { isAndroid } from "@/lib/device";
 
 type Props = {
   onComplete: () => void;
 };
 
 export default function PwaGuide({ onComplete }: Props) {
+  const [android, setAndroid] = useState(false);
+
+  useEffect(() => {
+    setAndroid(isAndroid());
+  }, []);
+
   function handleComplete() {
     setCookie("pwa_guided", "1");
     onComplete();
@@ -30,11 +38,19 @@ export default function PwaGuide({ onComplete }: Props) {
 
         <div className="mb-6 rounded-xl bg-[var(--color-background)] p-4 text-sm text-[var(--color-text-main)]">
           <p className="mb-2 font-bold">追加方法：</p>
-          <ol className="list-decimal pl-4 space-y-1 text-[var(--color-text-sub)]">
-            <li>画面下部の共有ボタン（□↑）をタップ</li>
-            <li>「ホーム画面に追加」を選択</li>
-            <li>「追加」をタップ</li>
-          </ol>
+          {android ? (
+            <ol className="list-decimal pl-4 space-y-1 text-[var(--color-text-sub)]">
+              <li>画面右上のメニュー（︙）をタップ</li>
+              <li>「アプリをインストール」または「ホーム画面に追加」を選択</li>
+              <li>「インストール」をタップ</li>
+            </ol>
+          ) : (
+            <ol className="list-decimal pl-4 space-y-1 text-[var(--color-text-sub)]">
+              <li>画面下部の共有ボタン（□↑）をタップ</li>
+              <li>「ホーム画面に追加」を選択</li>
+              <li>「追加」をタップ</li>
+            </ol>
+          )}
         </div>
 
         <button

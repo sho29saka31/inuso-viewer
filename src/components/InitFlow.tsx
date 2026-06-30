@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie } from "@/lib/cookies";
+import { isMobileOS, isStandalone } from "@/lib/device";
 import ConsentOverlay from "./ConsentOverlay";
 import PwaGuide from "./PwaGuide";
 import UserRoleOverlay from "./UserRoleOverlay";
@@ -12,13 +13,14 @@ const LEGAL_PATHS = ["/legal/terms", "/legal/privacy", "/legal/cookie-policy"];
 
 type Step = "consent" | "pwa" | "user_role" | "done";
 
-function isIOS(): boolean {
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+/** PWA追加案内を初回表示する対象か（モバイル端末かつ未インストール） */
+function shouldGuidePwa(): boolean {
+  return isMobileOS() && !isStandalone();
 }
 
 export default function InitFlow() {
   const [step, setStep] = useState<Step | null>(null);
-  const { showUserRoleOverlay, closeUserRoleOverlay } = useApp();
+  const { showUserRoleOverlay, closeUserRoleOverlay, showPwaGuide, closePwaGuide } = useApp();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function InitFlow() {
 
     if (!hasConsent) {
       setStep("consent");
-    } else if (!hasPwaGuided && isIOS()) {
+    } else if (!hasPwaGuided && shouldGuidePwa()) {
       setStep("pwa");
     } else if (!hasUserRole) {
       setStep("user_role");
@@ -40,7 +42,7 @@ export default function InitFlow() {
   }, [pathname]);
 
   function afterConsent() {
-    if (!getCookie("pwa_guided") && isIOS()) {
+    if (!getCookie("pwa_guided") && shouldGuidePwa()) {
       setStep("pwa");
     } else if (!getCookie("user_role")) {
       setStep("user_role");
@@ -62,6 +64,11 @@ export default function InitFlow() {
   }
 
   if (LEGAL_PATHS.includes(pathname)) return null;
+
+  // ヘッダー案内バー等から手動で開かれた PWA 追加案内
+  if (showPwaGuide) {
+    return <PwaGuide onComplete={closePwaGuide} />;
+  }
 
   if (showUserRoleOverlay) {
     return <UserRoleOverlay onComplete={closeUserRoleOverlay} />;

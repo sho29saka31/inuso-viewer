@@ -83,21 +83,11 @@ const legalPages = [
   { href: "/legal/cookie-policy", label: "Cookieポリシー" },
 ];
 
-function isIOS(): boolean {
-  if (typeof navigator === "undefined") return false;
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
-}
-
 export default function HamburgerMenu() {
   const { isHamburgerOpen, closeHamburger, features } = useApp();
   const visiblePages = pages.filter(({ featureKey }) => !featureKey || features[featureKey] !== false);
-  const [ios, setIos] = useState(false);
   const [visible, setVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
-
-  useEffect(() => {
-    setIos(isIOS());
-  }, []);
 
   useEffect(() => {
     if (isHamburgerOpen) {
@@ -106,6 +96,37 @@ export default function HamburgerMenu() {
     } else {
       setVisible(false);
     }
+  }, [isHamburgerOpen]);
+
+  // メニュー展開中は背面ページのスクロールをロックし、メニュー内のみスクロール可能にする
+  // （iOS Safari でも確実に効かせるため body を position: fixed で固定する）
+  useEffect(() => {
+    if (!isHamburgerOpen) return;
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    return () => {
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.width = prev.width;
+      body.style.overflow = prev.overflow;
+      window.scrollTo(0, scrollY);
+    };
   }, [isHamburgerOpen]);
 
   if (!shouldRender) return null;
@@ -120,7 +141,7 @@ export default function HamburgerMenu() {
       />
       {/* Panel */}
       <div
-        className="fixed top-0 right-0 z-50 h-full w-[80vw] max-w-72 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out"
+        className="fixed top-0 right-0 z-50 h-full w-[80vw] max-w-72 overflow-y-auto overscroll-contain bg-white shadow-2xl transition-transform duration-300 ease-out"
         style={{ transform: visible ? "translateX(0)" : "translateX(100%)" }}
         onTransitionEnd={() => { if (!visible) setShouldRender(false); }}
       >
@@ -189,23 +210,6 @@ export default function HamburgerMenu() {
               {label}
             </Link>
           ))}
-
-          {ios && (
-            <div className="mx-4 mt-2 border-t border-gray-100 pt-2">
-              <button
-                onClick={closeHamburger}
-                className="block w-full rounded-lg bg-[var(--color-background)] px-4 py-3 text-left text-sm font-bold text-[var(--color-primary)]"
-              >
-                <span className="flex items-center gap-2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <rect x="5" y="2" width="14" height="20" rx="2"/>
-                    <path d="M9 7l3-3 3 3M12 4v8"/>
-                  </svg>
-                  ホーム画面への追加方法
-                </span>
-              </button>
-            </div>
-          )}
         </nav>
       </div>
     </>
