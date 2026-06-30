@@ -15,3 +15,7 @@ messaging.onBackgroundMessage((payload) => {
     data: payload.data,
   });
 });
+
+// PWA インストール要件（fetch ハンドラを持つ Service Worker）を満たすための
+// パススルー fetch ハンドラ。レスポンスには介入せずネットワークに委ねる。
+self.addEventListener("fetch", () => {});
