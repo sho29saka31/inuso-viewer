@@ -40,6 +40,8 @@ interface Booth {
   status: number;
   waitCount?: number;
   isManual?: boolean;
+  imageUrl?: string;
+  description?: string;
   updatedAt?: { unix?: number; display?: string };
 }
 
