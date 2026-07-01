@@ -6,7 +6,7 @@ import FeatureDisabled from "@/components/FeatureDisabled";
 import { FLOORMAP_SVG } from "./floormap-svg";
 import BusyClient from "./BusyClient";
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export const metadata: Metadata = { title: "混雑状況" };
 
@@ -35,6 +35,9 @@ interface Booth {
   category: string;
   location?: string;
   status: number;
+  waitCount?: number;
+  isManual?: boolean;
+  updatedAt?: { unix?: number; display?: string };
 }
 
 // Firestore boothId と SVG の id が異なるブースのみマッピングする。
