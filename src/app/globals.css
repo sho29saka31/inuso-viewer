@@ -20,6 +20,7 @@
 body {
   background-color: var(--color-background);
   color: var(--color-text-main);
+  overscroll-behavior-y: none;
 }
 
 /* iOSでフォームフォーカス時のズーム防止 */
