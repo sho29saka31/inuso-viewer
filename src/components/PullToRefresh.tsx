@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useAppRefresh } from "@/hooks/useAppRefresh";
+import { useApp } from "@/contexts/AppContext";
 
 const PULL_THRESHOLD = 64;
 const MAX_PULL = 100;
 
 export default function PullToRefresh() {
-  const { refresh, isRefreshing } = useAppRefresh();
+  const { refresh, isRefreshing } = useApp();
   const [pullY, setPullY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const startYRef = useRef(0);
@@ -66,12 +66,19 @@ export default function PullToRefresh() {
 
   const progress = Math.min(pullY / PULL_THRESHOLD, 1);
   const visible = pullY > 4 || isRefreshing;
+  const RESTING_Y = 20;
+  const HIDDEN_Y = -48;
+  const translateY = isRefreshing
+    ? RESTING_Y
+    : visible
+    ? Math.min(pullY - 24, RESTING_Y)
+    : HIDDEN_Y;
 
   return (
     <div
-      className="fixed left-0 right-0 top-14 z-40 flex justify-center pointer-events-none"
+      className="fixed left-0 right-0 top-0 z-50 flex justify-center pointer-events-none"
       style={{
-        transform: `translateY(${visible ? Math.max(pullY - 24, 8) : -24}px)`,
+        transform: `translateY(${translateY}px)`,
         opacity: visible ? 1 : 0,
         transition: isDragging ? "none" : "transform 0.2s ease, opacity 0.2s ease",
       }}

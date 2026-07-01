@@ -6,7 +6,6 @@ import { useApp } from "@/contexts/AppContext";
 import { getCookie, setCookie } from "@/lib/cookies";
 import { useEffect, useState } from "react";
 import { AlertDialog } from "@/components/ui/Dialog";
-import { useAppRefresh } from "@/hooks/useAppRefresh";
 
 type Crumb = { label: string; href?: string };
 
@@ -55,9 +54,8 @@ function getBreadcrumbs(pathname: string): Crumb[] {
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { openHamburger, openUserRoleOverlay, features } = useApp();
+  const { openHamburger, openUserRoleOverlay, features, refresh, isRefreshing } = useApp();
   const [hasUnread, setHasUnread] = useState(false);
-  const { refresh, isRefreshing } = useAppRefresh();
   const [accountInfo, setAccountInfo] = useState<string | null>(null);
 
   const isTop = pathname === "/top" || pathname === "/";

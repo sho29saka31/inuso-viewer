@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import type { ViewerFeatures } from "@/lib/feature-flags";
+import { useAppRefresh } from "@/hooks/useAppRefresh";
 
 // Chrome 等が発火する beforeinstallprompt イベント（型は lib.dom 未定義のため自前定義）
 export type BeforeInstallPromptEvent = Event & {
@@ -35,6 +36,8 @@ type AppContextType = {
   installPrompt: BeforeInstallPromptEvent | null;
   clearInstallPrompt: () => void;
   features: ViewerFeatures;
+  refresh: () => void;
+  isRefreshing: boolean;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -44,6 +47,7 @@ export function AppProvider({ children, features }: { children: ReactNode; featu
   const [showUserRoleOverlay, setShowUserRoleOverlay] = useState(false);
   const [showPwaGuide, setShowPwaGuide] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const { refresh, isRefreshing } = useAppRefresh();
 
   // PWA インストール要件を満たすため Service Worker を権限に関係なく早期登録
   // （FcmInit の登録と同一 URL/スコープのため冪等）
@@ -96,6 +100,8 @@ export function AppProvider({ children, features }: { children: ReactNode; featu
           setInstallPrompt(null);
         },
         features: features ?? DEFAULT_FEATURES,
+        refresh,
+        isRefreshing,
       }}
     >
       {children}
