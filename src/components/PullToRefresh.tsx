@@ -6,10 +6,13 @@ import { useApp } from "@/contexts/AppContext";
 const PULL_THRESHOLD = 64;
 const MAX_PULL = 100;
 
+const HORIZONTAL_CANCEL_THRESHOLD = 10;
+
 export default function PullToRefresh() {
   const { refresh, isRefreshing } = useApp();
   const [pullY, setPullY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const startXRef = useRef(0);
   const startYRef = useRef(0);
   const draggingRef = useRef(false);
   const pullYRef = useRef(0);
@@ -18,11 +21,19 @@ export default function PullToRefresh() {
   useEffect(() => { isRefreshingRef.current = isRefreshing; }, [isRefreshing]);
 
   useEffect(() => {
+    function reset() {
+      draggingRef.current = false;
+      pullYRef.current = 0;
+      setIsDragging(false);
+      setPullY(0);
+    }
+
     function handleTouchStart(e: TouchEvent) {
       // ポップアップ表示中（BottomSheet/HamburgerMenu）はスクロールロックのため無効化
       if (isRefreshingRef.current) return;
       if (document.body.style.position === "fixed") return;
       if (window.scrollY > 0) return;
+      startXRef.current = e.touches[0].clientX;
       startYRef.current = e.touches[0].clientY;
       draggingRef.current = true;
       setIsDragging(true);
@@ -30,7 +41,15 @@ export default function PullToRefresh() {
 
     function handleTouchMove(e: TouchEvent) {
       if (!draggingRef.current) return;
+      const dx = e.touches[0].clientX - startXRef.current;
       const dy = e.touches[0].clientY - startYRef.current;
+
+      // 画面端からの「戻る」スワイプ（横方向優位）は縦のプル操作として扱わずキャンセルする
+      if (Math.abs(dx) > HORIZONTAL_CANCEL_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+        reset();
+        return;
+      }
+
       if (dy <= 0) {
         pullYRef.current = 0;
         setPullY(0);
@@ -45,22 +64,35 @@ export default function PullToRefresh() {
 
     function handleTouchEnd() {
       if (!draggingRef.current) return;
-      draggingRef.current = false;
-      setIsDragging(false);
-      if (pullYRef.current > PULL_THRESHOLD) {
+      const shouldRefresh = pullYRef.current > PULL_THRESHOLD;
+      reset();
+      if (shouldRefresh) {
         refresh();
       }
-      pullYRef.current = 0;
-      setPullY(0);
+    }
+
+    // ブラウザに横スワイプ等でジェスチャーを奪われた場合（戻る操作等）に
+    // touchendが発火せず状態が残ってしまうのを防ぐ
+    function handleTouchCancel() {
+      reset();
+    }
+
+    // bfcacheから復元された場合に備え、念のため状態をリセットする
+    function handlePageShow() {
+      reset();
     }
 
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: false });
     window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener("touchcancel", handleTouchCancel);
+    window.addEventListener("pageshow", handlePageShow);
     return () => {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchCancel);
+      window.removeEventListener("pageshow", handlePageShow);
     };
   }, [refresh]);
 
