@@ -1,5 +1,5 @@
 export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1700" width="1400" height="1700" font-family="sans-serif">
-<style>.bt{text-anchor:middle;dominant-baseline:middle}.bs{text-anchor:middle;dominant-baseline:middle;font-size:12.5px;fill:#334155}.bi{text-anchor:middle;dominant-baseline:middle;font-size:8px;fill:#1E3A8A;font-family:monospace}</style>
+<style>.bt{text-anchor:middle;dominant-baseline:middle}.bs{text-anchor:middle;dominant-baseline:middle;font-size:12.5px;fill:#334155}.bi{text-anchor:middle;dominant-baseline:middle;font-size:8px;fill:#1E3A8A;font-family:monospace}rect[id]{cursor:pointer}</style>
 <text x="40" y="100" font-size="17" font-weight="700" fill="#0F172A">フロアマップ — 第1棟5F</text>
 <text x="1360" y="98" text-anchor="end" font-size="11" fill="#64748B">第1棟基準</text>
 <text x="40" y="130" font-size="12" font-weight="700" fill="#1D4ED8">▲ 第2棟（HR教室棟）— 第2棟4F</text>
