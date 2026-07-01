@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ALLOWED_TOPICS = new Set(["all", "edu", "guest", "1nen", "2nen", "3nen"]);
+const CLASS_TOPICS = ["1-1", "1-2", "1-3", "1-4", "2-1", "2-2", "2-3", "2-4", "3-1", "3-2", "3-3", "3-4"]
+  .map((c) => `class${c}`);
+
+const ALLOWED_TOPICS = new Set([
+  "all", "edu", "guest", "prof", "1nen", "2nen", "3nen",
+  ...CLASS_TOPICS,
+]);
 
 export async function POST(req: NextRequest) {
   const { token, topics } = await req.json();

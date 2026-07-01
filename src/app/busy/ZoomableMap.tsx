@@ -24,7 +24,13 @@ const LEGEND = [
   { label: "非常に混雑", color: "#D7191C" },
 ];
 
-export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
+export default function ZoomableMap({
+  floorSvgs,
+  onBoothTap,
+}: {
+  floorSvgs: string[];
+  onBoothTap?: (boothId: string) => void;
+}) {
   const [floor, setFloor] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -137,6 +143,16 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
     setScale(viewRef.current.scale);
   }, [setHint]);
 
+  // タップ位置直下のrect[id]を探す。ラベル(<text>)はrectの兄弟要素で
+  // 内包していないため、e.targetだけでなくelementsFromPointで判定する。
+  const handleMapClick = useCallback((e: React.MouseEvent) => {
+    if (!onBoothTap) return;
+    const stack = document.elementsFromPoint(e.clientX, e.clientY);
+    const rect = stack.find((el) => el.tagName === "rect" && el.hasAttribute("id"));
+    const boothId = rect?.getAttribute("id");
+    if (boothId) onBoothTap(boothId);
+  }, [onBoothTap]);
+
   const switchFloor = useCallback((i: number) => {
     setFloor(i);
     resetView();
@@ -198,6 +214,7 @@ export default function ZoomableMap({ floorSvgs }: { floorSvgs: string[] }) {
           className="w-full overflow-hidden touch-none relative bg-[#F1F5F9]"
           style={{ height: `${containerH}px` }}
           onWheel={handleWheel}
+          onClick={handleMapClick}
         >
           <div
             ref={contentRef}

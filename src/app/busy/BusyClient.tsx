@@ -2,6 +2,14 @@
 
 import { useState } from "react";
 import ZoomableMap from "./ZoomableMap";
+import StaleBanner from "./StaleBanner";
+import BoothDetailSheet from "./BoothDetailSheet";
+
+// SVG側のrect idとFirestoreのboothIdが異なるブースのみ逆引きする。
+// page.tsxのBOOTH_ID_TO_SVGと対になる（そちらはboothId→svgId）。
+const SVG_ID_TO_BOOTH_ID: Record<string, string> = {
+  "club-esports": "club-game",
+};
 
 const STATUS_CONFIG = [
   { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
@@ -19,6 +27,9 @@ interface Booth {
   category: string;
   location?: string;
   status: number;
+  waitCount?: number;
+  isManual?: boolean;
+  updatedAt?: { unix?: number; display?: string };
 }
 
 const MapIcon = () => (
@@ -47,9 +58,19 @@ const TABS = [
 
 export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; floorSvgs: string[] }) {
   const [tab, setTab] = useState<"map" | "list">("map");
+  const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
+
+  const handleBoothTap = (svgId: string) => {
+    const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
+    setSelectedBoothId(boothId);
+  };
+
+  const selectedBooth = booths.find((b) => b.boothId === selectedBoothId) ?? null;
 
   return (
     <>
+      <StaleBanner booths={booths} />
+
       {/* セグメントコントロール */}
       <div className="mx-4 my-3 bg-gray-100 rounded-xl p-1 flex">
         {TABS.map(({ key, label, Icon }) => (
@@ -70,7 +91,11 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       </div>
 
       {/* マップ */}
-      {tab === "map" && <ZoomableMap floorSvgs={floorSvgs} />}
+      {tab === "map" && <ZoomableMap floorSvgs={floorSvgs} onBoothTap={handleBoothTap} />}
+
+      {selectedBooth && (
+        <BoothDetailSheet booth={selectedBooth} onClose={() => setSelectedBoothId(null)} />
+      )}
 
       {/* 一覧 */}
       {tab === "list" && (
@@ -81,6 +106,7 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
             {booths.map((booth) => {
               const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
               const { label, bg, text } = STATUS_CONFIG[level];
+              const mode = booth.isManual ? "manual" : "bluetooth";
               return (
                 <div
                   key={booth.boothId}
@@ -93,6 +119,11 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
                     {booth.location && (
                       <p className="text-xs text-[var(--color-text-sub)] mt-0.5">{booth.location}</p>
                     )}
+                    <div className="flex items-center gap-2 mt-1 text-[11px] text-[var(--color-text-sub)]">
+                      {typeof booth.waitCount === "number" && <span>待ち {booth.waitCount}組</span>}
+                      {booth.updatedAt?.display && <span>最終更新: {booth.updatedAt.display}</span>}
+                      <span>{mode === "manual" ? "手動更新" : "Bluetooth"}</span>
+                    </div>
                   </div>
                   <span
                     className="text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full"
