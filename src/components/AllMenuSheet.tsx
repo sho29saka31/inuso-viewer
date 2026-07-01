@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { useApp } from "@/contexts/AppContext";
+import BottomSheet from "@/components/BottomSheet";
 import type { ViewerFeatures } from "@/lib/feature-flags";
 
 type Item = {
@@ -51,24 +50,21 @@ const MENU_ITEMS: Item[] = [
 
 export default function AllMenuSheet({ onClose }: { onClose: () => void }) {
   const { features } = useApp();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  if (!mounted) return null;
-
   const items = MENU_ITEMS.filter(({ featureKey }) => !featureKey || features[featureKey] !== false);
 
-  return createPortal(
-    <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/40" />
-      <div
-        className="relative w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 pb-8 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-200" />
+  return (
+    <BottomSheet onClose={onClose}>
+      <div className="px-5 pb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-[var(--color-text-main)]">すべてのメニュー</h2>
-          <button onClick={onClose} aria-label="閉じる" className="flex h-9 w-9 items-center justify-center text-[var(--color-text-sub)]">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          <button
+            onClick={onClose}
+            aria-label="閉じる"
+            className="flex h-9 w-9 items-center justify-center text-[var(--color-text-sub)]"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -86,7 +82,6 @@ export default function AllMenuSheet({ onClose }: { onClose: () => void }) {
           ))}
         </div>
       </div>
-    </div>,
-    document.body
+    </BottomSheet>
   );
 }

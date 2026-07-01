@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import BottomSheet from "@/components/BottomSheet";
 
 const STATUS_CONFIG = [
   { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
@@ -51,24 +50,14 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onClose: () => void }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  if (!mounted) return null;
-
   const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
   const { label, bg, text } = STATUS_CONFIG[level];
   const source = booth.isManual ? "手動更新" : "Bluetooth（自動）";
   const categoryLabel = CATEGORY_LABELS[booth.category] ?? booth.category;
 
-  return createPortal(
-    <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/40" />
-      <div
-        className="relative w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 pb-8 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-200" />
-
+  return (
+    <BottomSheet onClose={onClose}>
+      <div className="px-5 pb-8">
         {/* ブース画像 */}
         {booth.imageUrl && (
           // 外部URLを含むため next/image ではなく img を使用
@@ -119,7 +108,6 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
           閉じる
         </button>
       </div>
-    </div>,
-    document.body
+    </BottomSheet>
   );
 }
