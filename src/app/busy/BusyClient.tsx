@@ -29,6 +29,8 @@ interface Booth {
   status: number;
   waitCount?: number;
   isManual?: boolean;
+  imageUrl?: string;
+  description?: string;
   updatedAt?: { unix?: number; display?: string };
 }
 
@@ -108,9 +110,11 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
               const { label, bg, text } = STATUS_CONFIG[level];
               const mode = booth.isManual ? "manual" : "bluetooth";
               return (
-                <div
+                <button
                   key={booth.boothId}
-                  className="rounded-xl bg-white border border-gray-100 shadow-sm p-3.5 flex items-center gap-3"
+                  type="button"
+                  onClick={() => setSelectedBoothId(booth.boothId)}
+                  className="w-full text-left rounded-xl bg-white border border-gray-100 shadow-sm p-3.5 flex items-center gap-3 active:bg-gray-50"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
@@ -131,7 +135,7 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
                   >
                     {label}
                   </span>
-                </div>
+                </button>
               );
             })}
           </div>

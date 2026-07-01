@@ -12,6 +12,21 @@ const STATUS_CONFIG = [
   { label: "非常に混雑", bg: "#FEF2F2", text: "#B91C1C" },
 ];
 
+const CATEGORY_LABELS: Record<string, string> = {
+  class: "クラス発表",
+  club: "部活動",
+  pe: "有志発表",
+  "pe-gym": "有志発表",
+  health: "委員会",
+  committee: "委員会",
+  game: "ゲーム",
+  food: "食品",
+  eat: "飲食",
+  stage: "ステージ",
+  exhibition: "展示",
+  other: "その他",
+};
+
 interface Booth {
   boothId: string;
   name?: string;
@@ -21,7 +36,18 @@ interface Booth {
   status: number;
   waitCount?: number;
   isManual?: boolean;
+  imageUrl?: string;
+  description?: string;
   updatedAt?: { unix?: number; display?: string };
+}
+
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex gap-2 text-sm">
+      <span className="shrink-0 w-24 text-[var(--color-text-sub)]">{label}</span>
+      <span className="flex-1 text-[var(--color-text-main)] break-words">{value}</span>
+    </div>
+  );
 }
 
 export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onClose: () => void }) {
@@ -31,16 +57,30 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
 
   const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
   const { label, bg, text } = STATUS_CONFIG[level];
-  const mode = booth.isManual ? "manual" : "bluetooth";
+  const source = booth.isManual ? "手動更新" : "Bluetooth（自動）";
+  const categoryLabel = CATEGORY_LABELS[booth.category] ?? booth.category;
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative w-full max-w-md rounded-t-2xl bg-white p-5 pb-8 shadow-xl"
+        className="relative w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 pb-8 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-200" />
+
+        {/* ブース画像 */}
+        {booth.imageUrl && (
+          // 外部URLを含むため next/image ではなく img を使用
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={booth.imageUrl}
+            alt={booth.name ?? booth.shopName ?? booth.boothId}
+            className="mb-4 h-44 w-full rounded-xl object-cover bg-gray-100"
+          />
+        )}
+
+        {/* ブース名 + ステータス */}
         <div className="flex items-start justify-between gap-2 mb-3">
           <h2 className="text-lg font-bold text-[var(--color-text-main)]">
             {booth.name ?? booth.shopName ?? booth.boothId}
@@ -53,15 +93,24 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
           </span>
         </div>
 
-        {booth.location && (
-          <p className="text-sm text-[var(--color-text-sub)] mb-1">{booth.location}</p>
-        )}
-
-        <div className="flex flex-col gap-1 mt-2 text-xs text-[var(--color-text-sub)]">
-          {typeof booth.waitCount === "number" && <p>待ち組数: {booth.waitCount}組</p>}
-          {booth.updatedAt?.display && <p>最終更新: {booth.updatedAt.display}</p>}
-          <p>更新方式: {mode === "manual" ? "手動更新" : "Bluetooth自動更新"}</p>
+        {/* 詳細情報 */}
+        <div className="flex flex-col gap-2">
+          {booth.location && <Row label="場所" value={booth.location} />}
+          {booth.category && <Row label="カテゴリ" value={categoryLabel} />}
+          {typeof booth.waitCount === "number" && (
+            <Row label="待ち組数（推定）" value={`${booth.waitCount}組`} />
+          )}
+          <Row label="ステータス" value={label} />
+          {booth.updatedAt?.display && <Row label="最終更新" value={booth.updatedAt.display} />}
+          <Row label="情報元" value={source} />
         </div>
+
+        {/* 詳細文章 */}
+        {booth.description && (
+          <p className="mt-4 whitespace-pre-wrap text-sm text-[var(--color-text-main)] leading-relaxed">
+            {booth.description}
+          </p>
+        )}
 
         <button
           onClick={onClose}

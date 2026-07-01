@@ -21,18 +21,6 @@ const tabs: { href: string; label: string; featureKey?: FeatureKey; icon: (activ
     ),
   },
   {
-    href: "/booth",
-    featureKey: "booth",
-    label: "ブース",
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
-        <path d="M3 3h18v4H3z" />
-        <path d="M3 7v13a1 1 0 001 1h16a1 1 0 001-1V7" />
-        <path d="M9 21V11h6v10" />
-      </svg>
-    ),
-  },
-  {
     href: "/top",
     label: "ホーム",
     icon: (active: boolean) => (
