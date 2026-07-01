@@ -20,7 +20,8 @@ export default function BottomSheet({
   const draggingRef = useRef(false);
   const translateYRef = useRef(0);
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
   useEffect(() => { setMounted(true); }, []);
 
