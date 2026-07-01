@@ -17,9 +17,14 @@
   box-sizing: border-box;
 }
 
+html {
+  overscroll-behavior-y: none;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text-main);
+  overscroll-behavior-y: none;
 }
 
 /* iOSでフォームフォーカス時のズーム防止 */

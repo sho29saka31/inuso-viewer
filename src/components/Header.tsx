@@ -4,9 +4,8 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "@/contexts/AppContext";
 import { getCookie, setCookie } from "@/lib/cookies";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { AlertDialog } from "@/components/ui/Dialog";
-import { revalidateAll } from "@/app/actions";
 
 type Crumb = { label: string; href?: string };
 
@@ -55,9 +54,8 @@ function getBreadcrumbs(pathname: string): Crumb[] {
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { openHamburger, openUserRoleOverlay, features } = useApp();
+  const { openHamburger, openUserRoleOverlay, features, refresh, isRefreshing } = useApp();
   const [hasUnread, setHasUnread] = useState(false);
-  const [isRefreshing, startRefresh] = useTransition();
   const [accountInfo, setAccountInfo] = useState<string | null>(null);
 
   const isTop = pathname === "/top" || pathname === "/";
@@ -106,7 +104,7 @@ export default function Header() {
         {/* Left: reload */}
         <div className="absolute left-2 flex items-center">
           <button
-            onClick={() => startRefresh(async () => { try { await revalidateAll(); } catch {} router.refresh(); })}
+            onClick={refresh}
             aria-label="更新"
             className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-sub)] hover:bg-[var(--color-background)]"
           >
