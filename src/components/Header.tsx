@@ -39,7 +39,6 @@ function getBreadcrumbs(pathname: string): Crumb[] {
 
   const PAGE_NAMES: Record<string, string> = {
     "/event": "イベントスケジュール",
-    "/booth": "ブース一覧",
     "/busy": "混雑状況",
     "/eat": "飲食エリア",
     "/notice": "お知らせ",
