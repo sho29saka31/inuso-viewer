@@ -28,7 +28,7 @@ function getTopicsForRole(raw: string): string[] {
       const topics = ["all", "edu"];
       if (grade && grade !== "none") {
         topics.push(`${grade}nen`);
-        if (cls) topics.push(`class${grade}${cls}`);
+        if (cls) topics.push(`class${grade}-${cls}`);
       }
       return topics;
     }
