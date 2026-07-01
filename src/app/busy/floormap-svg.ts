@@ -224,9 +224,9 @@ export const FLOORMAP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 
 <text x="900.0" y="1392.0" class="bt" font-size="9" fill="#94A3B8">女子更衣室</text>
 <rect x="948.2" y="1360" width="117.0" height="64" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" />
 <text x="1006.7" y="1392.0" class="bs">昇降口(東)</text>
-<rect id="health" x="1068.2" y="1360" width="117.0" height="64" rx="3" fill="#FEF3C7" stroke="#D97706" stroke-width="2" stroke-dasharray="6,3" />
-<text x="1126.7" y="1388.0" class="bt" font-size="12.5" font-weight="700" fill="#92400E">保健室</text>
-<text x="1126.7" y="1403.0" class="bt" font-size="8" fill="#92400E" font-family="monospace">health</text>
+<rect id="health" x="1068.2" y="1360" width="117.0" height="64" rx="3" fill="#94A3B8" stroke="#1D4ED8" stroke-width="2" />
+<text x="1126.7" y="1388.0" class="bt" font-size="12.5" font-weight="700" fill="#FFFFFF">保健室</text>
+<text x="1126.7" y="1403.0" class="bi">health</text>
 <rect x="1188.2" y="1360" width="50.3" height="64" rx="3" fill="#EEF2F7" stroke="#D8DFEA" stroke-width="1" />
 <text x="1213.3" y="1392.0" class="bt" font-size="9" fill="#94A3B8">準備室</text>
 <rect x="1241.5" y="1360" width="117.0" height="64" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" />
