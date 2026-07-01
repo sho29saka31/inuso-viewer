@@ -3,6 +3,13 @@
 import { useState } from "react";
 import ZoomableMap from "./ZoomableMap";
 import StaleBanner from "./StaleBanner";
+import BoothDetailSheet from "./BoothDetailSheet";
+
+// SVG側のrect idとFirestoreのboothIdが異なるブースのみ逆引きする。
+// page.tsxのBOOTH_ID_TO_SVGと対になる（そちらはboothId→svgId）。
+const SVG_ID_TO_BOOTH_ID: Record<string, string> = {
+  "club-esports": "club-game",
+};
 
 const STATUS_CONFIG = [
   { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
@@ -51,6 +58,14 @@ const TABS = [
 
 export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; floorSvgs: string[] }) {
   const [tab, setTab] = useState<"map" | "list">("map");
+  const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
+
+  const handleBoothTap = (svgId: string) => {
+    const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
+    setSelectedBoothId(boothId);
+  };
+
+  const selectedBooth = booths.find((b) => b.boothId === selectedBoothId) ?? null;
 
   return (
     <>
@@ -76,7 +91,11 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       </div>
 
       {/* マップ */}
-      {tab === "map" && <ZoomableMap floorSvgs={floorSvgs} />}
+      {tab === "map" && <ZoomableMap floorSvgs={floorSvgs} onBoothTap={handleBoothTap} />}
+
+      {selectedBooth && (
+        <BoothDetailSheet booth={selectedBooth} onClose={() => setSelectedBoothId(null)} />
+      )}
 
       {/* 一覧 */}
       {tab === "list" && (
