@@ -10,6 +10,9 @@ export const revalidate = 300;
 
 export const metadata: Metadata = { title: "混雑状況" };
 
+// オーバーレイ透明度は完全不透明（fill-opacity指定なし）で確定。
+// フロアマップは写真ではなく模式図のため下に透過させる背景がなく、
+// 不透明の方がラベル文字とのコントラストを確保できるため。
 const SVG_FILL_COLORS: Record<number, string> = {
   0: "#94A3B8",
   1: "#2C7BB6",
