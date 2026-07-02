@@ -12,10 +12,11 @@ export const revalidate = 300;
 export const metadata: Metadata = { title: "混雑状況" };
 
 // ブース枠は流動的ヒートマップキャンバス（下層）を透かして見せるため、
-// 半透明の白で統一し、ラベル文字は背景色に依存しない固定の濃色にする。
+// 半透明の背景色で統一し、ラベル文字は背景色に依存しない固定色にする。
+// CSS変数化することでダークモード（.dark）でも自動的に適切な色に切り替わる。
 // 混雑度の色表現はキャンバス側の連続グラデーションが担う。
-const BOOTH_RECT_FILL = "rgba(255,255,255,0.55)";
-const BOOTH_TEXT_FILL = "#0F172A";
+const BOOTH_RECT_FILL = "var(--map-booth-fill)";
+const BOOTH_TEXT_FILL = "var(--map-booth-text)";
 
 interface Booth {
   boothId: string;
