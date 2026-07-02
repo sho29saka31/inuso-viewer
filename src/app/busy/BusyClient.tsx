@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import ZoomableMap from "./ZoomableMap";
 import StaleBanner from "./StaleBanner";
 import BoothDetailSheet from "./BoothDetailSheet";
+import FilterModal from "./FilterModal";
 import { CATEGORY_FILTER_OPTIONS, categoryFilterGroup, type CategoryFilter } from "./categoryConfig";
 
 // SVG側のrect idとFirestoreのboothIdが異なるブースのみ逆引きする。
@@ -62,11 +63,23 @@ const TABS = [
 // 一覧の絞り込み用ステータス（「停止中」は対象外）
 const STATUS_FILTER_OPTIONS = [1, 2, 3, 4, 5] as const;
 
+const CATEGORY_MODAL_OPTIONS = [
+  { key: "all", label: "すべて" },
+  ...CATEGORY_FILTER_OPTIONS.map(({ key, label }) => ({ key, label })),
+];
+
+const STATUS_MODAL_OPTIONS = [
+  { key: "all", label: "すべて" },
+  ...STATUS_FILTER_OPTIONS.map((level) => ({ key: String(level), label: STATUS_CONFIG[level].label })),
+];
+
 export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; floorSvgs: string[] }) {
   const [tab, setTab] = useState<"map" | "list">("map");
   const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter | "all">("all");
   const [statusFilter, setStatusFilter] = useState<number | "all">("all");
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
 
   const handleBoothTap = (svgId: string) => {
     const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
@@ -82,6 +95,10 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       return true;
     });
   }, [booths, categoryFilter, statusFilter]);
+
+  const categoryLabel =
+    categoryFilter === "all" ? "すべて" : CATEGORY_FILTER_OPTIONS.find((o) => o.key === categoryFilter)?.label ?? "すべて";
+  const statusLabel = statusFilter === "all" ? "すべて" : STATUS_CONFIG[statusFilter].label;
 
   return (
     <>
@@ -117,28 +134,47 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       {tab === "list" && (
         <>
           {/* 絞り込み */}
-          <div className="px-4 pb-2 flex flex-col gap-2">
-            <div className="flex gap-1.5 overflow-x-auto">
-              <FilterChip active={categoryFilter === "all"} onClick={() => setCategoryFilter("all")}>
-                すべて
-              </FilterChip>
-              {CATEGORY_FILTER_OPTIONS.map(({ key, label }) => (
-                <FilterChip key={key} active={categoryFilter === key} onClick={() => setCategoryFilter(key)}>
-                  {label}
-                </FilterChip>
-              ))}
-            </div>
-            <div className="flex gap-1.5 overflow-x-auto">
-              <FilterChip active={statusFilter === "all"} onClick={() => setStatusFilter("all")}>
-                すべて
-              </FilterChip>
-              {STATUS_FILTER_OPTIONS.map((level) => (
-                <FilterChip key={level} active={statusFilter === level} onClick={() => setStatusFilter(level)}>
-                  {STATUS_CONFIG[level].label}
-                </FilterChip>
-              ))}
-            </div>
+          <div className="px-4 pb-2 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCategoryModal(true)}
+              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm active:bg-gray-50"
+            >
+              <span className="text-[var(--color-text-sub)]">ブース: <span className="font-semibold text-[var(--color-text-main)]">{categoryLabel}</span></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-text-sub)] shrink-0">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowStatusModal(true)}
+              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm active:bg-gray-50"
+            >
+              <span className="text-[var(--color-text-sub)]">ステータス: <span className="font-semibold text-[var(--color-text-main)]">{statusLabel}</span></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-text-sub)] shrink-0">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
           </div>
+
+          {showCategoryModal && (
+            <FilterModal
+              title="ブースの絞り込み"
+              options={CATEGORY_MODAL_OPTIONS}
+              selected={categoryFilter}
+              onSelect={(key) => setCategoryFilter(key as CategoryFilter | "all")}
+              onClose={() => setShowCategoryModal(false)}
+            />
+          )}
+          {showStatusModal && (
+            <FilterModal
+              title="ステータスの絞り込み"
+              options={STATUS_MODAL_OPTIONS}
+              selected={String(statusFilter)}
+              onSelect={(key) => setStatusFilter(key === "all" ? "all" : Number(key))}
+              onClose={() => setShowStatusModal(false)}
+            />
+          )}
 
           {filteredBooths.length === 0 ? (
             <p className="px-4 py-6 text-sm text-center text-[var(--color-text-sub)]">該当するブースがありません。</p>
@@ -176,29 +212,5 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
         </>
       )}
     </>
-  );
-}
-
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium border transition-colors ${
-        active
-          ? "bg-[var(--color-primary)] border-[var(--color-primary)] text-white"
-          : "bg-white border-gray-200 text-[var(--color-text-sub)]"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
