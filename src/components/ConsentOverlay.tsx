@@ -23,7 +23,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-sm rounded-2xl bg-[var(--color-surface)] p-8 shadow-2xl">
         <div className="mb-2 text-center text-2xl font-bold text-[var(--color-primary)]">ISF</div>
         <h1 className="mb-1 text-center text-lg font-bold text-[var(--color-text-main)]">
           犬山総合高等学校 文化祭アプリ
@@ -83,7 +83,7 @@ export default function ConsentOverlay({ onComplete }: Props) {
           className={`w-full rounded-xl py-3.5 text-sm font-bold transition-colors ${
             allChecked
               ? "bg-[var(--color-primary)] text-white active:opacity-80"
-              : "cursor-not-allowed bg-gray-200 text-gray-400"
+              : "cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
           }`}
         >
           全て同意して進める

@@ -26,7 +26,7 @@ export default async function DigitalPage() {
       <h1 className="text-xl font-bold mb-4">デジタルパンフレット</h1>
 
       {!pdfUrl ? (
-        <div className="rounded-xl bg-white border border-gray-100 shadow-sm p-6 text-center">
+        <div className="rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm p-6 text-center">
           <p className="text-sm text-[var(--color-text-sub)]">現在パンフレットは公開されていません。</p>
         </div>
       ) : (
@@ -39,7 +39,7 @@ export default async function DigitalPage() {
           >
             PDFを別タブで開く
           </a>
-          <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm" style={{ height: "calc(100svh - 220px)" }}>
+          <div className="rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm" style={{ height: "calc(100svh - 220px)" }}>
             <iframe src={pdfUrl} className="w-full h-full" title="デジタルパンフレット" />
           </div>
         </>

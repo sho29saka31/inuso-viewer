@@ -4,12 +4,12 @@ import BottomSheet from "@/components/BottomSheet";
 import { CATEGORY_LABELS } from "./categoryConfig";
 
 const STATUS_CONFIG = [
-  { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
-  { label: "非常に閑散", bg: "#EFF6FF", text: "#1D4ED8" },
-  { label: "閑散",       bg: "#F0FDFA", text: "#0F766E" },
-  { label: "通常",       bg: "#F0FDF4", text: "#15803D" },
-  { label: "混雑",       bg: "#FFF7ED", text: "#C2410C" },
-  { label: "非常に混雑", bg: "#FEF2F2", text: "#B91C1C" },
+  { label: "停止中",     className: "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300" },
+  { label: "非常に閑散", className: "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300" },
+  { label: "閑散",       className: "bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300" },
+  { label: "通常",       className: "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300" },
+  { label: "混雑",       className: "bg-orange-50 dark:bg-orange-950 text-orange-700 dark:text-orange-300" },
+  { label: "非常に混雑", className: "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300" },
 ];
 
 interface Booth {
@@ -38,7 +38,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 
 export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onClose: () => void }) {
   const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
-  const { label, bg, text } = STATUS_CONFIG[level];
+  const { label, className: statusClassName } = STATUS_CONFIG[level];
   const source = booth.isManual ? "手動更新" : "Bluetooth（自動）";
   const categoryLabel = CATEGORY_LABELS[booth.category] ?? booth.category;
   // 飲食ブースはimageUrl、それ以外はboothImageにadmin側で保存されるため両方見る
@@ -54,7 +54,7 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
           <img
             src={imageSrc}
             alt={booth.name ?? booth.shopName ?? booth.boothId}
-            className="mb-4 h-44 w-full rounded-xl object-cover bg-gray-100"
+            className="mb-4 h-44 w-full rounded-xl object-cover bg-gray-100 dark:bg-gray-700"
           />
         )}
 
@@ -64,8 +64,7 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
             {booth.name ?? booth.shopName ?? booth.boothId}
           </h2>
           <span
-            className="text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full"
-            style={{ backgroundColor: bg, color: text }}
+            className={`text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full ${statusClassName}`}
           >
             {label}
           </span>
@@ -92,7 +91,7 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
 
         <button
           onClick={onClose}
-          className="w-full mt-5 py-3 rounded-xl bg-gray-100 text-sm font-semibold text-[var(--color-text-main)]"
+          className="w-full mt-5 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-sm font-semibold text-[var(--color-text-main)]"
         >
           閉じる
         </button>

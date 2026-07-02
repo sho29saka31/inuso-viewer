@@ -73,7 +73,7 @@ export default async function TopPage() {
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center gap-1.5 rounded-xl bg-white border border-gray-100 shadow-sm py-4 px-1 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex flex-col items-center gap-1.5 rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm py-4 px-1 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-primary)]">{icon}</span>
               <span className="text-xs font-medium whitespace-nowrap">{label}</span>
@@ -98,7 +98,9 @@ export default async function TopPage() {
                   key={n.noticeId}
                   href={`/notice/${n.noticeId}`}
                   className={`rounded-xl border p-3 flex items-start gap-2 ${
-                    n.isUrgent ? "bg-red-50 border-red-200" : "bg-white border-gray-100"
+                    n.isUrgent
+                      ? "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800"
+                      : "bg-[var(--color-surface)] border-gray-100 dark:border-gray-700"
                   }`}
                 >
                   {n.isUrgent && (

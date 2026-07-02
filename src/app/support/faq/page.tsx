@@ -176,7 +176,7 @@ export default function FaqPage() {
       <p className="text-sm text-[var(--color-text-sub)] mb-6">質問をタップすると回答が表示されます。</p>
       <FaqAccordion faqs={faqs} />
 
-      <div className="mt-10 border-t border-gray-100 pt-6">
+      <div className="mt-10 border-t border-gray-100 dark:border-gray-700 pt-6">
         <p className="mb-3 text-xs text-[var(--color-text-sub)]">
           すべてのCookie・設定情報を削除します。同意バナー・ユーザー設定・既読状態・通知設定がすべてリセットされます。
         </p>

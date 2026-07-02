@@ -42,7 +42,7 @@ export default function Error({
         </button>
         <Link
           href="/top"
-          className="w-full py-3 rounded-2xl border border-gray-200 bg-white text-[var(--color-text-main)] text-sm font-medium text-center"
+          className="w-full py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-[var(--color-surface)] text-[var(--color-text-main)] text-sm font-medium text-center"
         >
           ホームへ戻る
         </Link>

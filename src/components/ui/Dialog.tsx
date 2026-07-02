@@ -18,14 +18,14 @@ export function ConfirmDialog({ message, onConfirm, onCancel }: ConfirmDialogPro
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-6" onClick={onCancel}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative w-full max-w-xs rounded-2xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-xs rounded-2xl bg-[var(--color-surface)] p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="text-sm text-[var(--color-text-main)] leading-relaxed whitespace-pre-line mb-6">{message}</p>
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-[var(--color-text-sub)]"
+            className="flex-1 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-[var(--color-text-sub)]"
           >
             キャンセル
           </button>
@@ -56,7 +56,7 @@ export function AlertDialog({ message, onClose }: AlertDialogProps) {
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-6" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative w-full max-w-xs rounded-2xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-xs rounded-2xl bg-[var(--color-surface)] p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="text-sm text-[var(--color-text-main)] leading-relaxed whitespace-pre-line mb-6">{message}</p>
