@@ -16,6 +16,24 @@
   --color-success: #22C55E;
 }
 
+/* 校内フロアマップ（floormap-svg.ts）の配色。.dark側が同じ詳細度で後勝ちする必要があるため、
+   このブロックは必ず .dark より前に置くこと（後に置くと .dark の値が上書きされてしまう）。 */
+:root {
+  --map-room-a: #F8FAFC;
+  --map-room-b: #EEF2F7;
+  --map-room-c: #E2E8F0;
+  --map-border-a: #D8DFEA;
+  --map-border-b: #CBD5E1;
+  --map-accent: #1D4ED8;
+  --map-text-heading: #0F172A;
+  --map-text-secondary: #64748B;
+  --map-text-muted: #94A3B8;
+  --map-text-navy: #1E3A8A;
+  --map-text-room: #334155;
+  --map-booth-fill: rgba(255, 255, 255, 0.55);
+  --map-booth-text: #0F172A;
+}
+
 .dark {
   --color-primary: #2DD4BF;
   --color-secondary: #14B8A6;
@@ -41,23 +59,6 @@
   --map-text-room: #CBD5E1;
   --map-booth-fill: rgba(15, 23, 42, 0.55);
   --map-booth-text: #F1F5F9;
-}
-
-/* 校内フロアマップ（floormap-svg.ts）の配色。ダークモードでは.darkの値が上書きする */
-:root {
-  --map-room-a: #F8FAFC;
-  --map-room-b: #EEF2F7;
-  --map-room-c: #E2E8F0;
-  --map-border-a: #D8DFEA;
-  --map-border-b: #CBD5E1;
-  --map-accent: #1D4ED8;
-  --map-text-heading: #0F172A;
-  --map-text-secondary: #64748B;
-  --map-text-muted: #94A3B8;
-  --map-text-navy: #1E3A8A;
-  --map-text-room: #334155;
-  --map-booth-fill: rgba(255, 255, 255, 0.55);
-  --map-booth-text: #0F172A;
 }
 
 * {
