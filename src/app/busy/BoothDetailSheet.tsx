@@ -22,6 +22,7 @@ interface Booth {
   waitCount?: number;
   isManual?: boolean;
   imageUrl?: string;
+  boothImage?: string;
   description?: string;
   updatedAt?: { unix?: number; display?: string };
 }
@@ -40,16 +41,18 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
   const { label, bg, text } = STATUS_CONFIG[level];
   const source = booth.isManual ? "手動更新" : "Bluetooth（自動）";
   const categoryLabel = CATEGORY_LABELS[booth.category] ?? booth.category;
+  // 飲食ブースはimageUrl、それ以外はboothImageにadmin側で保存されるため両方見る
+  const imageSrc = booth.imageUrl ?? booth.boothImage;
 
   return (
     <BottomSheet onClose={onClose}>
       <div className="px-5 pb-8">
         {/* ブース画像 */}
-        {booth.imageUrl && (
+        {imageSrc && (
           // 外部URLを含むため next/image ではなく img を使用
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={booth.imageUrl}
+            src={imageSrc}
             alt={booth.name ?? booth.shopName ?? booth.boothId}
             className="mb-4 h-44 w-full rounded-xl object-cover bg-gray-100"
           />
