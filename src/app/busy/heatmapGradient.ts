@@ -1,11 +1,13 @@
-// 既存の6段階ColorBrewer(RdYlBu反転)パレットの色値を流用した連続グラデーション。
-// 0=停止中(#94A3B8)は除き、レベル1〜5の色をheatScore 0〜100に均等割りする。
+// 単一色相（青）の明度グラデーション。色相の判別に頼らず明度の濃淡だけで
+// 順序が読めるため色覚特性によらず視認できる（dataviz skillのvalidate_palette.js
+// --ordinal で monotone lightness / contrast / single-hue を検証済み）。
+// 0=停止中(#94A3B8)は対象外。レベル1〜5の色をheatScore 0〜100に均等割りする。
 const GRADIENT_STOPS: [number, string][] = [
-  [0.0, "#2C7BB6"], // 非常に閑散
-  [0.25, "#ABD9E9"], // 閑散
-  [0.5, "#FFFFBF"], // 通常
-  [0.75, "#FDAE61"], // 混雑
-  [1.0, "#D7191C"], // 非常に混雑
+  [0.0, "#6DA7EC"], // 非常に閑散
+  [0.25, "#3987E5"], // 閑散
+  [0.5, "#256ABF"], // 通常
+  [0.75, "#184F95"], // 混雑
+  [1.0, "#0D366B"], // 非常に混雑
 ];
 
 function hexToRgb(hex: string): [number, number, number] {
