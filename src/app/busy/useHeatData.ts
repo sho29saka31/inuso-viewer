@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const POLL_MS = 20_000;
+const POLL_MS = 60_000;
 const TRANSITION_MS = 1000;
 
 function easeOutCubic(t: number): number {
@@ -62,7 +62,8 @@ export function useHeatData(
     const poll = async () => {
       if (document.hidden) return;
       try {
-        const res = await fetch(fetchUrl, { cache: "no-store" });
+        // Vercelの共有キャッシュ(route.tsのrevalidate)を効かせるため no-store は指定しない
+        const res = await fetch(fetchUrl);
         if (!res.ok) return;
         const data: { boothId: string; heatScore: number }[] = await res.json();
         if (cancelled) return;
