@@ -29,6 +29,7 @@ interface Booth {
   waitCount?: number;
   isManual?: boolean;
   imageUrl?: string;
+  boothImage?: string;
   description?: string;
   updatedAt?: { unix?: number; display?: string };
 }
