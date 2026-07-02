@@ -1,6 +1,7 @@
 "use client";
 
 import BottomSheet from "@/components/BottomSheet";
+import { CATEGORY_LABELS } from "./categoryConfig";
 
 const STATUS_CONFIG = [
   { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
@@ -10,21 +11,6 @@ const STATUS_CONFIG = [
   { label: "混雑",       bg: "#FFF7ED", text: "#C2410C" },
   { label: "非常に混雑", bg: "#FEF2F2", text: "#B91C1C" },
 ];
-
-const CATEGORY_LABELS: Record<string, string> = {
-  class: "クラス発表",
-  club: "部活動",
-  pe: "有志発表",
-  "pe-gym": "有志発表",
-  health: "委員会",
-  committee: "委員会",
-  game: "ゲーム",
-  food: "食品",
-  eat: "飲食",
-  stage: "ステージ",
-  exhibition: "展示",
-  other: "その他",
-};
 
 interface Booth {
   boothId: string;
@@ -87,7 +73,7 @@ export default function BoothDetailSheet({ booth, onClose }: { booth: Booth; onC
           {booth.location && <Row label="場所" value={booth.location} />}
           {booth.category && <Row label="カテゴリ" value={categoryLabel} />}
           {typeof booth.waitCount === "number" && (
-            <Row label="待ち組数（推定）" value={`${booth.waitCount}組`} />
+            <Row label="待ち組数" value={`${booth.waitCount}組`} />
           )}
           <Row label="ステータス" value={label} />
           {booth.updatedAt?.display && <Row label="最終更新" value={booth.updatedAt.display} />}

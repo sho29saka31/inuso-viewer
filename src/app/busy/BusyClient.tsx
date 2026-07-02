@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ZoomableMap from "./ZoomableMap";
 import StaleBanner from "./StaleBanner";
 import BoothDetailSheet from "./BoothDetailSheet";
+import FilterModal from "./FilterModal";
+import { CATEGORY_FILTER_OPTIONS, categoryFilterGroup, type CategoryFilter } from "./categoryConfig";
+import { useHeatData } from "./useHeatData";
+import type { FloorHeatPoint, FloorDim } from "./page";
 
 // SVG側のrect idとFirestoreのboothIdが異なるブースのみ逆引きする。
 // page.tsxのBOOTH_ID_TO_SVGと対になる（そちらはboothId→svgId）。
@@ -27,6 +31,7 @@ interface Booth {
   category: string;
   location?: string;
   status: number;
+  heatScore?: number;
   waitCount?: number;
   isManual?: boolean;
   imageUrl?: string;
@@ -58,9 +63,39 @@ const TABS = [
   { key: "list" as const, label: "一覧",   Icon: ListIcon },
 ];
 
-export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; floorSvgs: string[] }) {
+// 一覧の絞り込み用ステータス（「停止中」は対象外）
+const STATUS_FILTER_OPTIONS = [1, 2, 3, 4, 5] as const;
+
+const CATEGORY_MODAL_OPTIONS = [
+  { key: "all", label: "すべて" },
+  ...CATEGORY_FILTER_OPTIONS.map(({ key, label }) => ({ key, label })),
+];
+
+const STATUS_MODAL_OPTIONS = [
+  { key: "all", label: "すべて" },
+  ...STATUS_FILTER_OPTIONS.map((level) => ({ key: String(level), label: STATUS_CONFIG[level].label })),
+];
+
+export default function BusyClient({
+  booths,
+  floorSvgs,
+  floorHeatPoints,
+  floorDims,
+  initialHeat,
+}: {
+  booths: Booth[];
+  floorSvgs: string[];
+  floorHeatPoints: FloorHeatPoint[][];
+  floorDims: FloorDim[];
+  initialHeat: Record<string, number>;
+}) {
   const [tab, setTab] = useState<"map" | "list">("map");
   const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<number | "all">("all");
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const heatValues = useHeatData(initialHeat, "/api/booth/heat");
 
   const handleBoothTap = (svgId: string) => {
     const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
@@ -68,6 +103,18 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
   };
 
   const selectedBooth = booths.find((b) => b.boothId === selectedBoothId) ?? null;
+
+  const filteredBooths = useMemo(() => {
+    return booths.filter((booth) => {
+      if (categoryFilter !== "all" && categoryFilterGroup(booth.category) !== categoryFilter) return false;
+      if (statusFilter !== "all" && booth.status !== statusFilter) return false;
+      return true;
+    });
+  }, [booths, categoryFilter, statusFilter]);
+
+  const categoryLabel =
+    categoryFilter === "all" ? "すべて" : CATEGORY_FILTER_OPTIONS.find((o) => o.key === categoryFilter)?.label ?? "すべて";
+  const statusLabel = statusFilter === "all" ? "すべて" : STATUS_CONFIG[statusFilter].label;
 
   return (
     <>
@@ -93,7 +140,15 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       </div>
 
       {/* マップ */}
-      {tab === "map" && <ZoomableMap floorSvgs={floorSvgs} onBoothTap={handleBoothTap} />}
+      {tab === "map" && (
+        <ZoomableMap
+          floorSvgs={floorSvgs}
+          floorHeatPoints={floorHeatPoints}
+          floorDims={floorDims}
+          heatValues={heatValues}
+          onBoothTap={handleBoothTap}
+        />
+      )}
 
       {selectedBooth && (
         <BoothDetailSheet booth={selectedBooth} onClose={() => setSelectedBoothId(null)} />
@@ -101,45 +156,84 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
 
       {/* 一覧 */}
       {tab === "list" && (
-        booths.length === 0 ? (
-          <p className="px-4 py-6 text-sm text-center text-[var(--color-text-sub)]">データがありません。</p>
-        ) : (
-          <div className="px-4 flex flex-col gap-2 pb-4">
-            {booths.map((booth) => {
-              const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
-              const { label, bg, text } = STATUS_CONFIG[level];
-              const mode = booth.isManual ? "manual" : "bluetooth";
-              return (
-                <button
-                  key={booth.boothId}
-                  type="button"
-                  onClick={() => setSelectedBoothId(booth.boothId)}
-                  className="w-full text-left rounded-xl bg-white border border-gray-100 shadow-sm p-3.5 flex items-center gap-3 active:bg-gray-50"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
-                      {booth.name ?? booth.shopName}
-                    </p>
-                    {booth.location && (
-                      <p className="text-xs text-[var(--color-text-sub)] mt-0.5">{booth.location}</p>
-                    )}
-                    <div className="flex items-center gap-2 mt-1 text-[11px] text-[var(--color-text-sub)]">
-                      {typeof booth.waitCount === "number" && <span>待ち {booth.waitCount}組</span>}
-                      {booth.updatedAt?.display && <span>最終更新: {booth.updatedAt.display}</span>}
-                      <span>{mode === "manual" ? "手動更新" : "Bluetooth"}</span>
-                    </div>
-                  </div>
-                  <span
-                    className="text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full"
-                    style={{ backgroundColor: bg, color: text }}
-                  >
-                    {label}
-                  </span>
-                </button>
-              );
-            })}
+        <>
+          {/* 絞り込み */}
+          <div className="px-4 pb-2 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCategoryModal(true)}
+              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm active:bg-gray-50"
+            >
+              <span className="text-[var(--color-text-sub)]">ブース: <span className="font-semibold text-[var(--color-text-main)]">{categoryLabel}</span></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-text-sub)] shrink-0">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowStatusModal(true)}
+              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm active:bg-gray-50"
+            >
+              <span className="text-[var(--color-text-sub)]">ステータス: <span className="font-semibold text-[var(--color-text-main)]">{statusLabel}</span></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-text-sub)] shrink-0">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
           </div>
-        )
+
+          {showCategoryModal && (
+            <FilterModal
+              title="ブースの絞り込み"
+              options={CATEGORY_MODAL_OPTIONS}
+              selected={categoryFilter}
+              onSelect={(key) => setCategoryFilter(key as CategoryFilter | "all")}
+              onClose={() => setShowCategoryModal(false)}
+            />
+          )}
+          {showStatusModal && (
+            <FilterModal
+              title="ステータスの絞り込み"
+              options={STATUS_MODAL_OPTIONS}
+              selected={String(statusFilter)}
+              onSelect={(key) => setStatusFilter(key === "all" ? "all" : Number(key))}
+              onClose={() => setShowStatusModal(false)}
+            />
+          )}
+
+          {filteredBooths.length === 0 ? (
+            <p className="px-4 py-6 text-sm text-center text-[var(--color-text-sub)]">該当するブースがありません。</p>
+          ) : (
+            <div className="px-4 flex flex-col gap-2 pb-4">
+              {filteredBooths.map((booth) => {
+                const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
+                const { label, bg, text } = STATUS_CONFIG[level];
+                return (
+                  <button
+                    key={booth.boothId}
+                    type="button"
+                    onClick={() => setSelectedBoothId(booth.boothId)}
+                    className="w-full text-left rounded-xl bg-white border border-gray-100 shadow-sm p-3.5 flex items-center gap-3 active:bg-gray-50"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
+                        {booth.name ?? booth.shopName}
+                      </p>
+                      {booth.location && (
+                        <p className="text-xs text-[var(--color-text-sub)] mt-0.5">{booth.location}</p>
+                      )}
+                    </div>
+                    <span
+                      className="text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full"
+                      style={{ backgroundColor: bg, color: text }}
+                    >
+                      {label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </>
   );
