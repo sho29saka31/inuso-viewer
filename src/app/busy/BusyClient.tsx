@@ -82,12 +82,14 @@ export default function BusyClient({
   floorHeatPoints,
   floorDims,
   initialHeat,
+  heatPolling = true,
 }: {
   booths: Booth[];
   floorSvgs: string[];
   floorHeatPoints: FloorHeatPoint[][];
   floorDims: FloorDim[];
   initialHeat: Record<string, number>;
+  heatPolling?: boolean;
 }) {
   const [tab, setTab] = useState<"map" | "list">("map");
   const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
@@ -95,7 +97,7 @@ export default function BusyClient({
   const [statusFilter, setStatusFilter] = useState<number | "all">("all");
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
-  const heatValues = useHeatData(initialHeat, "/api/booth/heat");
+  const heatValues = useHeatData(initialHeat, "/api/booth/heat", heatPolling);
 
   const handleBoothTap = (svgId: string) => {
     const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;

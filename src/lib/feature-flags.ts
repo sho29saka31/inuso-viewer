@@ -10,12 +10,16 @@ export interface ViewerFeatures {
   notice: boolean;
   digital: boolean;
   map: boolean;
+  // 混雑ヒートマップのリアルタイムポーリング（/api/booth/heat）。
+  // falseにするとページ自体は使えるままFirestoreへの定期通信のみ止まる。
+  heatPolling: boolean;
 }
 
 const DEFAULTS: ViewerFeatures = {
   service: true,
   event: true, booth: true, busy: true, eat: true,
   notice: true, digital: true, map: true,
+  heatPolling: true,
 };
 
 export const getViewerFeatures = unstable_cache(
