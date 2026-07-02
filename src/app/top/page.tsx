@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getDb } from "@/lib/firebase-admin";
 import { formatDate } from "@/lib/formatDate";
 import { getViewerFeatures } from "@/lib/feature-flags";
+import { BoothBusyIcon } from "@/components/icons/BoothBusyIcon";
 
 export const revalidate = 60;
 export const metadata: Metadata = { title: "ホーム" };
@@ -30,8 +31,8 @@ const QUICK_LINKS = [
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
   },
   {
-    href: "/busy", label: "混雑", featureKey: "busy" as const,
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>,
+    href: "/busy", label: "ブース・混雑", featureKey: "busy" as const,
+    icon: <BoothBusyIcon size={28} />,
   },
   {
     href: "/eat", label: "飲食", featureKey: "eat" as const,
@@ -75,7 +76,7 @@ export default async function TopPage() {
               className="flex flex-col items-center gap-1.5 rounded-xl bg-white border border-gray-100 shadow-sm py-4 px-1 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-primary)]">{icon}</span>
-              <span className="text-xs font-medium">{label}</span>
+              <span className="text-xs font-medium whitespace-nowrap">{label}</span>
             </Link>
           ))}
         </div>

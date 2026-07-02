@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/contexts/AppContext";
 import AllMenuSheet from "@/components/AllMenuSheet";
+import { BoothBusyIcon } from "@/components/icons/BoothBusyIcon";
 
 type FeatureKey = "event" | "busy" | "eat";
 
@@ -25,14 +26,8 @@ const tabs: { href: string; label: string; featureKey?: FeatureKey; icon: (activ
   {
     href: "/busy",
     featureKey: "busy",
-    label: "混雑",
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? "white" : "currentColor"} strokeWidth="1.8">
-        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-      </svg>
-    ),
+    label: "ブース・混雑",
+    icon: (active: boolean) => <BoothBusyIcon size={22} color={active ? "white" : "currentColor"} />,
   },
   {
     href: "/top",
@@ -99,7 +94,7 @@ export default function Footer() {
                     {icon(active)}
                   </span>
                 )}
-                <span className={`text-xs font-medium ${active ? "text-[var(--color-primary)]" : "text-[var(--color-text-sub)]"}`}>
+                <span className={`text-[11px] font-medium whitespace-nowrap ${active ? "text-[var(--color-primary)]" : "text-[var(--color-text-sub)]"}`}>
                   {label}
                 </span>
               </Link>
@@ -119,7 +114,7 @@ export default function Footer() {
                 <rect x="14" y="14" width="7" height="7" rx="1" />
               </svg>
             </span>
-            <span className="text-xs font-medium text-[var(--color-text-sub)]">すべて</span>
+            <span className="text-[11px] font-medium whitespace-nowrap text-[var(--color-text-sub)]">すべて</span>
           </button>
         </div>
       </footer>
