@@ -10,26 +10,11 @@ export const revalidate = 300;
 
 export const metadata: Metadata = { title: "混雑状況" };
 
-// オーバーレイ透明度は完全不透明（fill-opacity指定なし）で確定。
-// フロアマップは写真ではなく模式図のため下に透過させる背景がなく、
-// 不透明の方がラベル文字とのコントラストを確保できるため。
-const SVG_FILL_COLORS: Record<number, string> = {
-  0: "#94A3B8",
-  1: "#2C7BB6",
-  2: "#ABD9E9",
-  3: "#FFFFBF",
-  4: "#FDAE61",
-  5: "#D7191C",
-};
-
-const SVG_TEXT_COLORS: Record<number, string> = {
-  0: "#FFFFFF",
-  1: "#FFFFFF",
-  2: "#1E3A5F",
-  3: "#5D4E00",
-  4: "#7C2D12",
-  5: "#FFFFFF",
-};
+// ブース枠は流動的ヒートマップキャンバス（下層）を透かして見せるため、
+// 半透明の白で統一し、ラベル文字は背景色に依存しない固定の濃色にする。
+// 混雑度の色表現はキャンバス側の連続グラデーションが担う。
+const BOOTH_RECT_FILL = "rgba(255,255,255,0.55)";
+const BOOTH_TEXT_FILL = "#0F172A";
 
 interface Booth {
   boothId: string;
@@ -38,6 +23,7 @@ interface Booth {
   category: string;
   location?: string;
   status: number;
+  heatScore?: number;
   waitCount?: number;
   isManual?: boolean;
   imageUrl?: string;
@@ -47,7 +33,7 @@ interface Booth {
 
 // Firestore boothId と SVG の id が異なるブースのみマッピングする。
 // 飲食（eat-car-1/2/3・pta-bazaar）は boothId と SVG id が一致するため
-// 下の statusMap で boothId をそのまま使う（フォールバック）。
+// boothId をそのまま使う（フォールバック）。
 const BOOTH_ID_TO_SVG: Record<string, string> = {
   "club-game": "club-esports",
 };
@@ -58,7 +44,61 @@ const FLOOR_VIEWBOXES = [
   "20 1568 880 120",
 ];
 
-async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { error: string }> {
+export interface FloorHeatPoint {
+  boothId: string;
+  x: number;
+  y: number;
+}
+
+export interface FloorDim {
+  width: number;
+  height: number;
+}
+
+// FLOORMAP_SVG中の<rect id="...">からブース中心座標を1回だけ抽出し、
+// 各フロアのviewBoxに応じてフロアローカル座標へ振り分ける。
+// heatmap.jsのcanvasオーバーレイをフロアごとに正しい位置へ重ねるために使う。
+const SVG_ID_TO_BOOTH_ID: Record<string, string> = Object.fromEntries(
+  Object.entries(BOOTH_ID_TO_SVG).map(([boothId, svgId]) => [svgId, boothId])
+);
+
+// floorHeatPointsはFirestoreのboothId空間で持つ（/api/booth/heatのレスポンスと同じキー）。
+function extractFloorHeatPoints(
+  svgBoothIds: Set<string>
+): { floorHeatPoints: FloorHeatPoint[][]; floorDims: FloorDim[] } {
+  const rectRe = /<rect id="([a-z0-9-]+)" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/g;
+  const centers: { id: string; x: number; y: number }[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = rectRe.exec(FLOORMAP_SVG)) !== null) {
+    const [, svgId, x, y, width, height] = m;
+    if (!svgBoothIds.has(svgId)) continue;
+    const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
+    centers.push({ id: boothId, x: Number(x) + Number(width) / 2, y: Number(y) + Number(height) / 2 });
+  }
+
+  const floorHeatPoints: FloorHeatPoint[][] = [];
+  const floorDims: FloorDim[] = [];
+  for (const vb of FLOOR_VIEWBOXES) {
+    const [vbX, vbY, vbW, vbH] = vb.split(/\s+/).map(Number);
+    floorDims.push({ width: vbW, height: vbH });
+    floorHeatPoints.push(
+      centers
+        .filter((c) => c.x >= vbX && c.x <= vbX + vbW && c.y >= vbY && c.y <= vbY + vbH)
+        .map((c) => ({ boothId: c.id, x: c.x - vbX, y: c.y - vbY }))
+    );
+  }
+  return { floorHeatPoints, floorDims };
+}
+
+async function getData(): Promise<
+  | {
+      booths: Booth[];
+      floorSvgs: string[];
+      floorHeatPoints: FloorHeatPoint[][];
+      floorDims: FloorDim[];
+    }
+  | { error: string }
+> {
   try {
     const db = getDb();
     const boothSnap = await db.collection("booths").orderBy("status", "asc").get();
@@ -68,27 +108,21 @@ async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { e
       return data;
     });
 
-    const statusMap: Record<string, number> = {};
+    const boothIds = new Set<string>();
     for (const booth of booths) {
       const id = booth.boothId ?? "";
-      const svgId = BOOTH_ID_TO_SVG[id] ?? id;
-      statusMap[svgId] = typeof booth.status === "number" ? booth.status : 0;
+      if (!id) continue;
+      boothIds.add(BOOTH_ID_TO_SVG[id] ?? id);
     }
 
     let svg = FLOORMAP_SVG;
-
-    for (const [boothId, status] of Object.entries(statusMap)) {
-      if (!boothId) continue;
-      const color = SVG_FILL_COLORS[status] ?? SVG_FILL_COLORS[0];
-      const textColor = SVG_TEXT_COLORS[status] ?? SVG_TEXT_COLORS[0];
-      const re = new RegExp(
-        `(<rect\\b[^>]*\\bid="${boothId}"[^>]*\\bfill=")[^"]*(")`
-      );
-      svg = svg.replace(re, `$1${color}$2`);
+    for (const svgId of boothIds) {
+      const re = new RegExp(`(<rect\\b[^>]*\\bid="${svgId}"[^>]*\\bfill=")[^"]*(")`);
+      svg = svg.replace(re, `$1${BOOTH_RECT_FILL}$2`);
       const textRe = new RegExp(
-        `(<rect\\b[^>]*\\bid="${boothId}"[^>]*/>\\s*<text\\b[^>]*\\bfill=")[^"]*(")`
+        `(<rect\\b[^>]*\\bid="${svgId}"[^>]*/>\\s*<text\\b[^>]*\\bfill=")[^"]*(")`
       );
-      svg = svg.replace(textRe, `$1${textColor}$2`);
+      svg = svg.replace(textRe, `$1${BOOTH_TEXT_FILL}$2`);
     }
 
     const floorSvgs = FLOOR_VIEWBOXES.map((vb) => {
@@ -98,7 +132,9 @@ async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { e
         .replace(/width="1400" height="1700"/, `width="${vbW}" height="${vbH}" style="display:block"`);
     });
 
-    return { booths, floorSvgs };
+    const { floorHeatPoints, floorDims } = extractFloorHeatPoints(boothIds);
+
+    return { booths, floorSvgs, floorHeatPoints, floorDims };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
@@ -118,7 +154,14 @@ export default async function BusyPage() {
     );
   }
 
-  const { booths, floorSvgs } = result;
+  const { booths, floorSvgs, floorHeatPoints, floorDims } = result;
+
+  const initialHeat: Record<string, number> = {};
+  for (const booth of booths) {
+    const id = booth.boothId ?? "";
+    if (!id) continue;
+    initialHeat[id] = typeof booth.heatScore === "number" ? booth.heatScore : (booth.status ?? 0) * 20;
+  }
 
   return (
     <div className="pb-24">
@@ -126,7 +169,13 @@ export default async function BusyPage() {
         <h1 className="text-xl font-bold mb-1">混雑状況</h1>
         <p className="text-xs text-[var(--color-text-sub)]">リアルタイム更新 (60秒ごと)</p>
       </div>
-      <BusyClient booths={booths} floorSvgs={floorSvgs} />
+      <BusyClient
+        booths={booths}
+        floorSvgs={floorSvgs}
+        floorHeatPoints={floorHeatPoints}
+        floorDims={floorDims}
+        initialHeat={initialHeat}
+      />
     </div>
   );
 }
