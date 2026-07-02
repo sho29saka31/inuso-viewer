@@ -25,7 +25,6 @@ interface Booth {
   location?: string;
   status: number;
   heatScore?: number;
-  heatPoint?: { x: number; y: number } | null;
   waitCount?: number;
   isManual?: boolean;
   imageUrl?: string;
@@ -63,11 +62,8 @@ const SVG_ID_TO_BOOTH_ID: Record<string, string> = Object.fromEntries(
 );
 
 // floorHeatPointsはFirestoreのboothId空間で持つ（/api/booth/heatのレスポンスと同じキー）。
-// overrides: 管理画面でブースごとに手動指定されたヒートマップ中心点（SVG viewBox座標系）。
-// 指定があればブース矩形の自動中心より優先する。
 function extractFloorHeatPoints(
-  svgBoothIds: Set<string>,
-  overrides: Record<string, { x: number; y: number }>
+  svgBoothIds: Set<string>
 ): { floorHeatPoints: FloorHeatPoint[][]; floorDims: FloorDim[] } {
   const rectRe = /<rect id="([a-z0-9-]+)" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/g;
   const centers: { id: string; x: number; y: number }[] = [];
@@ -76,12 +72,7 @@ function extractFloorHeatPoints(
     const [, svgId, x, y, width, height] = m;
     if (!svgBoothIds.has(svgId)) continue;
     const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
-    const override = overrides[boothId];
-    centers.push(
-      override
-        ? { id: boothId, x: override.x, y: override.y }
-        : { id: boothId, x: Number(x) + Number(width) / 2, y: Number(y) + Number(height) / 2 }
-    );
+    centers.push({ id: boothId, x: Number(x) + Number(width) / 2, y: Number(y) + Number(height) / 2 });
   }
 
   const floorHeatPoints: FloorHeatPoint[][] = [];
@@ -142,15 +133,7 @@ async function getData(): Promise<
         .replace(/width="1400" height="1700"/, `width="${vbW}" height="${vbH}" style="display:block"`);
     });
 
-    const heatPointOverrides: Record<string, { x: number; y: number }> = {};
-    for (const booth of booths) {
-      const id = booth.boothId ?? "";
-      if (!id || !booth.heatPoint) continue;
-      const { x, y } = booth.heatPoint;
-      if (typeof x === "number" && typeof y === "number") heatPointOverrides[id] = { x, y };
-    }
-
-    const { floorHeatPoints, floorDims } = extractFloorHeatPoints(boothIds, heatPointOverrides);
+    const { floorHeatPoints, floorDims } = extractFloorHeatPoints(boothIds);
 
     return { booths, floorSvgs, floorHeatPoints, floorDims };
   } catch (e) {
