@@ -11,9 +11,8 @@ import type { FloorHeatPoint, FloorDim } from "./page";
 
 // SVG側のrect idとFirestoreのboothIdが異なるブースのみ逆引きする。
 // page.tsxのBOOTH_ID_TO_SVGと対になる（そちらはboothId→svgId）。
-const SVG_ID_TO_BOOTH_ID: Record<string, string> = {
-  "club-esports": "club-game",
-};
+// e-スポーツ部はFirestore側もclub-esportsに統一済みのため、現在は特例マッピング不要。
+const SVG_ID_TO_BOOTH_ID: Record<string, string> = {};
 
 const STATUS_CONFIG = [
   { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
