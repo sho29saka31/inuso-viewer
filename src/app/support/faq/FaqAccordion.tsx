@@ -85,7 +85,7 @@ function UnsubscribeButton() {
     <>
       {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
       {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
-      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-3.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50">
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-[var(--color-danger)] py-3.5 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 dark:active:bg-red-950">
         通知の購読を解除する
       </button>
     </>
@@ -106,7 +106,7 @@ function ReadResetButton() {
     <>
       {confirmState && <ConfirmDialog message={confirmState.message} onConfirm={() => handleConfirm(true)} onCancel={() => handleConfirm(false)} />}
       {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
-      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 py-3.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50">
+      <button onClick={handleClick} className="mt-3 w-full rounded-xl border border-gray-300 dark:border-gray-600 py-3.5 text-sm font-bold text-[var(--color-text-main)] active:bg-gray-50 dark:active:bg-gray-800">
         既読状態をリセットする
       </button>
     </>
@@ -139,7 +139,7 @@ export function AllCookieDeleteButton({ compact }: { compact?: boolean }) {
       {alertState && <AlertDialog message={alertState.message} onClose={handleAlertClose} />}
       <button
         onClick={handleClick}
-        className={`w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 ${compact ? "" : "mt-2"}`}
+        className={`w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 dark:active:bg-red-950 ${compact ? "" : "mt-2"}`}
       >
         すべてのCookieを削除する
       </button>
@@ -161,7 +161,7 @@ export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
               const key = `${category}-${i}`;
               const open = openKey === key;
               return (
-                <div key={key} className="rounded-xl bg-white border border-gray-100 shadow-sm overflow-hidden">
+                <div key={key} className="rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                   <button
                     className="w-full text-left px-4 py-4 flex items-center justify-between gap-2"
                     onClick={() => setOpenKey(open ? null : key)}
@@ -177,7 +177,7 @@ export default function FaqAccordion({ faqs }: { faqs: FaqCategory[] }) {
                     </svg>
                   </button>
                   {open && (
-                    <div className="px-4 pb-4 border-t border-gray-100">
+                    <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700">
                       <p className="text-sm text-[var(--color-text-sub)] leading-relaxed mt-3 whitespace-pre-line">A. {a}</p>
                       {notifyButton && <NotifyButton />}
                       {unsubscribeButton && <UnsubscribeButton />}

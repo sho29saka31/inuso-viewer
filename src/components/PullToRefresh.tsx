@@ -115,7 +115,7 @@ export default function PullToRefresh() {
         transition: isDragging ? "none" : "transform 0.2s ease, opacity 0.2s ease",
       }}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface)] shadow-md">
         <svg
           width="24"
           height="24"

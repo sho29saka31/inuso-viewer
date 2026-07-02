@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* .dark クラス（<html>に付与）ベースのダークモード。OS設定追従はThemeContext側で行う */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #1EA78C;
   --color-secondary: #0D7A67;
@@ -11,6 +14,51 @@
   --color-danger: #EF4444;
   --color-warning: #F97316;
   --color-success: #22C55E;
+}
+
+/* 校内フロアマップ（floormap-svg.ts）の配色。.dark側が同じ詳細度で後勝ちする必要があるため、
+   このブロックは必ず .dark より前に置くこと（後に置くと .dark の値が上書きされてしまう）。 */
+:root {
+  --map-room-a: #F8FAFC;
+  --map-room-b: #EEF2F7;
+  --map-room-c: #E2E8F0;
+  --map-border-a: #D8DFEA;
+  --map-border-b: #CBD5E1;
+  --map-accent: #1D4ED8;
+  --map-text-heading: #0F172A;
+  --map-text-secondary: #64748B;
+  --map-text-muted: #94A3B8;
+  --map-text-navy: #1E3A8A;
+  --map-text-room: #334155;
+  --map-booth-fill: rgba(255, 255, 255, 0.55);
+  --map-booth-text: #0F172A;
+}
+
+.dark {
+  --color-primary: #2DD4BF;
+  --color-secondary: #14B8A6;
+  --color-accent: #FBBF24;
+  --color-background: #0B1220;
+  --color-surface: #1A2333;
+  --color-text-main: #F3F4F6;
+  --color-text-sub: #9CA3AF;
+  --color-danger: #F87171;
+  --color-warning: #FB923C;
+  --color-success: #4ADE80;
+
+  --map-room-a: #1E293B;
+  --map-room-b: #24304A;
+  --map-room-c: #202A3D;
+  --map-border-a: #3B4A63;
+  --map-border-b: #475569;
+  --map-accent: #60A5FA;
+  --map-text-heading: #F1F5F9;
+  --map-text-secondary: #94A3B8;
+  --map-text-muted: #94A3B8;
+  --map-text-navy: #93C5FD;
+  --map-text-room: #CBD5E1;
+  --map-booth-fill: rgba(15, 23, 42, 0.55);
+  --map-booth-text: #F1F5F9;
 }
 
 * {

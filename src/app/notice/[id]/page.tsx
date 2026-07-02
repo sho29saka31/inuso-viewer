@@ -70,7 +70,7 @@ export default async function NoticeDetailPage({ params }: { params: Promise<{ i
         </div>
         <h1 className="text-lg font-bold text-[var(--color-text-main)] mb-4">{notice.title}</h1>
         <p className="text-sm text-[var(--color-text-main)] whitespace-pre-wrap leading-relaxed">{notice.body}</p>
-        <div className="flex justify-between items-center mt-5 pt-3 border-t border-gray-100 text-xs text-[var(--color-text-sub)]">
+        <div className="flex justify-between items-center mt-5 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs text-[var(--color-text-sub)]">
           <span>{notice.authorId}</span>
           <span>{formatDate(notice.createdAt, { year: true, month: "long" })}</span>
         </div>

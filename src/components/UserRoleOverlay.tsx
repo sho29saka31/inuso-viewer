@@ -2,12 +2,27 @@
 
 import { useState } from "react";
 import { setCookie } from "@/lib/cookies";
+import SelectField from "@/components/ui/SelectField";
 
 type Props = {
   onComplete: () => void;
 };
 
 type Role = "student" | "teacher" | "parent" | "visitor" | "";
+
+const ROLE_OPTIONS = [
+  { key: "student", label: "生徒" },
+  { key: "teacher", label: "教員" },
+  { key: "parent", label: "保護者" },
+  { key: "visitor", label: "来賓" },
+];
+
+const CLASS_OPTIONS = [
+  { key: "1", label: "1組" },
+  { key: "2", label: "2組" },
+  { key: "3", label: "3組" },
+  { key: "4", label: "4組" },
+];
 
 export default function UserRoleOverlay({ onComplete }: Props) {
   const [role, setRole] = useState<Role>("");
@@ -57,7 +72,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-sm rounded-2xl bg-[var(--color-surface)] p-8 shadow-2xl">
         <h2 className="mb-2 text-center text-lg font-bold text-[var(--color-text-main)]">
           あなたについて教えてください
         </h2>
@@ -66,62 +81,36 @@ export default function UserRoleOverlay({ onComplete }: Props) {
         </p>
 
         <div className="mb-4 flex flex-col gap-4">
-          <div>
-            <label className="mb-1 block text-xs font-bold text-[var(--color-text-sub)]">
-              あなたは
-            </label>
-            <select
-              value={role}
-              onChange={(e) => { setRole(e.target.value as Role); setGrade(""); setCls(""); setStudentId(""); }}
-              className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
-              style={{ fontSize: "16px" }}
-            >
-              <option value="">▼ 選択してください</option>
-              <option value="student">生徒</option>
-              <option value="teacher">教員</option>
-              <option value="parent">保護者</option>
-              <option value="visitor">来賓</option>
-            </select>
-          </div>
+          <SelectField
+            label="あなたは"
+            title="ユーザー種別を選択"
+            value={role}
+            options={ROLE_OPTIONS}
+            onChange={(key) => { setRole(key as Role); setGrade(""); setCls(""); setStudentId(""); }}
+          />
 
           {(role === "student" || role === "teacher") && (
-            <div>
-              <label className="mb-1 block text-xs font-bold text-[var(--color-text-sub)]">
-                {role === "teacher" ? "担当学年（任意）" : "学年"}
-              </label>
-              <select
-                value={grade}
-                onChange={(e) => setGrade(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
-              style={{ fontSize: "16px" }}
-              >
-                <option value="">▼ 選択してください</option>
-                <option value="1">1年</option>
-                <option value="2">2年</option>
-                <option value="3">3年</option>
-                {role === "teacher" && <option value="none">なし</option>}
-              </select>
-            </div>
+            <SelectField
+              label={role === "teacher" ? "担当学年（任意）" : "学年"}
+              title="学年を選択"
+              value={grade}
+              onChange={setGrade}
+              options={
+                role === "teacher"
+                  ? [{ key: "1", label: "1年" }, { key: "2", label: "2年" }, { key: "3", label: "3年" }, { key: "none", label: "なし" }]
+                  : [{ key: "1", label: "1年" }, { key: "2", label: "2年" }, { key: "3", label: "3年" }]
+              }
+            />
           )}
 
           {role === "student" && (
-            <div>
-              <label className="mb-1 block text-xs font-bold text-[var(--color-text-sub)]">
-                クラス
-              </label>
-              <select
-                value={cls}
-                onChange={(e) => setCls(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
-              style={{ fontSize: "16px" }}
-              >
-                <option value="">▼ 選択してください</option>
-                <option value="1">1組</option>
-                <option value="2">2組</option>
-                <option value="3">3組</option>
-                <option value="4">4組</option>
-              </select>
-            </div>
+            <SelectField
+              label="クラス"
+              title="クラスを選択"
+              value={cls}
+              options={CLASS_OPTIONS}
+              onChange={setCls}
+            />
           )}
 
           {role === "student" && (
@@ -136,7 +125,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value.replace(/\D/g, ""))}
                 placeholder="例: 1234"
-                className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
               style={{ fontSize: "16px" }}
               />
             </div>
@@ -153,7 +142,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
           className={`mb-3 w-full rounded-xl py-3 text-sm font-bold transition-colors ${
             role
               ? "bg-[var(--color-primary)] text-white active:opacity-80"
-              : "cursor-not-allowed bg-gray-200 text-gray-400"
+              : "cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
           }`}
         >
           進める

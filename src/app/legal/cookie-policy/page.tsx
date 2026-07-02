@@ -31,10 +31,10 @@ export default function CookiePolicyPage() {
           <h2 className="text-sm font-bold text-[var(--color-text-main)] mb-2">使用しているCookie一覧</h2>
           <div className="flex flex-col gap-2">
             {cookies.map((c) => (
-              <div key={c.name} className="rounded-xl bg-white border border-gray-100 shadow-sm p-3">
+              <div key={c.name} className="rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <p className="font-mono text-xs text-[var(--color-primary)]">{c.name}</p>
-                  <span className={`text-xs px-1.5 py-0.5 rounded font-bold ${c.essential ? "bg-gray-100 text-gray-600" : "bg-blue-50 text-blue-600"}`}>
+                  <span className={`text-xs px-1.5 py-0.5 rounded font-bold ${c.essential ? "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300" : "bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-300"}`}>
                     {c.essential ? "必須" : "機能"}
                   </span>
                 </div>
@@ -51,9 +51,9 @@ export default function CookiePolicyPage() {
             ブラウザの設定からCookieを無効にすることができます。ただしその場合、以下の機能が動作しなくなります。
           </p>
           <ul className="flex flex-col gap-1 text-sm text-[var(--color-text-sub)]">
-            <li className="flex items-start gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />ユーザー種別の保持（毎回選択が必要になります）</li>
-            <li className="flex items-start gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />お知らせの既読管理</li>
-            <li className="flex items-start gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />プッシュ通知の受信</li>
+            <li className="flex items-start gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 shrink-0" />ユーザー種別の保持（毎回選択が必要になります）</li>
+            <li className="flex items-start gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 shrink-0" />お知らせの既読管理</li>
+            <li className="flex items-start gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 shrink-0" />プッシュ通知の受信</li>
           </ul>
         </section>
 
@@ -67,7 +67,7 @@ export default function CookiePolicyPage() {
               href="https://vercel.com/legal/privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
+              className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
             >
               Vercel プライバシーポリシー
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -80,7 +80,7 @@ export default function CookiePolicyPage() {
               href="https://policies.google.com/technologies/partner-sites"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
+              className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
             >
               Google Analytics データの利用について
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -93,7 +93,7 @@ export default function CookiePolicyPage() {
               href="https://sentry.io/privacy/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
+              className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
             >
               Sentry プライバシーポリシー
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -106,7 +106,7 @@ export default function CookiePolicyPage() {
               href="https://policies.google.com/privacy"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
+              className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-3 py-2 text-sm text-[var(--color-primary)]"
             >
               Google / Firebase プライバシーポリシー
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -100,7 +100,7 @@ export default function BottomSheet({
       <div className="absolute inset-0 bg-black/40" />
       <div
         ref={sheetRef}
-        className="relative w-full max-w-md max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-2xl bg-white shadow-xl"
+        className="relative w-full max-w-md max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-2xl bg-[var(--color-surface)] shadow-xl"
         style={{
           transform: `translateY(${translateY}px)`,
           transition: translateY === 0 ? "transform 0.25s cubic-bezier(0.32,0.72,0,1)" : "none",
@@ -108,7 +108,7 @@ export default function BottomSheet({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="h-1 w-10 rounded-full bg-gray-200" />
+          <div className="h-1 w-10 rounded-full bg-gray-200 dark:bg-gray-600" />
         </div>
         {children}
       </div>

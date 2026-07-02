@@ -3,6 +3,7 @@ import Script from "next/script";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AppProvider } from "@/contexts/AppContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Header from "@/components/Header";
 import HeaderGuideBar from "@/components/HeaderGuideBar";
 import Footer from "@/components/Footer";
@@ -55,7 +56,7 @@ export default async function RootLayout({
 
   if (features.service === false) {
     return (
-      <html lang="ja">
+      <html lang="ja" suppressHydrationWarning>
         <body className={mPlusRounded.className}>
           <MaintenancePage />
         </body>
@@ -64,7 +65,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body className={mPlusRounded.className}>
         {/* beforeinstallprompt はハイドレーション前に発火し得るため、最速で捕捉して退避する */}
         <Script id="pwa-install-capture" strategy="beforeInteractive">
@@ -74,20 +75,32 @@ export default async function RootLayout({
             "window.addEventListener('appinstalled',function(){window.__pwaInstallPrompt=null;});"
           }
         </Script>
-        <AppProvider features={features}>
-          <RouteRefresh />
-          <GoogleAnalytics />
-          <InitFlow />
-          <FcmInit />
-          <Header />
-          <HeaderGuideBar />
-          <PullToRefresh />
-          <main className="min-h-[calc(100dvh-3.5rem-4rem)] pb-16">
-            {children}
-          </main>
-          <Footer />
-          <HamburgerMenu />
-        </AppProvider>
+        {/* ダークモードのちらつき防止のため、ハイドレーション前に<html>へdarkクラスを同期的に付与する */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {
+            "(function(){try{" +
+            "var s=localStorage.getItem('theme-preference');" +
+            "var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;" +
+            "if(d)document.documentElement.classList.add('dark');" +
+            "}catch(e){}})();"
+          }
+        </Script>
+        <ThemeProvider>
+          <AppProvider features={features}>
+            <RouteRefresh />
+            <GoogleAnalytics />
+            <InitFlow />
+            <FcmInit />
+            <Header />
+            <HeaderGuideBar />
+            <PullToRefresh />
+            <main className="min-h-[calc(100dvh-3.5rem-4rem)] pb-16">
+              {children}
+            </main>
+            <Footer />
+            <HamburgerMenu />
+          </AppProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

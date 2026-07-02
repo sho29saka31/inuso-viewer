@@ -31,7 +31,7 @@ export default function NoticeNotFound() {
         </Link>
         <Link
           href="/top"
-          className="w-full py-3 rounded-2xl border border-gray-200 text-[var(--color-text-main)] text-sm font-medium text-center"
+          className="w-full py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-[var(--color-text-main)] text-sm font-medium text-center"
         >
           ホームへ戻る
         </Link>

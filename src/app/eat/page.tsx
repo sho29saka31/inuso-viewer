@@ -9,12 +9,12 @@ export const metadata: Metadata = { title: "飲食エリア" };
 
 const STATUS_LABELS = ["停止中", "非常に閑散", "閑散", "通常", "混雑", "非常に混雑"];
 const STATUS_COLORS = [
-  "bg-gray-200 text-gray-600",
-  "bg-blue-100 text-blue-700",
-  "bg-green-100 text-green-700",
-  "bg-yellow-100 text-yellow-700",
-  "bg-orange-100 text-orange-700",
-  "bg-red-100 text-red-700",
+  "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300",
+  "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300",
+  "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300",
+  "bg-yellow-100 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-300",
+  "bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-300",
+  "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300",
 ];
 
 interface EatItem {
@@ -39,7 +39,7 @@ async function getEatItems(): Promise<{ items: EatItem[] } | { error: string }> 
 
 function EatCard({ item }: { item: EatItem }) {
   return (
-    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 overflow-hidden">
+    <div className="rounded-2xl bg-[var(--color-surface)] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
       {item.imageUrl && (
         <div className="relative w-full aspect-[4/3]">
           <Image src={item.imageUrl} alt={item.shopName} fill className="object-cover" />
@@ -80,7 +80,7 @@ function EatCard({ item }: { item: EatItem }) {
                 <span className="flex items-center gap-1.5">
                   {p.name}
                   {p.isSoldOut && (
-                    <span className="no-underline not-italic text-xs px-1 py-0.5 rounded bg-red-100 text-red-600 font-medium" style={{ textDecoration: "none" }}>
+                    <span className="no-underline not-italic text-xs px-1 py-0.5 rounded bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-300 font-medium" style={{ textDecoration: "none" }}>
                       売り切れ
                     </span>
                   )}

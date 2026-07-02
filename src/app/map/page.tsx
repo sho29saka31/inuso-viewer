@@ -28,11 +28,11 @@ export default async function MapPage() {
       <h1 className="text-xl font-bold mb-4">校内マップ</h1>
 
       {!imageUrl ? (
-        <div className="rounded-xl bg-white border border-gray-100 shadow-sm p-6 text-center">
+        <div className="rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm p-6 text-center">
           <p className="text-sm text-[var(--color-text-sub)]">マップは現在準備中です。</p>
         </div>
       ) : (
-        <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+        <div className="rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
           <Image
             src={imageUrl}
             alt="校内マップ"

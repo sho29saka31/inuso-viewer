@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import ZoomableMap from "./ZoomableMap";
 import StaleBanner from "./StaleBanner";
 import BoothDetailSheet from "./BoothDetailSheet";
-import FilterModal from "./FilterModal";
+import SelectModal from "@/components/ui/SelectModal";
 import { CATEGORY_FILTER_OPTIONS, categoryFilterGroup, type CategoryFilter } from "./categoryConfig";
 import { useHeatData } from "./useHeatData";
 import type { FloorHeatPoint, FloorDim } from "./page";
@@ -15,12 +15,12 @@ import type { FloorHeatPoint, FloorDim } from "./page";
 const SVG_ID_TO_BOOTH_ID: Record<string, string> = {};
 
 const STATUS_CONFIG = [
-  { label: "停止中",     bg: "#F1F5F9", text: "#64748B" },
-  { label: "非常に閑散", bg: "#EFF6FF", text: "#1D4ED8" },
-  { label: "閑散",       bg: "#F0FDFA", text: "#0F766E" },
-  { label: "通常",       bg: "#F0FDF4", text: "#15803D" },
-  { label: "混雑",       bg: "#FFF7ED", text: "#C2410C" },
-  { label: "非常に混雑", bg: "#FEF2F2", text: "#B91C1C" },
+  { label: "停止中",     className: "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300" },
+  { label: "非常に閑散", className: "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300" },
+  { label: "閑散",       className: "bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300" },
+  { label: "通常",       className: "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300" },
+  { label: "混雑",       className: "bg-orange-50 dark:bg-orange-950 text-orange-700 dark:text-orange-300" },
+  { label: "非常に混雑", className: "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300" },
 ];
 
 interface Booth {
@@ -123,7 +123,7 @@ export default function BusyClient({
       <StaleBanner booths={booths} />
 
       {/* セグメントコントロール */}
-      <div className="mx-4 my-3 bg-gray-100 rounded-xl p-1 flex">
+      <div className="mx-4 my-3 bg-gray-100 dark:bg-gray-800 rounded-xl p-1 flex">
         {TABS.map(({ key, label, Icon }) => (
           <button
             key={key}
@@ -131,7 +131,7 @@ export default function BusyClient({
             onClick={() => setTab(key)}
             className={`flex-1 py-3 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-1.5 ${
               tab === key
-                ? "bg-white shadow-sm text-[var(--color-text-main)]"
+                ? "bg-[var(--color-surface)] shadow-sm text-[var(--color-text-main)]"
                 : "text-[var(--color-text-sub)]"
             }`}
           >
@@ -164,7 +164,7 @@ export default function BusyClient({
             <button
               type="button"
               onClick={() => setShowCategoryModal(true)}
-              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm active:bg-gray-50"
+              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-[var(--color-surface)] px-3 py-2 text-sm active:bg-gray-50 dark:active:bg-gray-800"
             >
               <span className="text-[var(--color-text-sub)]">ブース: <span className="font-semibold text-[var(--color-text-main)]">{categoryLabel}</span></span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-text-sub)] shrink-0">
@@ -174,7 +174,7 @@ export default function BusyClient({
             <button
               type="button"
               onClick={() => setShowStatusModal(true)}
-              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm active:bg-gray-50"
+              className="flex-1 flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-[var(--color-surface)] px-3 py-2 text-sm active:bg-gray-50 dark:active:bg-gray-800"
             >
               <span className="text-[var(--color-text-sub)]">ステータス: <span className="font-semibold text-[var(--color-text-main)]">{statusLabel}</span></span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-text-sub)] shrink-0">
@@ -184,7 +184,7 @@ export default function BusyClient({
           </div>
 
           {showCategoryModal && (
-            <FilterModal
+            <SelectModal
               title="ブースの絞り込み"
               options={CATEGORY_MODAL_OPTIONS}
               selected={categoryFilter}
@@ -193,7 +193,7 @@ export default function BusyClient({
             />
           )}
           {showStatusModal && (
-            <FilterModal
+            <SelectModal
               title="ステータスの絞り込み"
               options={STATUS_MODAL_OPTIONS}
               selected={String(statusFilter)}
@@ -208,13 +208,13 @@ export default function BusyClient({
             <div className="px-4 flex flex-col gap-2 pb-4">
               {filteredBooths.map((booth) => {
                 const level = Math.min(Math.max(booth.status ?? 0, 0), 5);
-                const { label, bg, text } = STATUS_CONFIG[level];
+                const { label, className: statusClassName } = STATUS_CONFIG[level];
                 return (
                   <button
                     key={booth.boothId}
                     type="button"
                     onClick={() => setSelectedBoothId(booth.boothId)}
-                    className="w-full text-left rounded-xl bg-white border border-gray-100 shadow-sm p-3.5 flex items-center gap-3 active:bg-gray-50"
+                    className="w-full text-left rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm p-3.5 flex items-center gap-3 active:bg-gray-50 dark:active:bg-gray-800"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-sm text-[var(--color-text-main)] truncate">
@@ -225,8 +225,7 @@ export default function BusyClient({
                       )}
                     </div>
                     <span
-                      className="text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full"
-                      style={{ backgroundColor: bg, color: text }}
+                      className={`text-xs font-semibold shrink-0 px-2.5 py-1 rounded-full ${statusClassName}`}
                     >
                       {label}
                     </span>

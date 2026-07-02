@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export default function FilterModal({
+export default function SelectModal({
   title,
   options,
   selected,
@@ -24,7 +24,7 @@ export default function FilterModal({
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-6" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative w-full max-w-xs max-h-[70vh] overflow-y-auto rounded-2xl bg-white p-5 shadow-xl"
+        className="relative w-full max-w-xs max-h-[70vh] overflow-y-auto rounded-2xl bg-[var(--color-surface)] p-5 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-sm font-bold text-[var(--color-text-main)] mb-3">{title}</h3>

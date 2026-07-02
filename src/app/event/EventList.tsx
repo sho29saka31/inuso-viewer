@@ -72,7 +72,7 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
               >
                 <span className="text-sm font-bold text-[var(--color-primary)]">{ev.eventName}</span>
                 {ev.isDelayed && (
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-medium">
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-300 font-medium">
                     遅延 +{ev.delayMinutes}分
                   </span>
                 )}
@@ -88,14 +88,14 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                     key={ev.eventId}
                     className={`flex gap-3 rounded-xl border shadow-sm p-3 transition-colors ${
                       isDone
-                        ? "bg-gray-50 border-gray-100 opacity-50"
+                        ? "bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-50"
                         : isActive
                         ? "bg-[var(--color-primary)]/5 border-[var(--color-primary)]/30"
-                        : "bg-white border-gray-100"
+                        : "bg-[var(--color-surface)] border-gray-100 dark:border-gray-700"
                     }`}
                   >
-                    <div className={`flex flex-col items-center text-sm shrink-0 w-14 pt-0.5 ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
-                      <span className={`font-bold ${isDone ? "text-gray-400" : "text-[var(--color-text-main)]"}`}>
+                    <div className={`flex flex-col items-center text-sm shrink-0 w-14 pt-0.5 ${isDone ? "text-gray-400 dark:text-gray-500" : "text-[var(--color-text-sub)]"}`}>
+                      <span className={`font-bold ${isDone ? "text-gray-400 dark:text-gray-500" : "text-[var(--color-text-main)]"}`}>
                         {ev.startTime.slice(0, 5)}
                       </span>
                       <span className="text-xs">〜</span>
@@ -103,7 +103,7 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className={`font-bold text-sm ${isDone ? "text-gray-400" : "text-[var(--color-text-main)]"}`}>
+                        <p className={`font-bold text-sm ${isDone ? "text-gray-400 dark:text-gray-500" : "text-[var(--color-text-main)]"}`}>
                           {ev.eventName}
                         </p>
                         {isActive && (
@@ -112,16 +112,16 @@ export default function EventList({ grouped }: { grouped: Record<string, Event[]
                           </span>
                         )}
                         {ev.isDelayed && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-medium">
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-300 font-medium">
                             遅延 +{ev.delayMinutes}分
                           </span>
                         )}
                       </div>
-                      <p className={`text-xs mt-0.5 ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
+                      <p className={`text-xs mt-0.5 ${isDone ? "text-gray-400 dark:text-gray-500" : "text-[var(--color-text-sub)]"}`}>
                         {ev.location}
                       </p>
                       {ev.details && (
-                        <p className={`text-xs mt-1 whitespace-pre-wrap ${isDone ? "text-gray-400" : "text-[var(--color-text-sub)]"}`}>
+                        <p className={`text-xs mt-1 whitespace-pre-wrap ${isDone ? "text-gray-400 dark:text-gray-500" : "text-[var(--color-text-sub)]"}`}>
                           {ev.details}
                         </p>
                       )}
