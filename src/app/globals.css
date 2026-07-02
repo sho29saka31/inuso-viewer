@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* .dark クラス（<html>に付与）ベースのダークモード。OS設定追従はThemeContext側で行う */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #1EA78C;
   --color-secondary: #0D7A67;
@@ -11,6 +14,19 @@
   --color-danger: #EF4444;
   --color-warning: #F97316;
   --color-success: #22C55E;
+}
+
+.dark {
+  --color-primary: #2DD4BF;
+  --color-secondary: #14B8A6;
+  --color-accent: #FBBF24;
+  --color-background: #0B1220;
+  --color-surface: #1A2333;
+  --color-text-main: #F3F4F6;
+  --color-text-sub: #9CA3AF;
+  --color-danger: #F87171;
+  --color-warning: #FB923C;
+  --color-success: #4ADE80;
 }
 
 * {

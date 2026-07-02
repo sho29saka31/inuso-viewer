@@ -99,7 +99,7 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
+    <header className="sticky top-0 z-30 border-b border-gray-100 dark:border-gray-800 bg-[var(--color-surface)]">
       <div className="relative flex h-14 items-center justify-center px-4">
         {/* Left: reload */}
         <div className="absolute left-2 flex items-center">
@@ -149,7 +149,7 @@ export default function Header() {
                     <path d="M13.73 21a2 2 0 01-3.46 0" />
                   </svg>
                   {hasUnread && (
-                    <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
+                    <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-[var(--color-surface)]" />
                   )}
                 </button>
               )}
@@ -172,7 +172,7 @@ export default function Header() {
 
       {accountInfo && <AlertDialog message={accountInfo} onClose={() => setAccountInfo(null)} />}
       {crumbs.length > 0 && (
-        <div className="border-t border-gray-50 bg-[var(--color-background)] px-4 py-1.5 text-xs text-[var(--color-text-sub)] flex items-center gap-1 flex-wrap">
+        <div className="border-t border-gray-50 dark:border-gray-800 bg-[var(--color-background)] px-4 py-1.5 text-xs text-[var(--color-text-sub)] flex items-center gap-1 flex-wrap">
           {crumbs.map((crumb, i) => (
             <span key={i} className="flex items-center gap-1">
               {i > 0 && <span>&gt;</span>}
