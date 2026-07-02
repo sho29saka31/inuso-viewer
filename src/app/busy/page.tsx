@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { getViewerFeatures } from "@/lib/feature-flags";
 import FeatureDisabled from "@/components/FeatureDisabled";
 import { FLOORMAP_SVG } from "./floormap-svg";
+import { categorySortRank } from "./categoryConfig";
 import BusyClient from "./BusyClient";
 
 export const revalidate = 300;
@@ -61,12 +62,14 @@ const FLOOR_VIEWBOXES = [
 async function getData(): Promise<{ booths: Booth[]; floorSvgs: string[] } | { error: string }> {
   try {
     const db = getDb();
-    const boothSnap = await db.collection("booths").orderBy("status", "asc").get();
-    const booths = boothSnap.docs.map((d) => {
-      const data = d.data() as Booth;
-      if (!data.boothId) data.boothId = d.id;
-      return data;
-    });
+    const boothSnap = await db.collection("booths").get();
+    const booths = boothSnap.docs
+      .map((d) => {
+        const data = d.data() as Booth;
+        if (!data.boothId) data.boothId = d.id;
+        return data;
+      })
+      .sort((a, b) => categorySortRank(a.category) - categorySortRank(b.category));
 
     const statusMap: Record<string, number> = {};
     for (const booth of booths) {
