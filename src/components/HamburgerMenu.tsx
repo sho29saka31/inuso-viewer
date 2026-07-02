@@ -136,11 +136,11 @@ export default function HamburgerMenu() {
       />
       {/* Panel */}
       <div
-        className="fixed top-0 right-0 z-50 h-full w-[80vw] max-w-72 overflow-y-auto overscroll-contain bg-white shadow-2xl transition-transform duration-300 ease-out"
+        className="fixed top-0 right-0 z-50 h-full w-[80vw] max-w-72 overflow-y-auto overscroll-contain bg-[var(--color-surface)] shadow-2xl transition-transform duration-300 ease-out"
         style={{ transform: visible ? "translateX(0)" : "translateX(100%)" }}
         onTransitionEnd={() => { if (!visible) setShouldRender(false); }}
       >
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 px-5 py-4">
           <span className="font-bold text-[var(--color-text-main)]">メニュー</span>
           <button onClick={closeHamburger} className="flex h-11 w-11 items-center justify-center text-[var(--color-text-sub)]" aria-label="閉じる">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -162,7 +162,7 @@ export default function HamburgerMenu() {
             </Link>
           ))}
 
-          <div className="mx-4 my-2 border-t border-gray-100" />
+          <div className="mx-4 my-2 border-t border-gray-100 dark:border-gray-800" />
 
           {supportPages.map(({ href, label, icon }) => (
             <Link
@@ -176,7 +176,7 @@ export default function HamburgerMenu() {
             </Link>
           ))}
 
-          <div className="mx-4 my-2 border-t border-gray-100" />
+          <div className="mx-4 my-2 border-t border-gray-100 dark:border-gray-800" />
 
           {externalPages.map(({ href, label, icon }) => (
             <a
@@ -193,7 +193,7 @@ export default function HamburgerMenu() {
             </a>
           ))}
 
-          <div className="mx-4 my-2 border-t border-gray-100" />
+          <div className="mx-4 my-2 border-t border-gray-100 dark:border-gray-800" />
 
           {legalPages.map(({ href, label }) => (
             <Link

@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useApp } from "@/contexts/AppContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import BottomSheet from "@/components/BottomSheet";
 import { BoothBusyIcon } from "@/components/icons/BoothBusyIcon";
+import { ThemeIcon } from "@/components/icons/ThemeIcon";
 import type { ViewerFeatures } from "@/lib/feature-flags";
 
 type Item = {
@@ -47,6 +49,7 @@ const MENU_ITEMS: Item[] = [
 
 export default function AllMenuSheet({ onClose }: { onClose: () => void }) {
   const { features } = useApp();
+  const { theme, toggleTheme } = useTheme();
   const items = MENU_ITEMS.filter(({ featureKey }) => !featureKey || features[featureKey] !== false);
 
   return (
@@ -54,15 +57,24 @@ export default function AllMenuSheet({ onClose }: { onClose: () => void }) {
       <div className="px-5 pb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-[var(--color-text-main)]">すべてのメニュー</h2>
-          <button
-            onClick={onClose}
-            aria-label="閉じる"
-            className="flex h-9 w-9 items-center justify-center text-[var(--color-text-sub)]"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="flex items-center">
+            <button
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+              className="flex h-9 w-9 items-center justify-center text-[var(--color-text-sub)]"
+            >
+              <ThemeIcon theme={theme} size={20} />
+            </button>
+            <button
+              onClick={onClose}
+              aria-label="閉じる"
+              className="flex h-9 w-9 items-center justify-center text-[var(--color-text-sub)]"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -71,7 +83,7 @@ export default function AllMenuSheet({ onClose }: { onClose: () => void }) {
               key={href}
               href={href}
               onClick={onClose}
-              className="flex flex-col items-center gap-1.5 rounded-xl bg-white border border-gray-100 shadow-sm py-4 px-1 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
+              className="flex flex-col items-center gap-1.5 rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm py-4 px-1 text-[var(--color-text-main)] hover:bg-[var(--color-background)] active:bg-[var(--color-background)]"
             >
               <span className="text-[var(--color-primary)]">{icon}</span>
               <span className="text-xs font-medium text-center">{label}</span>

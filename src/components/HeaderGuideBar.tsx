@@ -80,7 +80,7 @@ export default function HeaderGuideBar() {
 
   // install
   return (
-    <div className="flex items-center gap-3 border-b border-gray-100 bg-[var(--color-background)] px-4 py-2">
+    <div className="flex items-center gap-3 border-b border-gray-100 dark:border-gray-800 bg-[var(--color-background)] px-4 py-2">
       <svg className="shrink-0 text-[var(--color-primary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <rect x="5" y="2" width="14" height="20" rx="2" />
         <path d="M9 7l3-3 3 3M12 4v8" />
