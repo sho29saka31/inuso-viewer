@@ -4,6 +4,8 @@ import { useState } from "react";
 import ZoomableMap from "./ZoomableMap";
 import StaleBanner from "./StaleBanner";
 import BoothDetailSheet from "./BoothDetailSheet";
+import { useHeatData } from "./useHeatData";
+import type { FloorHeatPoint, FloorDim } from "./page";
 
 // SVG側のrect idとFirestoreのboothIdが異なるブースのみ逆引きする。
 // page.tsxのBOOTH_ID_TO_SVGと対になる（そちらはboothId→svgId）。
@@ -27,6 +29,7 @@ interface Booth {
   category: string;
   location?: string;
   status: number;
+  heatScore?: number;
   waitCount?: number;
   isManual?: boolean;
   imageUrl?: string;
@@ -58,9 +61,22 @@ const TABS = [
   { key: "list" as const, label: "一覧",   Icon: ListIcon },
 ];
 
-export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; floorSvgs: string[] }) {
+export default function BusyClient({
+  booths,
+  floorSvgs,
+  floorHeatPoints,
+  floorDims,
+  initialHeat,
+}: {
+  booths: Booth[];
+  floorSvgs: string[];
+  floorHeatPoints: FloorHeatPoint[][];
+  floorDims: FloorDim[];
+  initialHeat: Record<string, number>;
+}) {
   const [tab, setTab] = useState<"map" | "list">("map");
   const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
+  const heatValues = useHeatData(initialHeat, "/api/booth/heat");
 
   const handleBoothTap = (svgId: string) => {
     const boothId = SVG_ID_TO_BOOTH_ID[svgId] ?? svgId;
@@ -93,7 +109,15 @@ export default function BusyClient({ booths, floorSvgs }: { booths: Booth[]; flo
       </div>
 
       {/* マップ */}
-      {tab === "map" && <ZoomableMap floorSvgs={floorSvgs} onBoothTap={handleBoothTap} />}
+      {tab === "map" && (
+        <ZoomableMap
+          floorSvgs={floorSvgs}
+          floorHeatPoints={floorHeatPoints}
+          floorDims={floorDims}
+          heatValues={heatValues}
+          onBoothTap={handleBoothTap}
+        />
+      )}
 
       {selectedBooth && (
         <BoothDetailSheet booth={selectedBooth} onClose={() => setSelectedBoothId(null)} />

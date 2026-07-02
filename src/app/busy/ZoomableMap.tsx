@@ -1,6 +1,9 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect, type TouchEvent, type WheelEvent } from "react";
+import HeatmapCanvas from "./HeatmapCanvas";
+import { CSS_GRADIENT } from "./heatmapGradient";
+import type { FloorHeatPoint, FloorDim } from "./page";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
@@ -15,20 +18,17 @@ const FLOORS = [
   { label: "屋外", viewBox: "20 1568 880 120" },
 ];
 
-const LEGEND = [
-  { label: "停止中", color: "#94A3B8" },
-  { label: "非常に閑散", color: "#2C7BB6" },
-  { label: "閑散", color: "#ABD9E9" },
-  { label: "通常", color: "#FFFFBF" },
-  { label: "混雑", color: "#FDAE61" },
-  { label: "非常に混雑", color: "#D7191C" },
-];
-
 export default function ZoomableMap({
   floorSvgs,
+  floorHeatPoints,
+  floorDims,
+  heatValues,
   onBoothTap,
 }: {
   floorSvgs: string[];
+  floorHeatPoints: FloorHeatPoint[][];
+  floorDims: FloorDim[];
+  heatValues: Record<string, number>;
   onBoothTap?: (boothId: string) => void;
 }) {
   const [floor, setFloor] = useState(0);
@@ -218,14 +218,27 @@ export default function ZoomableMap({
         >
           <div
             ref={contentRef}
-            className="w-max h-max"
+            className="relative w-max h-max"
             style={{
               transform: "translate(0px, 0px) scale(1)",
               transformOrigin: "0 0",
               transition: "transform 0.15s ease-out",
             }}
-            dangerouslySetInnerHTML={{ __html: floorSvgs[floor] }}
-          />
+          >
+            <HeatmapCanvas
+              width={floorDims[floor].width}
+              height={floorDims[floor].height}
+              points={floorHeatPoints[floor].map((p) => ({
+                x: p.x,
+                y: p.y,
+                value: heatValues[p.boothId] ?? 0,
+              }))}
+            />
+            <div
+              className="relative"
+              dangerouslySetInnerHTML={{ __html: floorSvgs[floor] }}
+            />
+          </div>
 
           <div className="pointer-events-none absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-black/5 to-transparent" />
 
@@ -239,17 +252,14 @@ export default function ZoomableMap({
           )}
         </div>
 
-        {/* 凡例 */}
-        <div className="border-t border-gray-200 bg-gray-50 px-3 py-1.5 flex items-center justify-center gap-2 flex-wrap">
-          {LEGEND.map((item) => (
-            <div key={item.label} className="flex items-center gap-0.5">
-              <span
-                className="w-2.5 h-2.5 rounded-sm shrink-0 border border-gray-300"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-xs text-gray-500">{item.label}</span>
-            </div>
-          ))}
+        {/* 凡例（連続グラデーション） */}
+        <div className="border-t border-gray-200 bg-gray-50 px-3 py-2 flex items-center justify-center gap-2">
+          <span className="text-xs text-gray-500 shrink-0">空き</span>
+          <span
+            className="h-2.5 flex-1 max-w-[220px] rounded-full border border-gray-300"
+            style={{ background: CSS_GRADIENT }}
+          />
+          <span className="text-xs text-gray-500 shrink-0">混雑</span>
         </div>
       </div>
 
