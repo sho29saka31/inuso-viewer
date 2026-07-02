@@ -160,7 +160,8 @@ async function getData(): Promise<
 }
 
 export default async function BusyPage() {
-  if (!(await getViewerFeatures()).busy) return <FeatureDisabled />;
+  const features = await getViewerFeatures();
+  if (!features.busy) return <FeatureDisabled />;
   const result = await getData();
 
   if ("error" in result) {
@@ -194,6 +195,7 @@ export default async function BusyPage() {
         floorHeatPoints={floorHeatPoints}
         floorDims={floorDims}
         initialHeat={initialHeat}
+        heatPolling={features.heatPolling}
       />
     </div>
   );

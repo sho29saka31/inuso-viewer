@@ -12,9 +12,12 @@ function easeOutCubic(t: number): number {
 // heatScoreを定期ポーリングし、新しい値を受け取るたびに約1秒でease補間する。
 // タブが非アクティブな間(document.hidden)はポーリングをスキップし、
 // 新しい値が来ない限りrAFループも走らないため実質的にアニメーションも止まる。
+// enabled=falseの場合はポーリング自体を開始せず、initialの値を表示し続ける
+// （admin側のfeature toggleでFirestoreへの定期通信のみ止める用途）。
 export function useHeatData(
   initial: Record<string, number>,
-  fetchUrl: string
+  fetchUrl: string,
+  enabled: boolean = true
 ): Record<string, number> {
   const [display, setDisplay] = useState<Record<string, number>>(initial);
   const displayedRef = useRef<Record<string, number>>(initial);
@@ -57,6 +60,7 @@ export function useHeatData(
   }, []);
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
 
     const poll = async () => {
@@ -81,7 +85,7 @@ export function useHeatData(
       clearInterval(id);
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, [fetchUrl, applyNewValues]);
+  }, [fetchUrl, applyNewValues, enabled]);
 
   return display;
 }
