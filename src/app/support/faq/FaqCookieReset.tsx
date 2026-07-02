@@ -14,7 +14,7 @@ export default function FaqCookieReset() {
   return (
     <button
       onClick={handleReset}
-      className="w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50"
+      className="w-full rounded-xl border border-[var(--color-danger)] py-3 text-sm font-bold text-[var(--color-danger)] active:bg-red-50 dark:active:bg-red-950"
     >
       ユーザー種別・学年をリセットする
     </button>

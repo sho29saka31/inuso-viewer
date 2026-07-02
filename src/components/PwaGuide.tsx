@@ -59,7 +59,7 @@ export default function PwaGuide({ onComplete }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-sm rounded-2xl bg-[var(--color-surface)] p-8 shadow-2xl">
         <div className="mb-4 text-center">
           <div className="mb-3 flex justify-center text-[var(--color-primary)]">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">

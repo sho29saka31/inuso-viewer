@@ -197,7 +197,7 @@ export default function ZoomableMap({
             className={`px-3.5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
               i === floor
                 ? "bg-[var(--color-primary)] text-white shadow-sm"
-                : "bg-gray-100 text-gray-600 active:bg-gray-200"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 active:bg-gray-200 dark:active:bg-gray-700"
             }`}
           >
             {f.label}
@@ -208,10 +208,10 @@ export default function ZoomableMap({
       </div>
 
       {/* マップ */}
-      <div className="mx-4 mb-3 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
+      <div className="mx-4 mb-3 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm bg-[var(--color-surface)]">
         <div
           ref={containerRef}
-          className="w-full overflow-hidden touch-none relative bg-[#F1F5F9]"
+          className="w-full overflow-hidden touch-none relative bg-[#F1F5F9] dark:bg-[#0F172A]"
           style={{ height: `${containerH}px` }}
           onWheel={handleWheel}
           onClick={handleMapClick}
@@ -245,7 +245,7 @@ export default function ZoomableMap({
           {scale > 1 && (
             <button
               onClick={resetView}
-              className="absolute top-2 right-2 bg-white/90 border border-gray-300 rounded-lg px-2.5 py-1 text-xs text-gray-700 shadow-sm active:bg-gray-100"
+              className="absolute top-2 right-2 bg-[var(--color-surface)]/90 border border-gray-300 dark:border-gray-600 rounded-lg px-2.5 py-1 text-xs text-gray-700 dark:text-gray-300 shadow-sm active:bg-gray-100 dark:active:bg-gray-700"
             >
               リセット
             </button>
@@ -253,17 +253,17 @@ export default function ZoomableMap({
         </div>
 
         {/* 凡例（連続グラデーション） */}
-        <div className="border-t border-gray-200 bg-gray-50 px-3 py-2 flex items-center justify-center gap-2">
-          <span className="text-xs text-gray-500 shrink-0">空き</span>
+        <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 flex items-center justify-center gap-2">
+          <span className="text-xs text-gray-500 dark:text-gray-400 shrink-0">空き</span>
           <span
-            className="h-2.5 flex-1 max-w-[220px] rounded-full border border-gray-300"
+            className="h-2.5 flex-1 max-w-[220px] rounded-full border border-gray-300 dark:border-gray-600"
             style={{ background: CSS_GRADIENT }}
           />
-          <span className="text-xs text-gray-500 shrink-0">混雑</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 shrink-0">混雑</span>
         </div>
       </div>
 
-      <p className="px-4 mb-3 text-xs text-gray-400 text-center">
+      <p className="px-4 mb-3 text-xs text-gray-400 dark:text-gray-500 text-center">
         横にスクロール・ピンチで拡大できます
       </p>
     </div>

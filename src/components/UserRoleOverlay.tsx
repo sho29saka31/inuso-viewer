@@ -57,7 +57,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-sm rounded-2xl bg-[var(--color-surface)] p-8 shadow-2xl">
         <h2 className="mb-2 text-center text-lg font-bold text-[var(--color-text-main)]">
           あなたについて教えてください
         </h2>
@@ -73,7 +73,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
             <select
               value={role}
               onChange={(e) => { setRole(e.target.value as Role); setGrade(""); setCls(""); setStudentId(""); }}
-              className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
               style={{ fontSize: "16px" }}
             >
               <option value="">▼ 選択してください</option>
@@ -92,7 +92,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
               <select
                 value={grade}
                 onChange={(e) => setGrade(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
               style={{ fontSize: "16px" }}
               >
                 <option value="">▼ 選択してください</option>
@@ -112,7 +112,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
               <select
                 value={cls}
                 onChange={(e) => setCls(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
               style={{ fontSize: "16px" }}
               >
                 <option value="">▼ 選択してください</option>
@@ -136,7 +136,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value.replace(/\D/g, ""))}
                 placeholder="例: 1234"
-                className="w-full rounded-lg border border-gray-200 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
               style={{ fontSize: "16px" }}
               />
             </div>
@@ -153,7 +153,7 @@ export default function UserRoleOverlay({ onComplete }: Props) {
           className={`mb-3 w-full rounded-xl py-3 text-sm font-bold transition-colors ${
             role
               ? "bg-[var(--color-primary)] text-white active:opacity-80"
-              : "cursor-not-allowed bg-gray-200 text-gray-400"
+              : "cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
           }`}
         >
           進める

@@ -56,7 +56,7 @@ export default function AboutPage() {
               { label: "開催日", value: "2026年9月7日（月）・8日（火）" },
               { label: "バージョン", value: "1.0.0" },
             ].map(({ label, value }) => (
-              <div key={label} className="rounded-xl bg-white border border-gray-100 shadow-sm px-4 py-3">
+              <div key={label} className="rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-4 py-3">
                 <p className="text-xs text-[var(--color-text-sub)] mb-0.5">{label}</p>
                 <p className="font-bold text-sm text-[var(--color-text-main)]">{value}</p>
               </div>
@@ -68,7 +68,7 @@ export default function AboutPage() {
           <h2 className="text-xs font-bold text-[var(--color-primary)] uppercase tracking-wider mb-2">技術スタック</h2>
           <div className="flex flex-col gap-2">
             {techStack.map(({ name, desc }) => (
-              <div key={name} className="rounded-xl bg-white border border-gray-100 shadow-sm px-4 py-3">
+              <div key={name} className="rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-4 py-3">
                 <p className="text-sm font-bold text-[var(--color-text-main)] mb-1">{name}</p>
                 <p className="text-xs text-[var(--color-text-sub)] leading-relaxed">{desc}</p>
               </div>
@@ -84,7 +84,7 @@ export default function AboutPage() {
               { label: "プライバシーポリシー", href: "/legal/privacy" },
               { label: "Cookieポリシー", href: "/legal/cookie-policy" },
             ].map(({ label, href }) => (
-              <a key={href} href={href} className="flex items-center justify-between rounded-xl bg-white border border-gray-100 shadow-sm px-4 py-3 text-sm text-[var(--color-text-main)]">
+              <a key={href} href={href} className="flex items-center justify-between rounded-xl bg-[var(--color-surface)] border border-gray-100 dark:border-gray-700 shadow-sm px-4 py-3 text-sm text-[var(--color-text-main)]">
                 {label}
                 <span className="text-[var(--color-text-sub)]">→</span>
               </a>
