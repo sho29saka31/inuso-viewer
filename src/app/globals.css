@@ -27,6 +27,37 @@
   --color-danger: #F87171;
   --color-warning: #FB923C;
   --color-success: #4ADE80;
+
+  --map-room-a: #1E293B;
+  --map-room-b: #24304A;
+  --map-room-c: #202A3D;
+  --map-border-a: #3B4A63;
+  --map-border-b: #475569;
+  --map-accent: #60A5FA;
+  --map-text-heading: #F1F5F9;
+  --map-text-secondary: #94A3B8;
+  --map-text-muted: #94A3B8;
+  --map-text-navy: #93C5FD;
+  --map-text-room: #CBD5E1;
+  --map-booth-fill: rgba(15, 23, 42, 0.55);
+  --map-booth-text: #F1F5F9;
+}
+
+/* 校内フロアマップ（floormap-svg.ts）の配色。ダークモードでは.darkの値が上書きする */
+:root {
+  --map-room-a: #F8FAFC;
+  --map-room-b: #EEF2F7;
+  --map-room-c: #E2E8F0;
+  --map-border-a: #D8DFEA;
+  --map-border-b: #CBD5E1;
+  --map-accent: #1D4ED8;
+  --map-text-heading: #0F172A;
+  --map-text-secondary: #64748B;
+  --map-text-muted: #94A3B8;
+  --map-text-navy: #1E3A8A;
+  --map-text-room: #334155;
+  --map-booth-fill: rgba(255, 255, 255, 0.55);
+  --map-booth-text: #0F172A;
 }
 
 * {

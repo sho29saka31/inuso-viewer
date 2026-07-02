@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export default function FilterModal({
+export default function SelectModal({
   title,
   options,
   selected,

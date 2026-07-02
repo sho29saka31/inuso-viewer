@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import ZoomableMap from "./ZoomableMap";
 import StaleBanner from "./StaleBanner";
 import BoothDetailSheet from "./BoothDetailSheet";
-import FilterModal from "./FilterModal";
+import SelectModal from "@/components/ui/SelectModal";
 import { CATEGORY_FILTER_OPTIONS, categoryFilterGroup, type CategoryFilter } from "./categoryConfig";
 import { useHeatData } from "./useHeatData";
 import type { FloorHeatPoint, FloorDim } from "./page";
@@ -184,7 +184,7 @@ export default function BusyClient({
           </div>
 
           {showCategoryModal && (
-            <FilterModal
+            <SelectModal
               title="ブースの絞り込み"
               options={CATEGORY_MODAL_OPTIONS}
               selected={categoryFilter}
@@ -193,7 +193,7 @@ export default function BusyClient({
             />
           )}
           {showStatusModal && (
-            <FilterModal
+            <SelectModal
               title="ステータスの絞り込み"
               options={STATUS_MODAL_OPTIONS}
               selected={String(statusFilter)}

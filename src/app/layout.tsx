@@ -56,7 +56,7 @@ export default async function RootLayout({
 
   if (features.service === false) {
     return (
-      <html lang="ja">
+      <html lang="ja" suppressHydrationWarning>
         <body className={mPlusRounded.className}>
           <MaintenancePage />
         </body>
@@ -65,7 +65,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body className={mPlusRounded.className}>
         {/* beforeinstallprompt はハイドレーション前に発火し得るため、最速で捕捉して退避する */}
         <Script id="pwa-install-capture" strategy="beforeInteractive">
